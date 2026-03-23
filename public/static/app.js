@@ -594,34 +594,190 @@ async function showProspectDetail(id) {
   try {
     const { data } = await API.get(`/prospects/${id}`);
     const p = data.prospect; const appels = data.appels||[]; const rdvs = data.rdv||[];
+    const nrpBadge = p.compteur_nrp > 0 ? `<span class="badge bg-red-50 text-red-500 border border-red-100 ml-2"><i class="fas fa-phone-slash mr-1 text-[8px]"></i>${p.compteur_nrp}/5 NRP</span>` : '';
+
     document.getElementById('modal').innerHTML = `
       <div class="fixed inset-0 modal-overlay z-50 flex items-center justify-center p-4" onclick="closeModal(event)">
-        <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto scale-in" onclick="event.stopPropagation()" style="box-shadow:0 20px 60px rgba(0,0,0,0.15);">
-          <div class="p-7">
-            <div class="flex justify-between items-start mb-6">
-              <div><h2 class="text-lg font-bold text-gray-800">${p.nom_entreprise}</h2><p class="text-gray-400 text-sm mt-0.5">${p.nom_dirigeant||''} - ${p.ville||''}</p></div>
-              <button onclick="document.getElementById('modal').classList.add('hidden')" class="w-8 h-8 rounded-lg flex items-center justify-center text-gray-300 hover:text-gray-600 hover:bg-gray-50 transition-all"><i class="fas fa-times"></i></button>
+        <div class="bg-white rounded-2xl max-w-4xl w-full max-h-[92vh] overflow-y-auto scale-in" onclick="event.stopPropagation()" style="box-shadow:0 25px 80px rgba(0,0,0,0.15);">
+          
+          <!-- Header avec nom + statut + bouton fermer -->
+          <div class="p-6 pb-4 border-b" style="border-color:#F0F0F0;">
+            <div class="flex justify-between items-start">
+              <div>
+                <div class="flex items-center">
+                  <h2 class="text-xl font-extrabold" style="color:var(--text-dark);">${p.nom_entreprise}</h2>
+                  <span class="ml-3">${getStatusBadge(p.statut)}</span>
+                  ${nrpBadge}
+                </div>
+                <p class="text-sm mt-1" style="color:var(--text-light);">${p.nom_dirigeant||'Contact non renseigne'} — ${p.ville||''} ${p.code_postal||''}</p>
+              </div>
+              <button onclick="document.getElementById('modal').classList.add('hidden')" class="w-9 h-9 rounded-xl flex items-center justify-center hover:bg-gray-100 transition-all" style="color:#CCCCCC;"><i class="fas fa-times text-sm"></i></button>
             </div>
-            <div class="grid grid-cols-2 gap-3 text-xs mb-6">
-              <div class="text-gray-600"><strong class="text-gray-400">Tel:</strong> <span class="font-mono">${p.telephone}</span></div>
-              <div class="text-gray-600"><strong class="text-gray-400">Email:</strong> ${p.email||'-'}</div>
-              <div class="text-gray-600"><strong class="text-gray-400">APE:</strong> ${p.code_ape||'-'}</div>
-              <div class="text-gray-600"><strong class="text-gray-400">OPCO:</strong> ${p.opco||'-'}</div>
-              <div><strong class="text-gray-400">Statut:</strong> ${getStatusBadge(p.statut)}</div>
-              <div class="text-gray-600"><strong class="text-gray-400">Budget:</strong> ${p.budget_identifie?p.budget_identifie+'&euro;':'-'}</div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-0">
+            
+            <!-- COLONNE GAUCHE : Infos + Historique -->
+            <div class="lg:col-span-2 p-6 pr-4">
+              <!-- Infos prospect -->
+              <div class="grid grid-cols-2 gap-3 text-sm mb-5">
+                <div class="flex items-center">
+                  <div class="w-8 h-8 rounded-lg flex items-center justify-center mr-3" style="background:var(--maf-peach);"><i class="fas fa-phone text-xs" style="color:var(--maf-orange);"></i></div>
+                  <a href="tel:${p.telephone}" class="font-bold text-base hover:underline" style="color:var(--maf-orange);">${p.telephone}</a>
+                </div>
+                <div class="flex items-center">
+                  <div class="w-8 h-8 rounded-lg flex items-center justify-center mr-3" style="background:#F5F5F5;"><i class="fas fa-envelope text-xs" style="color:#AAAAAA;"></i></div>
+                  <span style="color:var(--text-medium);">${p.email||'-'}</span>
+                </div>
+                ${p.code_ape ? `<div class="flex items-center"><div class="w-8 h-8 rounded-lg flex items-center justify-center mr-3" style="background:#F5F5F5;"><i class="fas fa-industry text-xs" style="color:#AAAAAA;"></i></div><span style="color:var(--text-medium);">APE: ${p.code_ape}</span></div>` : ''}
+                ${p.opco ? `<div class="flex items-center"><div class="w-8 h-8 rounded-lg flex items-center justify-center mr-3" style="background:var(--maf-peach);"><i class="fas fa-building text-xs" style="color:var(--maf-orange);"></i></div><span class="font-semibold" style="color:var(--text-dark);">OPCO: ${p.opco}</span></div>` : ''}
+                ${p.budget_identifie ? `<div class="flex items-center"><div class="w-8 h-8 rounded-lg flex items-center justify-center mr-3" style="background:#ECFDF5;"><i class="fas fa-euro-sign text-xs" style="color:#10B981;"></i></div><span style="color:var(--text-medium);">Budget: ${p.budget_identifie}&euro;</span></div>` : ''}
+              </div>
+
+              ${p.notes ? `<div class="rounded-xl p-3.5 text-xs mb-5" style="background:#FFFBEB;border:1.5px solid #FDE68A;color:#92400E;"><i class="fas fa-sticky-note mr-2" style="color:#F59E0B;"></i>${p.notes}</div>` : ''}
+              ${p.date_rappel ? `<div class="rounded-xl p-3.5 text-xs mb-5" style="background:var(--maf-peach-light);border:1.5px solid rgba(232,100,44,0.15);color:#92400E;"><i class="fas fa-clock mr-2" style="color:var(--maf-orange);"></i>Rappel prevu: ${formatDate(p.date_rappel)}</div>` : ''}
+
+              <!-- Historique -->
+              <div class="divider mb-4"></div>
+              <h3 class="text-[11px] font-bold mb-3 uppercase tracking-wider" style="color:var(--text-muted);">Historique des appels (${appels.length})</h3>
+              <div class="space-y-1.5 mb-5 max-h-44 overflow-y-auto">
+                ${appels.map(a=>`<div class="text-xs border-l-2 ${getResultBorderColor(a.statut_resultat)} pl-3 py-2 hover:bg-gray-50 rounded-r transition-colors"><span class="font-bold" style="color:var(--text-dark);">${a.statut_resultat}</span><span class="ml-2 font-mono text-[11px]" style="color:var(--text-muted);">${formatDate(a.created_at)}</span><span class="ml-2" style="color:var(--text-medium);">${a.commentaire||'-'}</span><span class="text-[10px] ml-2" style="color:var(--text-muted);">(${a.operateur_prenom})</span></div>`).join('')||'<p class="text-xs italic" style="color:var(--text-muted);">Premier appel — aucun historique</p>'}
+              </div>
+
+              <!-- RDV existants -->
+              ${rdvs.length>0?`
+                <h3 class="text-[11px] font-bold mb-3 uppercase tracking-wider" style="color:var(--text-muted);">Rendez-vous (${rdvs.length})</h3>
+                <div class="space-y-2 mb-4">${rdvs.map(r=>`<div class="rounded-xl p-3 text-xs" style="background:#ECFDF5;border:1.5px solid #A7F3D0;"><strong class="font-mono" style="color:#059669;">${formatDate(r.date_rdv)}</strong> <span style="color:var(--text-light);">— ${r.type_rdv}</span>${r.formation_souhaitee?`<br><span style="color:var(--text-medium);">${r.formation_souhaitee}</span>`:''}</div>`).join('')}</div>
+              `:''}
             </div>
-            ${p.notes?`<div class="rounded-lg p-3.5 text-xs text-amber-700 bg-amber-50 border border-amber-100 mb-5"><i class="fas fa-sticky-note text-amber-400 mr-2"></i>${p.notes}</div>`:''}
-            <div class="divider mb-5"></div>
-            <h3 class="text-[11px] font-bold text-gray-400 mb-3 uppercase tracking-wider">Historique (${appels.length})</h3>
-            <div class="space-y-1 mb-5 max-h-40 overflow-y-auto">
-              ${appels.map(a=>`<div class="text-xs border-l-2 ${getResultBorderColor(a.statut_resultat)} pl-3 py-1.5 hover:bg-gray-50 rounded-r"><span class="font-bold text-gray-600">${a.statut_resultat}</span><span class="text-gray-300 ml-2 font-mono text-[11px]">${formatDate(a.created_at)}</span><span class="text-gray-500 ml-2">${a.commentaire||'-'}</span><span class="text-gray-300 text-[10px] ml-2">(${a.operateur_prenom})</span></div>`).join('')||'<p class="text-gray-300 text-xs italic">Aucun appel</p>'}
+
+            <!-- COLONNE DROITE : Actions -->
+            <div class="p-6 pl-4 lg:border-l" style="border-color:#F0F0F0;background:#FAFAFA;border-radius:0 0 1rem 0;">
+              <h3 class="text-[11px] font-bold mb-4 uppercase tracking-wider" style="color:var(--text-muted);"><i class="fas fa-clipboard-check mr-1.5"></i>Actions</h3>
+              
+              <div class="space-y-2.5 mb-5">
+                <button onclick="showModalResultForm('NRP', ${p.id})" class="action-btn" style="--btn-color:#fca5a5;--btn-bg:#fef2f2;--btn-glow:rgba(239,68,68,0.06);">
+                  <span class="flex items-center"><i class="fas fa-phone-slash text-red-400 mr-3"></i><span class="font-semibold text-sm" style="color:var(--text-dark);">NRP</span></span>
+                  <span class="text-[10px]" style="color:var(--text-muted);">Ne repond pas</span>
+                </button>
+                <button onclick="showModalResultForm('AR', ${p.id})" class="action-btn" style="--btn-color:#fcd34d;--btn-bg:#fffbeb;--btn-glow:rgba(245,158,11,0.06);">
+                  <span class="flex items-center"><i class="fas fa-redo text-amber-400 mr-3"></i><span class="font-semibold text-sm" style="color:var(--text-dark);">AR</span></span>
+                  <span class="text-[10px]" style="color:var(--text-muted);">A rappeler</span>
+                </button>
+                <button onclick="showModalResultForm('RDV', ${p.id})" class="action-btn" style="--btn-color:#6ee7b7;--btn-bg:#ecfdf5;--btn-glow:rgba(16,185,129,0.06);">
+                  <span class="flex items-center"><i class="fas fa-calendar-check text-green-500 mr-3"></i><span class="font-semibold text-sm" style="color:var(--text-dark);">RDV</span></span>
+                  <span class="text-[10px]" style="color:var(--text-muted);">Rendez-vous</span>
+                </button>
+                <button onclick="showModalResultForm('FIN', ${p.id})" class="action-btn" style="--btn-color:#d1d5db;--btn-bg:#f9fafb;--btn-glow:rgba(0,0,0,0.02);">
+                  <span class="flex items-center"><i class="fas fa-ban mr-3" style="color:#CCCCCC;"></i><span class="font-semibold text-sm" style="color:var(--text-light);">FIN</span></span>
+                  <span class="text-[10px]" style="color:var(--text-muted);">Cloturer</span>
+                </button>
+              </div>
+
+              <!-- Zone formulaire dynamique -->
+              <div id="modalResultForm"></div>
             </div>
-            ${rdvs.length>0?`<h3 class="text-[11px] font-bold text-gray-400 mb-3 uppercase tracking-wider">RDV (${rdvs.length})</h3><div class="space-y-2">${rdvs.map(r=>`<div class="rounded-lg p-3 text-xs bg-green-50 border border-green-100"><strong class="text-green-600 font-mono">${formatDate(r.date_rdv)}</strong> <span class="text-gray-400">- ${r.type_rdv}</span>${r.formation_souhaitee?`<br><span class="text-gray-500">${r.formation_souhaitee}</span>`:''}</div>`).join('')}</div>`:''}
+
           </div>
         </div>
       </div>`;
     document.getElementById('modal').classList.remove('hidden');
   } catch (err) { alert('Erreur: '+(err.response?.data?.error||err.message)); }
+}
+
+// Formulaire de resultat dans la modal prospect
+function showModalResultForm(type, prospectId) {
+  const formDiv = document.getElementById('modalResultForm');
+  const forms = {
+    NRP: `<div class="glass-card-static rounded-xl p-4 scale-in" style="border-color:#FECACA;">
+      <h4 class="font-bold text-red-600 text-sm mb-3"><i class="fas fa-phone-slash mr-2"></i>NRP</h4>
+      <textarea id="modalNrpComment" placeholder="Commentaire optionnel..." rows="2" class="w-full p-3 rounded-lg text-xs"></textarea>
+      <button onclick="submitModalResult('NRP', ${prospectId})" class="w-full btn-danger py-2.5 rounded-lg text-sm mt-2"><i class="fas fa-check mr-2"></i>Confirmer NRP</button>
+    </div>`,
+    AR: `<div class="glass-card-static rounded-xl p-4 scale-in" style="border-color:#FDE68A;">
+      <h4 class="font-bold text-amber-600 text-sm mb-3"><i class="fas fa-redo mr-2"></i>A rappeler</h4>
+      <label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:var(--text-muted);">Date de rappel *</label>
+      <input type="datetime-local" id="modalArDate" required class="w-full glass-input p-3 rounded-lg text-xs mb-2" value="${getDefaultRappelDate()}">
+      <textarea id="modalArComment" placeholder="Raison du rappel..." rows="2" class="w-full p-3 rounded-lg text-xs mb-2"></textarea>
+      <button onclick="submitModalResult('AR', ${prospectId})" class="w-full btn-warning py-2.5 rounded-lg text-sm"><i class="fas fa-check mr-2"></i>Confirmer AR</button>
+    </div>`,
+    RDV: `<div class="glass-card-static rounded-xl p-4 scale-in" style="border-color:#A7F3D0;">
+      <h4 class="font-bold text-green-600 text-sm mb-3"><i class="fas fa-calendar-check mr-2"></i>Rendez-vous</h4>
+      <div class="space-y-2">
+        <div><label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:var(--text-muted);">Date et heure *</label><input type="datetime-local" id="modalRdvDate" required class="w-full glass-input p-2.5 rounded-lg text-xs"></div>
+        <div><label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:var(--text-muted);">Type</label><select id="modalRdvType" class="w-full p-2.5 rounded-lg text-xs"><option value="presentiel">Presentiel</option><option value="distance">A distance</option><option value="telephone">Telephone</option></select></div>
+        <div><label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:var(--text-muted);">Lieu</label><input type="text" id="modalRdvLieu" placeholder="Adresse ou lien visio..." class="w-full glass-input p-2.5 rounded-lg text-xs"></div>
+        <div><label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:var(--text-muted);">Formation souhaitee</label><textarea id="modalRdvFormation" placeholder="Formation souhaitee..." rows="2" class="w-full p-2.5 rounded-lg text-xs"></textarea></div>
+        <div><label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:var(--text-muted);">Notes</label><textarea id="modalRdvComments" placeholder="Notes..." rows="2" class="w-full p-2.5 rounded-lg text-xs"></textarea></div>
+      </div>
+      <button onclick="submitModalResult('RDV', ${prospectId})" class="w-full btn-success py-2.5 rounded-lg text-sm mt-3"><i class="fas fa-check mr-2"></i>Confirmer RDV</button>
+    </div>`,
+    FIN: `<div class="glass-card-static rounded-xl p-4 scale-in">
+      <h4 class="font-bold text-sm mb-3" style="color:var(--text-light);"><i class="fas fa-ban mr-2"></i>Cloturer</h4>
+      <label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:var(--text-muted);">Motif *</label>
+      <select id="modalFinMotif" class="w-full p-2.5 rounded-lg text-xs mb-2"><option value="PAS_INTERESSE">Pas interesse</option><option value="HORS_CIBLE">Hors cible</option><option value="FAUX_NUMERO">Faux numero</option><option value="DOUBLON">Doublon</option><option value="AUTRE">Autre</option></select>
+      <textarea id="modalFinComment" placeholder="Commentaire..." rows="2" class="w-full p-2.5 rounded-lg text-xs mb-2"></textarea>
+      <button onclick="submitModalResult('FIN', ${prospectId})" class="w-full btn-secondary py-2.5 rounded-lg text-sm"><i class="fas fa-check mr-2"></i>Confirmer</button>
+    </div>`
+  };
+  formDiv.innerHTML = forms[type];
+}
+
+// Soumettre un resultat depuis la modal
+async function submitModalResult(type, prospectId) {
+  const payload = { prospect_id: prospectId, statut_resultat: type };
+  switch (type) {
+    case 'NRP': payload.commentaire = document.getElementById('modalNrpComment')?.value; break;
+    case 'AR':
+      payload.date_rappel = document.getElementById('modalArDate')?.value;
+      payload.commentaire = document.getElementById('modalArComment')?.value;
+      if (!payload.date_rappel) { alert('Date de rappel obligatoire'); return; } break;
+    case 'RDV':
+      payload.rdv_date = document.getElementById('modalRdvDate')?.value;
+      payload.rdv_type = document.getElementById('modalRdvType')?.value;
+      payload.rdv_lieu = document.getElementById('modalRdvLieu')?.value;
+      payload.rdv_formation = document.getElementById('modalRdvFormation')?.value;
+      payload.rdv_commentaires = document.getElementById('modalRdvComments')?.value;
+      payload.commentaire = 'RDV pris: ' + (payload.rdv_formation || 'Formation a preciser');
+      if (!payload.rdv_date) { alert('Date du RDV obligatoire'); return; } break;
+    case 'FIN':
+      payload.motif_fin = document.getElementById('modalFinMotif')?.value;
+      payload.commentaire = document.getElementById('modalFinComment')?.value; break;
+  }
+  try {
+    await API.post('/appels', payload);
+    if (type === 'RDV') showConfetti();
+    // Afficher message de succes dans la modal
+    const cfgMap = {
+      NRP: { icon: 'fa-phone-slash', msg: 'NRP enregistre', bgc: '#FEF2F2', icc: '#EF4444' },
+      AR: { icon: 'fa-redo', msg: 'Rappel programme', bgc: '#FFFBEB', icc: '#F59E0B' },
+      RDV: { icon: 'fa-trophy', msg: 'RDV confirme !', bgc: '#ECFDF5', icc: '#10B981' },
+      FIN: { icon: 'fa-ban', msg: 'Prospect cloture', bgc: '#F9FAFB', icc: '#9CA3AF' },
+    };
+    const cfg = cfgMap[type];
+    const modalContent = document.querySelector('.modal-overlay > div');
+    if (modalContent) {
+      modalContent.innerHTML = `
+        <div class="text-center py-12 px-8 scale-in">
+          <div class="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-5 ${type==='RDV'?'success-glow':''}" style="background:${cfg.bgc};">
+            <i class="fas ${cfg.icon} text-3xl" style="color:${cfg.icc};"></i>
+          </div>
+          <h2 class="text-xl font-extrabold mb-2" style="color:var(--text-dark);">${cfg.msg}</h2>
+          ${type === 'RDV' ? '<p class="text-sm mb-6 font-bold" style="color:#10B981;">Excellent travail !</p>' : '<div class="mb-6"></div>'}
+          <div class="flex justify-center space-x-3">
+            <button onclick="document.getElementById('modal').classList.add('hidden');loadProspects();" class="btn-secondary px-6 py-3 rounded-xl text-sm">
+              <i class="fas fa-list mr-2"></i>Retour a la liste
+            </button>
+            <button onclick="document.getElementById('modal').classList.add('hidden');navigate('#operator');" class="btn-primary px-6 py-3 rounded-xl text-sm">
+              <i class="fas fa-bolt mr-2"></i>Poste d'appel
+            </button>
+          </div>
+        </div>`;
+    }
+    // Rafraichir la liste en arriere-plan
+    if (typeof loadProspects === 'function' && document.getElementById('prospectsTable')) loadProspects();
+    if (typeof loadMyStats === 'function') loadMyStats();
+  } catch (err) { alert(err.response?.data?.error || 'Erreur lors de l\'enregistrement'); }
 }
 
 function showAddProspectModal() {
@@ -843,3 +999,4 @@ window.loadProspects = loadProspects; window.changePage = changePage;
 window.switchAdminTab = switchAdminTab; window.showAddUserModal = showAddUserModal;
 window.toggleUserActive = toggleUserActive; window.importCSV = importCSV;
 window.logout = logout; window.debounce = debounce; window.loadRDV = loadRDV;
+window.showModalResultForm = showModalResultForm; window.submitModalResult = submitModalResult;
