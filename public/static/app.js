@@ -1,6 +1,7 @@
 // =============================================
 // MAF Formation - Telemarketing SPA
-// Application JavaScript complète
+// PREMIUM IMMERSIVE UI v3.0
+// "Effet Wahou" - Apple-inspired Design
 // =============================================
 
 const API = axios.create({ baseURL: '/api' });
@@ -26,7 +27,7 @@ API.interceptors.response.use(
   }
 );
 
-// ---- Router simple basé sur le hash ----
+// ---- Router simple base sur le hash ----
 function navigate(hash) {
   window.location.hash = hash;
 }
@@ -71,44 +72,74 @@ function clearTimers() {
 }
 
 // =============================================
-// PAGE: LOGIN
+// PAGE: LOGIN - Ultra Premium Immersive
 // =============================================
 function renderLogin() {
   document.getElementById('app').innerHTML = `
-    <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-maf-800 via-maf-700 to-maf-600">
-      <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md fade-in">
-        <div class="text-center mb-8">
-          <div class="w-20 h-20 bg-maf-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <i class="fas fa-headset text-maf-600 text-3xl"></i>
+    <div class="min-h-screen flex items-center justify-center relative overflow-hidden">
+      <!-- Orbes de lumiere animes -->
+      <div class="absolute inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute w-[600px] h-[600px] rounded-full blur-[120px] float" 
+          style="top: 10%; left: 5%; background: radial-gradient(circle, rgba(232,100,44,0.15), transparent 70%); animation-delay: 0s;"></div>
+        <div class="absolute w-[500px] h-[500px] rounded-full blur-[100px] float" 
+          style="bottom: 10%; right: 5%; background: radial-gradient(circle, rgba(99,102,241,0.1), transparent 70%); animation-delay: -4s;"></div>
+        <div class="absolute w-[400px] h-[400px] rounded-full blur-[80px] float" 
+          style="top: 50%; left: 50%; transform: translate(-50%, -50%); background: radial-gradient(circle, rgba(139,92,246,0.06), transparent 70%); animation-delay: -7s;"></div>
+      </div>
+
+      <!-- Particules decoratives -->
+      <div class="particle-field">
+        ${Array.from({length: 12}, (_, i) => `
+          <div class="particle" style="left:${Math.random()*100}%; animation-delay:${Math.random()*15}s; animation-duration:${12+Math.random()*8}s;"></div>
+        `).join('')}
+      </div>
+
+      <!-- Carte Login Glassmorphism -->
+      <div class="glass rounded-[2rem] p-12 w-full max-w-[420px] slide-up relative" 
+        style="box-shadow: 0 40px 100px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04), inset 0 1px 0 rgba(255,255,255,0.06);">
+        
+        <!-- Logo avec glow premium -->
+        <div class="text-center mb-12">
+          <div class="relative inline-block">
+            <div class="w-[88px] h-[88px] rounded-[1.75rem] flex items-center justify-center mx-auto mb-7 glow-pulse relative"
+              style="background: linear-gradient(145deg, #e8642c, #d4501e);">
+              <i class="fas fa-headset text-white text-[2.2rem]"></i>
+              <div class="absolute inset-0 rounded-[1.75rem]" style="background: linear-gradient(145deg, rgba(255,255,255,0.25) 0%, transparent 50%);"></div>
+            </div>
+            <!-- Halo de lumiere sous le logo -->
+            <div class="absolute -bottom-4 left-1/2 -translate-x-1/2 w-24 h-4 rounded-full blur-xl" 
+              style="background: rgba(232,100,44,0.25);"></div>
           </div>
-          <h1 class="text-2xl font-bold text-gray-800">MAF Formation</h1>
-          <p class="text-gray-500 mt-1">Plateforme Télémarketing</p>
+          <h1 class="text-[1.75rem] font-extrabold text-white tracking-tight" style="letter-spacing: -0.03em;">MAF Formation</h1>
+          <p class="text-white/30 mt-2 text-sm font-light tracking-widest uppercase">Plateforme Telemarketing</p>
         </div>
-        <form id="loginForm" class="space-y-4">
+
+        <form id="loginForm" class="space-y-5">
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-            <div class="relative">
-              <i class="fas fa-envelope absolute left-3 top-3 text-gray-400"></i>
+            <label class="block text-[11px] font-semibold text-white/40 mb-2.5 uppercase tracking-[0.15em]">Email</label>
+            <div class="relative group">
+              <i class="fas fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-white/20 text-sm transition-colors group-focus-within:text-maf-400"></i>
               <input type="email" id="loginEmail" placeholder="votre@email.fr" required
-                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-maf-500 focus:border-transparent">
+                class="w-full pl-12 pr-4 py-4 glass-input rounded-xl text-sm font-medium">
             </div>
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Mot de passe</label>
-            <div class="relative">
-              <i class="fas fa-lock absolute left-3 top-3 text-gray-400"></i>
-              <input type="password" id="loginPassword" placeholder="••••••" required
-                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-maf-500 focus:border-transparent">
+            <label class="block text-[11px] font-semibold text-white/40 mb-2.5 uppercase tracking-[0.15em]">Mot de passe</label>
+            <div class="relative group">
+              <i class="fas fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-white/20 text-sm transition-colors group-focus-within:text-maf-400"></i>
+              <input type="password" id="loginPassword" placeholder="••••••••" required
+                class="w-full pl-12 pr-4 py-4 glass-input rounded-xl text-sm font-medium">
             </div>
           </div>
-          <div id="loginError" class="hidden bg-red-50 text-red-700 p-3 rounded-lg text-sm"></div>
-          <button type="submit" class="w-full btn-primary py-3 text-lg">
-            <i class="fas fa-sign-in-alt mr-2"></i>Connexion
+          <div id="loginError" class="hidden rounded-xl p-3.5 text-sm" style="background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.15); color: #fca5a5;"></div>
+          <button type="submit" class="w-full btn-primary py-4.5 text-[15px] rounded-xl mt-3 tracking-tight" style="padding-top: 1.1rem; padding-bottom: 1.1rem;">
+            <i class="fas fa-arrow-right mr-2.5"></i>Connexion
           </button>
         </form>
-        <div class="mt-6 text-center text-xs text-gray-400">
-          <p>Comptes de test : admin@maf-formation.fr</p>
-          <p>Mot de passe : admin</p>
+
+        <div class="mt-10 text-center">
+          <div class="divider"></div>
+          <p class="text-white/15 text-[11px] mt-5 font-mono">admin@maf-formation.fr / admin</p>
         </div>
       </div>
     </div>
@@ -126,13 +157,13 @@ function renderLogin() {
       localStorage.setItem('maf_user', JSON.stringify(data.user));
       currentUser = data.user;
 
-      // Redirection selon le rôle
       if (currentUser.role === 'admin') navigate('#admin');
       else if (currentUser.role === 'supervisor') navigate('#dashboard');
       else navigate('#operator');
     } catch (err) {
       errorDiv.textContent = err.response?.data?.error || 'Erreur de connexion';
       errorDiv.classList.remove('hidden');
+      errorDiv.classList.add('scale-in');
     }
   });
 }
@@ -146,7 +177,7 @@ function logout() {
 }
 
 // =============================================
-// COMPOSANT: Navigation
+// COMPOSANT: Navigation Premium
 // =============================================
 function getNavbar(active = '') {
   const isAdmin = currentUser?.role === 'admin';
@@ -167,30 +198,42 @@ function getNavbar(active = '') {
   }
 
   return `
-    <nav class="bg-white border-b border-gray-200 shadow-sm">
-      <div class="max-w-7xl mx-auto px-4">
-        <div class="flex justify-between items-center h-16">
+    <nav class="glass sticky top-0 z-50" style="border-top: none; border-left: none; border-right: none; box-shadow: 0 8px 32px rgba(0,0,0,0.2);">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="flex justify-between items-center h-[60px]">
+          <!-- Logo -->
           <div class="flex items-center space-x-3">
-            <div class="w-9 h-9 bg-maf-600 rounded-lg flex items-center justify-center">
-              <i class="fas fa-headset text-white text-sm"></i>
+            <div class="w-9 h-9 rounded-xl flex items-center justify-center relative" style="background: linear-gradient(145deg, #e8642c, #d4501e);">
+              <i class="fas fa-headset text-white text-[13px]"></i>
+              <div class="absolute inset-0 rounded-xl" style="background: linear-gradient(145deg, rgba(255,255,255,0.2) 0%, transparent 50%);"></div>
             </div>
-            <span class="font-bold text-gray-800">MAF Formation</span>
+            <div>
+              <span class="font-bold text-white/90 text-sm tracking-tight block leading-none">MAF Formation</span>
+              <span class="text-[9px] text-white/20 font-medium tracking-wider uppercase">Telemarketing</span>
+            </div>
           </div>
-          <div class="flex items-center space-x-1">
+          
+          <!-- Navigation Links -->
+          <div class="flex items-center space-x-0.5 p-1 rounded-2xl" style="background: rgba(255,255,255,0.02);">
             ${links.map(l => `
-              <a href="${l.hash}" class="flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors
-                ${l.active ? 'bg-maf-100 text-maf-700' : 'text-gray-600 hover:bg-gray-100'}">
-                <i class="fas ${l.icon} mr-1.5"></i>${l.label}
+              <a href="${l.hash}" class="flex items-center px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-300
+                ${l.active 
+                  ? 'text-white bg-white/8 shadow-sm' 
+                  : 'text-white/35 hover:text-white/60 hover:bg-white/4'}"
+                style="${l.active ? 'box-shadow: 0 2px 8px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.05);' : ''}">
+                <i class="fas ${l.icon} mr-2 text-[10px] ${l.active ? 'text-maf-400' : ''}"></i>${l.label}
               </a>
             `).join('')}
           </div>
-          <div class="flex items-center space-x-3">
+          
+          <!-- User Info -->
+          <div class="flex items-center space-x-4">
             <div class="text-right">
-              <p class="text-sm font-medium text-gray-700">${currentUser?.prenom} ${currentUser?.nom}</p>
-              <p class="text-xs text-gray-500">${getRoleLabel(currentUser?.role)}</p>
+              <p class="text-xs font-semibold text-white/70 leading-none">${currentUser?.prenom} ${currentUser?.nom}</p>
+              <p class="text-[10px] text-maf-400/60 font-medium mt-0.5">${getRoleLabel(currentUser?.role)}</p>
             </div>
-            <button onclick="logout()" class="p-2 text-gray-400 hover:text-red-600 transition-colors" title="Déconnexion">
-              <i class="fas fa-sign-out-alt"></i>
+            <button onclick="logout()" class="w-9 h-9 rounded-xl flex items-center justify-center text-white/25 hover:text-red-400 hover:bg-red-500/10 transition-all duration-300" title="Deconnexion">
+              <i class="fas fa-sign-out-alt text-sm"></i>
             </button>
           </div>
         </div>
@@ -200,31 +243,39 @@ function getNavbar(active = '') {
 }
 
 function getRoleLabel(role) {
-  return { admin: 'Administrateur', supervisor: 'Superviseur', operator: 'Téléopérateur' }[role] || role;
+  return { admin: 'Administrateur', supervisor: 'Superviseur', operator: 'Teleoperateur' }[role] || role;
 }
 
 // =============================================
-// PAGE: OPÉRATEUR - Fiche d'appel
+// PAGE: OPERATEUR - Poste d'appel Premium
 // =============================================
 function renderOperator() {
   document.getElementById('app').innerHTML = `
     ${getNavbar('operator')}
     <div class="max-w-5xl mx-auto p-6 fade-in">
-      <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-bold text-gray-800">
-          <i class="fas fa-phone-alt text-maf-600 mr-2"></i>Poste d'appel
-        </h1>
-        <div id="myStatsBar" class="flex items-center space-x-4 text-sm"></div>
+      <div class="flex justify-between items-center mb-8">
+        <div>
+          <h1 class="text-[1.6rem] font-extrabold text-white tracking-tight" style="letter-spacing: -0.03em;">
+            <span class="text-gradient">Poste d'appel</span>
+          </h1>
+          <p class="text-white/25 text-sm mt-1.5 font-medium">File d'attente commune</p>
+        </div>
+        <div id="myStatsBar" class="flex items-center space-x-2"></div>
       </div>
       <div id="operatorContent">
-        <div class="text-center py-20">
-          <div class="w-24 h-24 bg-maf-100 rounded-full flex items-center justify-center mx-auto mb-6">
-            <i class="fas fa-phone-volume text-maf-600 text-4xl"></i>
+        <div class="text-center py-28 slide-up">
+          <div class="relative inline-block mb-10">
+            <div class="w-32 h-32 rounded-[2rem] flex items-center justify-center mx-auto glow-pulse"
+              style="background: linear-gradient(145deg, rgba(232,100,44,0.15), rgba(232,100,44,0.04));">
+              <i class="fas fa-phone-volume text-maf-400 text-5xl float"></i>
+            </div>
+            <div class="absolute -bottom-3 left-1/2 -translate-x-1/2 w-20 h-3 rounded-full blur-lg" 
+              style="background: rgba(232,100,44,0.2);"></div>
           </div>
-          <h2 class="text-xl font-semibold text-gray-700 mb-2">Prêt à appeler</h2>
-          <p class="text-gray-500 mb-6">Cliquez sur le bouton pour obtenir le prochain prospect</p>
-          <button onclick="fetchNextProspect()" class="btn-primary text-lg px-8 py-3">
-            <i class="fas fa-forward mr-2"></i>Prochain prospect
+          <h2 class="text-2xl font-bold text-white mb-3 tracking-tight">Pret a appeler</h2>
+          <p class="text-white/30 mb-10 text-sm max-w-sm mx-auto leading-relaxed">Cliquez pour obtenir le prochain prospect de la file d'attente</p>
+          <button onclick="fetchNextProspect()" class="btn-primary text-base px-12 py-5 rounded-2xl tracking-tight">
+            <i class="fas fa-bolt mr-2.5"></i>Prochain prospect
           </button>
         </div>
       </div>
@@ -238,10 +289,12 @@ async function loadMyStats() {
     const { data } = await API.get('/dashboard/my-stats');
     const s = data.today;
     document.getElementById('myStatsBar').innerHTML = `
-      <span class="bg-gray-100 px-3 py-1 rounded-full"><i class="fas fa-phone mr-1"></i>${s.total_appels || 0} appels</span>
-      <span class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full"><i class="fas fa-calendar-check mr-1"></i>${s.nb_rdv || 0} RDV</span>
-      <span class="bg-amber-100 text-amber-700 px-3 py-1 rounded-full"><i class="fas fa-redo mr-1"></i>${s.nb_ar || 0} AR</span>
-      <span class="bg-red-100 text-red-700 px-3 py-1 rounded-full"><i class="fas fa-phone-slash mr-1"></i>${s.nb_nrp || 0} NRP</span>
+      <div class="flex items-center space-x-2">
+        <span class="glass-card-static px-3.5 py-2 rounded-xl text-xs font-semibold text-white/50"><i class="fas fa-phone mr-1.5 text-white/30"></i>${s.total_appels || 0}</span>
+        <span class="px-3.5 py-2 rounded-xl text-xs font-bold" style="background:rgba(16,185,129,0.08);color:#6ee7b7;border:1px solid rgba(16,185,129,0.1);"><i class="fas fa-calendar-check mr-1.5"></i>${s.nb_rdv || 0}</span>
+        <span class="px-3.5 py-2 rounded-xl text-xs font-bold" style="background:rgba(245,158,11,0.08);color:#fcd34d;border:1px solid rgba(245,158,11,0.1);"><i class="fas fa-redo mr-1.5"></i>${s.nb_ar || 0}</span>
+        <span class="px-3.5 py-2 rounded-xl text-xs font-bold" style="background:rgba(239,68,68,0.08);color:#fca5a5;border:1px solid rgba(239,68,68,0.1);"><i class="fas fa-phone-slash mr-1.5"></i>${s.nb_nrp || 0}</span>
+      </div>
     `;
   } catch (e) { console.error(e); }
 }
@@ -249,9 +302,11 @@ async function loadMyStats() {
 async function fetchNextProspect() {
   const content = document.getElementById('operatorContent');
   content.innerHTML = `
-    <div class="text-center py-20">
-      <i class="fas fa-spinner fa-spin text-maf-600 text-4xl mb-4"></i>
-      <p class="text-gray-500">Recherche du prochain prospect...</p>
+    <div class="text-center py-28">
+      <div class="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-5" style="background:rgba(232,100,44,0.06);">
+        <i class="fas fa-spinner fa-spin text-maf-400 text-2xl"></i>
+      </div>
+      <p class="text-white/30 text-sm font-medium">Recherche du prochain prospect...</p>
     </div>
   `;
 
@@ -259,14 +314,14 @@ async function fetchNextProspect() {
     const { data } = await API.get('/prospects/next');
     if (!data.prospect) {
       content.innerHTML = `
-        <div class="text-center py-20">
-          <div class="w-24 h-24 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
-            <i class="fas fa-check-circle text-emerald-500 text-4xl"></i>
+        <div class="text-center py-28 slide-up">
+          <div class="w-32 h-32 rounded-[2rem] flex items-center justify-center mx-auto mb-8" style="background:rgba(16,185,129,0.06);">
+            <i class="fas fa-check-circle text-emerald-400 text-5xl"></i>
           </div>
-          <h2 class="text-xl font-semibold text-gray-700 mb-2">File d'attente vide !</h2>
-          <p class="text-gray-500 mb-6">${data.message || 'Tous les prospects sont traités.'}</p>
-          <button onclick="fetchNextProspect()" class="btn-primary px-6 py-2">
-            <i class="fas fa-sync mr-2"></i>Vérifier à nouveau
+          <h2 class="text-2xl font-bold text-white mb-3 tracking-tight">File d'attente vide</h2>
+          <p class="text-white/30 mb-10 text-sm">${data.message || 'Tous les prospects sont traites.'}</p>
+          <button onclick="fetchNextProspect()" class="btn-secondary px-8 py-3.5 rounded-xl text-sm">
+            <i class="fas fa-sync mr-2"></i>Verifier a nouveau
           </button>
         </div>
       `;
@@ -276,11 +331,13 @@ async function fetchNextProspect() {
   } catch (err) {
     const msg = err.response?.data?.message || err.response?.data?.error || 'Erreur serveur';
     content.innerHTML = `
-      <div class="text-center py-20">
-        <i class="fas fa-exclamation-triangle text-amber-500 text-4xl mb-4"></i>
-        <p class="text-gray-700 font-medium mb-2">${msg}</p>
-        <button onclick="fetchNextProspect()" class="btn-primary mt-4 px-6 py-2">
-          <i class="fas fa-redo mr-2"></i>Réessayer
+      <div class="text-center py-28 slide-up">
+        <div class="w-24 h-24 rounded-2xl flex items-center justify-center mx-auto mb-6" style="background:rgba(245,158,11,0.06);">
+          <i class="fas fa-exclamation-triangle text-amber-400 text-3xl"></i>
+        </div>
+        <p class="text-white/60 font-semibold mb-2">${msg}</p>
+        <button onclick="fetchNextProspect()" class="btn-primary mt-8 px-8 py-3.5 rounded-xl">
+          <i class="fas fa-redo mr-2"></i>Reessayer
         </button>
       </div>
     `;
@@ -292,66 +349,70 @@ function renderCallCard(prospect, historique, lockedUntil) {
   const content = document.getElementById('operatorContent');
 
   const statusBadge = {
-    'NOUVEAU': '<span class="badge bg-blue-100 text-blue-700"><i class="fas fa-star mr-1"></i>Nouveau</span>',
-    'AR': '<span class="badge bg-amber-100 text-amber-700"><i class="fas fa-redo mr-1"></i>À rappeler</span>',
+    'NOUVEAU': '<span class="badge" style="background:rgba(59,130,246,0.12);color:#93c5fd;border:1px solid rgba(59,130,246,0.15);"><i class="fas fa-star mr-1 text-[8px]"></i>Nouveau</span>',
+    'AR': '<span class="badge" style="background:rgba(245,158,11,0.12);color:#fcd34d;border:1px solid rgba(245,158,11,0.15);"><i class="fas fa-redo mr-1 text-[8px]"></i>A rappeler</span>',
   }[prospect.statut] || '';
 
   const nrpBadge = prospect.compteur_nrp > 0
-    ? `<span class="badge bg-red-100 text-red-700"><i class="fas fa-phone-slash mr-1"></i>${prospect.compteur_nrp}/5 NRP</span>`
+    ? `<span class="badge" style="background:rgba(239,68,68,0.1);color:#fca5a5;border:1px solid rgba(239,68,68,0.12);"><i class="fas fa-phone-slash mr-1 text-[8px]"></i>${prospect.compteur_nrp}/5 NRP</span>`
     : '';
 
   content.innerHTML = `
-    <div class="fade-in">
+    <div class="slide-up">
       <!-- Timer de verrouillage -->
-      <div class="bg-maf-50 border border-maf-200 rounded-lg p-3 mb-4 flex justify-between items-center">
-        <div class="flex items-center text-maf-700">
-          <i class="fas fa-lock mr-2"></i>
-          <span class="text-sm font-medium">Prospect verrouillé pour vous</span>
+      <div class="glass-card-static rounded-2xl p-4 mb-6 flex justify-between items-center" style="border-color: rgba(232,100,44,0.15);">
+        <div class="flex items-center">
+          <div class="live-dot mr-3.5"></div>
+          <span class="text-xs font-semibold text-white/40">Prospect verrouille pour vous</span>
         </div>
-        <div id="lockTimer" class="text-sm font-mono font-bold text-maf-700"></div>
+        <div id="lockTimer" class="text-sm font-mono font-bold text-maf-400"></div>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Colonne gauche: Infos prospect -->
-        <div class="lg:col-span-2 space-y-4">
+        <div class="lg:col-span-2 space-y-5">
           <!-- Fiche entreprise -->
-          <div class="bg-white rounded-xl shadow-sm border p-6">
-            <div class="flex justify-between items-start mb-4">
+          <div class="glass-card rounded-2xl p-7">
+            <div class="flex justify-between items-start mb-6">
               <div>
-                <h2 class="text-xl font-bold text-gray-800">${prospect.nom_entreprise}</h2>
-                <p class="text-gray-500">${prospect.nom_dirigeant || 'Contact non renseigné'}</p>
+                <h2 class="text-xl font-extrabold text-white tracking-tight" style="letter-spacing: -0.02em;">${prospect.nom_entreprise}</h2>
+                <p class="text-white/35 text-sm mt-1 font-medium">${prospect.nom_dirigeant || 'Contact non renseigne'}</p>
               </div>
               <div class="flex space-x-2">${statusBadge} ${nrpBadge}</div>
             </div>
             <div class="grid grid-cols-2 gap-4 text-sm">
-              <div class="flex items-center">
-                <i class="fas fa-phone text-maf-500 w-5 mr-2"></i>
-                <a href="tel:${prospect.telephone}" class="text-maf-600 font-semibold text-lg hover:underline">${prospect.telephone}</a>
+              <div class="flex items-center group">
+                <div class="w-8 h-8 rounded-lg flex items-center justify-center mr-3" style="background:rgba(232,100,44,0.08);">
+                  <i class="fas fa-phone text-maf-400 text-xs"></i>
+                </div>
+                <a href="tel:${prospect.telephone}" class="text-maf-300 font-bold text-lg hover:text-maf-200 transition-colors tracking-tight">${prospect.telephone}</a>
               </div>
               <div class="flex items-center">
-                <i class="fas fa-map-marker-alt text-gray-400 w-5 mr-2"></i>
-                <span>${prospect.ville || 'Non renseigné'} ${prospect.code_postal || ''}</span>
+                <div class="w-8 h-8 rounded-lg flex items-center justify-center mr-3" style="background:rgba(255,255,255,0.03);">
+                  <i class="fas fa-map-marker-alt text-white/20 text-xs"></i>
+                </div>
+                <span class="text-white/50 font-medium">${prospect.ville || 'Non renseigne'} ${prospect.code_postal || ''}</span>
               </div>
-              ${prospect.email ? `<div class="flex items-center"><i class="fas fa-envelope text-gray-400 w-5 mr-2"></i><span>${prospect.email}</span></div>` : ''}
-              ${prospect.code_ape ? `<div class="flex items-center"><i class="fas fa-industry text-gray-400 w-5 mr-2"></i><span>APE: ${prospect.code_ape}</span></div>` : ''}
-              ${prospect.opco ? `<div class="flex items-center"><i class="fas fa-building text-gray-400 w-5 mr-2"></i><span>OPCO: ${prospect.opco}</span></div>` : ''}
-              ${prospect.budget_identifie ? `<div class="flex items-center"><i class="fas fa-euro-sign text-gray-400 w-5 mr-2"></i><span>Budget: ${prospect.budget_identifie}€</span></div>` : ''}
+              ${prospect.email ? `<div class="flex items-center"><div class="w-8 h-8 rounded-lg flex items-center justify-center mr-3" style="background:rgba(255,255,255,0.03);"><i class="fas fa-envelope text-white/20 text-xs"></i></div><span class="text-white/50">${prospect.email}</span></div>` : ''}
+              ${prospect.code_ape ? `<div class="flex items-center"><div class="w-8 h-8 rounded-lg flex items-center justify-center mr-3" style="background:rgba(255,255,255,0.03);"><i class="fas fa-industry text-white/20 text-xs"></i></div><span class="text-white/50">APE: ${prospect.code_ape}</span></div>` : ''}
+              ${prospect.opco ? `<div class="flex items-center"><div class="w-8 h-8 rounded-lg flex items-center justify-center mr-3" style="background:rgba(232,100,44,0.05);"><i class="fas fa-building text-maf-400/40 text-xs"></i></div><span class="text-white/60 font-semibold">OPCO: ${prospect.opco}</span></div>` : ''}
+              ${prospect.budget_identifie ? `<div class="flex items-center"><div class="w-8 h-8 rounded-lg flex items-center justify-center mr-3" style="background:rgba(16,185,129,0.05);"><i class="fas fa-euro-sign text-emerald-400/40 text-xs"></i></div><span class="text-white/50">Budget: ${prospect.budget_identifie}&euro;</span></div>` : ''}
             </div>
-            ${prospect.notes ? `<div class="mt-4 p-3 bg-yellow-50 rounded-lg text-sm"><i class="fas fa-sticky-note text-yellow-500 mr-2"></i>${prospect.notes}</div>` : ''}
-            ${prospect.date_rappel ? `<div class="mt-3 p-3 bg-amber-50 rounded-lg text-sm"><i class="fas fa-clock text-amber-500 mr-2"></i>Rappel prévu: ${formatDate(prospect.date_rappel)}</div>` : ''}
+            ${prospect.notes ? `<div class="mt-6 p-4 rounded-xl text-xs text-yellow-200/70 leading-relaxed" style="background:rgba(245,158,11,0.05);border:1px solid rgba(245,158,11,0.1);"><i class="fas fa-sticky-note text-yellow-400/40 mr-2"></i>${prospect.notes}</div>` : ''}
+            ${prospect.date_rappel ? `<div class="mt-3 p-4 rounded-xl text-xs text-amber-200/70" style="background:rgba(245,158,11,0.05);border:1px solid rgba(245,158,11,0.1);"><i class="fas fa-clock text-amber-400/40 mr-2"></i>Rappel prevu: ${formatDate(prospect.date_rappel)}</div>` : ''}
           </div>
 
           <!-- Historique des appels -->
-          <div class="bg-white rounded-xl shadow-sm border p-6">
-            <h3 class="font-semibold text-gray-700 mb-3"><i class="fas fa-history mr-2"></i>Historique (${historique.length})</h3>
+          <div class="glass-card rounded-2xl p-6">
+            <h3 class="font-semibold text-white/50 text-sm mb-4"><i class="fas fa-history mr-2 text-white/20"></i>Historique <span class="text-white/20">(${historique.length})</span></h3>
             ${historique.length === 0
-              ? '<p class="text-gray-400 text-sm">Premier appel pour ce prospect</p>'
-              : `<div class="space-y-2 max-h-48 overflow-y-auto">${historique.map(h => `
-                  <div class="flex items-start text-sm border-l-2 ${getResultBorderColor(h.statut_resultat)} pl-3 py-1">
-                    <span class="font-medium w-10">${h.statut_resultat}</span>
-                    <span class="text-gray-500 w-32">${formatDate(h.created_at)}</span>
-                    <span class="text-gray-600 flex-1">${h.commentaire || '-'}</span>
-                    <span class="text-gray-400 text-xs">${h.operateur_prenom} ${h.operateur_nom}</span>
+              ? '<p class="text-white/15 text-xs italic">Premier appel pour ce prospect</p>'
+              : `<div class="space-y-2 max-h-48 overflow-y-auto pr-1">${historique.map(h => `
+                  <div class="flex items-start text-xs border-l-2 ${getResultBorderColor(h.statut_resultat)} pl-3.5 py-2 hover:bg-white/[0.02] rounded-r-lg transition-colors">
+                    <span class="font-bold w-10 text-white/60">${h.statut_resultat}</span>
+                    <span class="text-white/25 w-32 font-mono text-[11px]">${formatDate(h.created_at)}</span>
+                    <span class="text-white/45 flex-1">${h.commentaire || '-'}</span>
+                    <span class="text-white/15 text-[10px] font-medium">${h.operateur_prenom} ${h.operateur_nom}</span>
                   </div>
                 `).join('')}</div>`
             }
@@ -360,42 +421,37 @@ function renderCallCard(prospect, historique, lockedUntil) {
 
         <!-- Colonne droite: Actions -->
         <div class="space-y-4">
-          <!-- Résultat de l'appel -->
-          <div class="bg-white rounded-xl shadow-sm border p-6">
-            <h3 class="font-semibold text-gray-700 mb-4"><i class="fas fa-clipboard-check mr-2"></i>Résultat de l'appel</h3>
+          <div class="glass-card rounded-2xl p-6">
+            <h3 class="font-semibold text-white/50 text-sm mb-5"><i class="fas fa-clipboard-check mr-2 text-white/20"></i>Resultat de l'appel</h3>
             <div class="space-y-3">
-              <button onclick="showResultForm('NRP', ${prospect.id})" class="w-full flex items-center justify-between p-3 rounded-lg border-2 border-gray-200 hover:border-red-400 hover:bg-red-50 transition-all">
-                <span class="flex items-center"><i class="fas fa-phone-slash text-red-500 mr-3"></i><span class="font-medium">NRP</span></span>
-                <span class="text-xs text-gray-400">Ne répond pas</span>
+              <button onclick="showResultForm('NRP', ${prospect.id})" class="action-btn" style="--btn-color:rgba(239,68,68,0.4);--btn-bg:rgba(239,68,68,0.04);--btn-glow:rgba(239,68,68,0.06);">
+                <span class="flex items-center"><i class="fas fa-phone-slash text-red-400 mr-3 text-sm"></i><span class="font-semibold text-white/65 text-sm">NRP</span></span>
+                <span class="text-[10px] text-white/20 font-medium">Ne repond pas</span>
               </button>
-              <button onclick="showResultForm('AR', ${prospect.id})" class="w-full flex items-center justify-between p-3 rounded-lg border-2 border-gray-200 hover:border-amber-400 hover:bg-amber-50 transition-all">
-                <span class="flex items-center"><i class="fas fa-redo text-amber-500 mr-3"></i><span class="font-medium">AR</span></span>
-                <span class="text-xs text-gray-400">À rappeler</span>
+              <button onclick="showResultForm('AR', ${prospect.id})" class="action-btn" style="--btn-color:rgba(245,158,11,0.4);--btn-bg:rgba(245,158,11,0.04);--btn-glow:rgba(245,158,11,0.06);">
+                <span class="flex items-center"><i class="fas fa-redo text-amber-400 mr-3 text-sm"></i><span class="font-semibold text-white/65 text-sm">AR</span></span>
+                <span class="text-[10px] text-white/20 font-medium">A rappeler</span>
               </button>
-              <button onclick="showResultForm('RDV', ${prospect.id})" class="w-full flex items-center justify-between p-3 rounded-lg border-2 border-gray-200 hover:border-emerald-400 hover:bg-emerald-50 transition-all">
-                <span class="flex items-center"><i class="fas fa-calendar-check text-emerald-500 mr-3"></i><span class="font-medium">RDV</span></span>
-                <span class="text-xs text-gray-400">Rendez-vous pris !</span>
+              <button onclick="showResultForm('RDV', ${prospect.id})" class="action-btn" style="--btn-color:rgba(16,185,129,0.4);--btn-bg:rgba(16,185,129,0.04);--btn-glow:rgba(16,185,129,0.06);">
+                <span class="flex items-center"><i class="fas fa-calendar-check text-emerald-400 mr-3 text-sm"></i><span class="font-semibold text-white/65 text-sm">RDV</span></span>
+                <span class="text-[10px] text-white/20 font-medium">Rendez-vous !</span>
               </button>
-              <button onclick="showResultForm('FIN', ${prospect.id})" class="w-full flex items-center justify-between p-3 rounded-lg border-2 border-gray-200 hover:border-gray-400 hover:bg-gray-50 transition-all">
-                <span class="flex items-center"><i class="fas fa-ban text-gray-500 mr-3"></i><span class="font-medium">FIN</span></span>
-                <span class="text-xs text-gray-400">Clôturer</span>
+              <button onclick="showResultForm('FIN', ${prospect.id})" class="action-btn" style="--btn-color:rgba(161,161,170,0.2);--btn-bg:rgba(161,161,170,0.02);--btn-glow:rgba(161,161,170,0.03);">
+                <span class="flex items-center"><i class="fas fa-ban text-white/25 mr-3 text-sm"></i><span class="font-semibold text-white/40 text-sm">FIN</span></span>
+                <span class="text-[10px] text-white/15 font-medium">Cloturer</span>
               </button>
             </div>
           </div>
 
-          <!-- Formulaire dynamique -->
           <div id="resultForm" class="hidden"></div>
 
-          <!-- Passer -->
-          <button onclick="releaseProspect(${prospect.id})" class="w-full btn-secondary py-2 text-sm">
+          <button onclick="releaseProspect(${prospect.id})" class="w-full btn-secondary py-3 text-xs rounded-xl font-semibold">
             <i class="fas fa-forward mr-2"></i>Passer ce prospect
           </button>
         </div>
       </div>
     </div>
   `;
-
-  // Démarrer le timer
   startLockTimer();
 }
 
@@ -407,14 +463,14 @@ function startLockTimer() {
     const now = new Date();
     const diff = lockEndTime - now;
     if (diff <= 0) {
-      timerEl.innerHTML = '<span class="text-red-600 timer-urgent">⚠️ Verrou expiré</span>';
+      timerEl.innerHTML = '<span class="timer-urgent font-semibold">Verrou expire</span>';
       clearInterval(lockTimer);
       return;
     }
     const mins = Math.floor(diff / 60000);
     const secs = Math.floor((diff % 60000) / 1000);
-    timerEl.textContent = `⏱ ${mins}:${secs.toString().padStart(2, '0')}`;
-    if (diff < 120000) timerEl.classList.add('text-red-600');
+    timerEl.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+    if (diff < 120000) timerEl.classList.add('timer-urgent');
   }, 1000);
 }
 
@@ -424,85 +480,98 @@ function showResultForm(type, prospectId) {
 
   const forms = {
     NRP: `
-      <div class="bg-red-50 rounded-xl border border-red-200 p-6 fade-in">
-        <h4 class="font-semibold text-red-700 mb-3"><i class="fas fa-phone-slash mr-2"></i>NRP - Ne répond pas</h4>
-        <textarea id="nrpComment" placeholder="Commentaire (optionnel)..." rows="2"
-          class="w-full border rounded-lg p-2 text-sm mb-3"></textarea>
-        <button onclick="submitResult('NRP', ${prospectId})" class="w-full btn-danger py-2">
-          <i class="fas fa-check mr-2"></i>Confirmer NRP
+      <div class="glass-card rounded-2xl p-5 scale-in" style="border-color:rgba(239,68,68,0.12);">
+        <h4 class="font-bold text-red-300 text-sm mb-3"><i class="fas fa-phone-slash mr-2"></i>NRP</h4>
+        <textarea id="nrpComment" placeholder="Commentaire optionnel..." rows="2" class="w-full p-3 rounded-xl text-xs mb-3"></textarea>
+        <button onclick="submitResult('NRP', ${prospectId})" class="w-full btn-danger py-3 rounded-xl text-sm font-semibold">
+          <i class="fas fa-check mr-2"></i>Confirmer
         </button>
       </div>
     `,
     AR: `
-      <div class="bg-amber-50 rounded-xl border border-amber-200 p-6 fade-in">
-        <h4 class="font-semibold text-amber-700 mb-3"><i class="fas fa-redo mr-2"></i>AR - À rappeler</h4>
-        <label class="block text-sm font-medium text-gray-700 mb-1">Date et heure de rappel *</label>
-        <input type="datetime-local" id="arDate" required
-          class="w-full border rounded-lg p-2 text-sm mb-3" value="${getDefaultRappelDate()}">
-        <textarea id="arComment" placeholder="Raison du rappel..." rows="2"
-          class="w-full border rounded-lg p-2 text-sm mb-3"></textarea>
-        <button onclick="submitResult('AR', ${prospectId})" class="w-full btn-warning py-2">
+      <div class="glass-card rounded-2xl p-5 scale-in" style="border-color:rgba(245,158,11,0.12);">
+        <h4 class="font-bold text-amber-300 text-sm mb-3"><i class="fas fa-redo mr-2"></i>A rappeler</h4>
+        <label class="block text-[10px] font-semibold text-white/35 mb-1.5 uppercase tracking-wider">Date de rappel *</label>
+        <input type="datetime-local" id="arDate" required class="w-full glass-input p-3 rounded-xl text-xs mb-3" value="${getDefaultRappelDate()}">
+        <textarea id="arComment" placeholder="Raison du rappel..." rows="2" class="w-full p-3 rounded-xl text-xs mb-3"></textarea>
+        <button onclick="submitResult('AR', ${prospectId})" class="w-full btn-warning py-3 rounded-xl text-sm font-semibold">
           <i class="fas fa-check mr-2"></i>Confirmer AR
         </button>
       </div>
     `,
     RDV: `
-      <div class="bg-emerald-50 rounded-xl border border-emerald-200 p-6 fade-in">
-        <h4 class="font-semibold text-emerald-700 mb-3"><i class="fas fa-calendar-check mr-2"></i>RDV - Rendez-vous</h4>
+      <div class="glass-card rounded-2xl p-5 scale-in" style="border-color:rgba(16,185,129,0.12);">
+        <h4 class="font-bold text-emerald-300 text-sm mb-4"><i class="fas fa-calendar-check mr-2"></i>Rendez-vous</h4>
         <div class="space-y-3">
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Date et heure du RDV *</label>
-            <input type="datetime-local" id="rdvDate" required class="w-full border rounded-lg p-2 text-sm">
+            <label class="block text-[10px] font-semibold text-white/35 mb-1.5 uppercase tracking-wider">Date et heure *</label>
+            <input type="datetime-local" id="rdvDate" required class="w-full glass-input p-3 rounded-xl text-xs">
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Type de RDV</label>
-            <select id="rdvType" class="w-full border rounded-lg p-2 text-sm">
-              <option value="presentiel">Présentiel</option>
-              <option value="distance">À distance</option>
-              <option value="telephone">Téléphone</option>
+            <label class="block text-[10px] font-semibold text-white/35 mb-1.5 uppercase tracking-wider">Type de RDV</label>
+            <select id="rdvType" class="w-full p-3 rounded-xl text-xs">
+              <option value="presentiel">Presentiel</option>
+              <option value="distance">A distance</option>
+              <option value="telephone">Telephone</option>
             </select>
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Lieu</label>
-            <input type="text" id="rdvLieu" placeholder="Adresse ou lien visio..." class="w-full border rounded-lg p-2 text-sm">
+            <label class="block text-[10px] font-semibold text-white/35 mb-1.5 uppercase tracking-wider">Lieu</label>
+            <input type="text" id="rdvLieu" placeholder="Adresse ou lien visio..." class="w-full glass-input p-3 rounded-xl text-xs">
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Formation souhaitée</label>
-            <textarea id="rdvFormation" placeholder="Décrivez la formation souhaitée..." rows="2"
-              class="w-full border rounded-lg p-2 text-sm"></textarea>
+            <label class="block text-[10px] font-semibold text-white/35 mb-1.5 uppercase tracking-wider">Formation souhaitee</label>
+            <textarea id="rdvFormation" placeholder="Decrivez la formation..." rows="2" class="w-full p-3 rounded-xl text-xs"></textarea>
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Commentaires</label>
-            <textarea id="rdvComments" placeholder="Notes supplémentaires..." rows="2"
-              class="w-full border rounded-lg p-2 text-sm"></textarea>
+            <label class="block text-[10px] font-semibold text-white/35 mb-1.5 uppercase tracking-wider">Commentaires</label>
+            <textarea id="rdvComments" placeholder="Notes..." rows="2" class="w-full p-3 rounded-xl text-xs"></textarea>
           </div>
         </div>
-        <button onclick="submitResult('RDV', ${prospectId})" class="w-full btn-success py-2 mt-4">
-          <i class="fas fa-check mr-2"></i>Confirmer RDV 🎉
+        <button onclick="submitResult('RDV', ${prospectId})" class="w-full btn-success py-3 rounded-xl text-sm font-semibold mt-4">
+          <i class="fas fa-check mr-2"></i>Confirmer RDV
         </button>
       </div>
     `,
     FIN: `
-      <div class="bg-gray-50 rounded-xl border border-gray-200 p-6 fade-in">
-        <h4 class="font-semibold text-gray-700 mb-3"><i class="fas fa-ban mr-2"></i>Clôturer le prospect</h4>
-        <label class="block text-sm font-medium text-gray-700 mb-1">Motif *</label>
-        <select id="finMotif" class="w-full border rounded-lg p-2 text-sm mb-3">
-          <option value="PAS_INTERESSE">Pas intéressé</option>
+      <div class="glass-card rounded-2xl p-5 scale-in" style="border-color:rgba(161,161,170,0.08);">
+        <h4 class="font-bold text-white/45 text-sm mb-3"><i class="fas fa-ban mr-2"></i>Cloturer</h4>
+        <label class="block text-[10px] font-semibold text-white/35 mb-1.5 uppercase tracking-wider">Motif *</label>
+        <select id="finMotif" class="w-full p-3 rounded-xl text-xs mb-3">
+          <option value="PAS_INTERESSE">Pas interesse</option>
           <option value="HORS_CIBLE">Hors cible</option>
-          <option value="FAUX_NUMERO">Faux numéro</option>
+          <option value="FAUX_NUMERO">Faux numero</option>
           <option value="DOUBLON">Doublon</option>
           <option value="AUTRE">Autre</option>
         </select>
-        <textarea id="finComment" placeholder="Commentaire..." rows="2"
-          class="w-full border rounded-lg p-2 text-sm mb-3"></textarea>
-        <button onclick="submitResult('FIN', ${prospectId})" class="w-full bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-lg">
-          <i class="fas fa-check mr-2"></i>Confirmer clôture
+        <textarea id="finComment" placeholder="Commentaire..." rows="2" class="w-full p-3 rounded-xl text-xs mb-3"></textarea>
+        <button onclick="submitResult('FIN', ${prospectId})" class="w-full btn-secondary py-3 rounded-xl text-sm font-semibold" style="background:rgba(255,255,255,0.06);">
+          <i class="fas fa-check mr-2"></i>Confirmer
         </button>
       </div>
     `
   };
 
   formDiv.innerHTML = forms[type];
+}
+
+function showConfetti() {
+  const container = document.createElement('div');
+  container.className = 'confetti-container';
+  document.body.appendChild(container);
+  const colors = ['#e8642c','#10b981','#f59e0b','#3b82f6','#8b5cf6','#ec4899','#06b6d4'];
+  for (let i = 0; i < 60; i++) {
+    const confetti = document.createElement('div');
+    confetti.className = 'confetti';
+    confetti.style.left = Math.random() * 100 + '%';
+    confetti.style.animationDelay = Math.random() * 2.5 + 's';
+    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+    confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '3px';
+    confetti.style.width = (Math.random() * 10 + 4) + 'px';
+    confetti.style.height = (Math.random() * 10 + 4) + 'px';
+    container.appendChild(confetti);
+  }
+  setTimeout(() => container.remove(), 4500);
 }
 
 async function submitResult(type, prospectId) {
@@ -523,7 +592,7 @@ async function submitResult(type, prospectId) {
       payload.rdv_lieu = document.getElementById('rdvLieu')?.value;
       payload.rdv_formation = document.getElementById('rdvFormation')?.value;
       payload.rdv_commentaires = document.getElementById('rdvComments')?.value;
-      payload.commentaire = `RDV pris: ${payload.rdv_formation || 'Formation à préciser'}`;
+      payload.commentaire = `RDV pris: ${payload.rdv_formation || 'Formation a preciser'}`;
       if (!payload.rdv_date) { alert('Date de RDV obligatoire'); return; }
       break;
     case 'FIN':
@@ -534,26 +603,27 @@ async function submitResult(type, prospectId) {
 
   try {
     await API.post('/appels', payload);
-    // Succès - afficher message et passer au suivant
     const content = document.getElementById('operatorContent');
-    const successMsg = {
-      NRP: '📵 NRP enregistré',
-      AR: '🔄 Rappel programmé',
-      RDV: '🎉 RDV enregistré avec succès !',
-      FIN: '🏁 Prospect clôturé'
-    }[type];
-    const successColor = {
-      NRP: 'red', AR: 'amber', RDV: 'emerald', FIN: 'gray'
+
+    if (type === 'RDV') showConfetti();
+
+    const config = {
+      NRP: { icon: 'fa-phone-slash', msg: 'NRP enregistre', color: 'rgba(239,68,68,0.06)', iconColor: 'text-red-400' },
+      AR: { icon: 'fa-redo', msg: 'Rappel programme', color: 'rgba(245,158,11,0.06)', iconColor: 'text-amber-400' },
+      RDV: { icon: 'fa-trophy', msg: 'RDV enregistre !', color: 'rgba(16,185,129,0.08)', iconColor: 'text-emerald-400' },
+      FIN: { icon: 'fa-ban', msg: 'Prospect cloture', color: 'rgba(161,161,170,0.06)', iconColor: 'text-white/35' },
     }[type];
 
     content.innerHTML = `
-      <div class="text-center py-12 fade-in">
-        <div class="w-20 h-20 bg-${successColor}-100 rounded-full flex items-center justify-center mx-auto mb-4">
-          <i class="fas fa-check text-${successColor}-500 text-3xl"></i>
+      <div class="text-center py-20 slide-up">
+        <div class="w-28 h-28 rounded-[2rem] flex items-center justify-center mx-auto mb-8 ${type === 'RDV' ? 'success-glow' : ''}"
+          style="background:${config.color};">
+          <i class="fas ${config.icon} ${config.iconColor} text-4xl"></i>
         </div>
-        <h2 class="text-xl font-semibold text-gray-700 mb-2">${successMsg}</h2>
-        <button onclick="fetchNextProspect()" class="btn-primary mt-6 px-8 py-3 text-lg">
-          <i class="fas fa-forward mr-2"></i>Prochain prospect
+        <h2 class="text-2xl font-extrabold text-white mb-3 tracking-tight">${config.msg}</h2>
+        ${type === 'RDV' ? '<p class="text-emerald-400/50 text-sm mb-8 font-semibold">Excellent travail !</p>' : '<div class="mb-8"></div>'}
+        <button onclick="fetchNextProspect()" class="btn-primary mt-2 px-12 py-5 text-base rounded-2xl tracking-tight">
+          <i class="fas fa-bolt mr-2.5"></i>Prochain prospect
         </button>
       </div>
     `;
@@ -568,7 +638,7 @@ async function releaseProspect(prospectId) {
     await API.post(`/prospects/${prospectId}/release`);
     fetchNextProspect();
   } catch (e) {
-    alert('Erreur lors de la libération du prospect');
+    alert('Erreur lors de la liberation du prospect');
   }
 }
 
@@ -579,24 +649,28 @@ function renderDashboard() {
   document.getElementById('app').innerHTML = `
     ${getNavbar('dashboard')}
     <div class="max-w-7xl mx-auto p-6 fade-in">
-      <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-bold text-gray-800">
-          <i class="fas fa-chart-bar text-maf-600 mr-2"></i>Dashboard Superviseur
-        </h1>
-        <div class="flex items-center space-x-2">
-          <span id="lastRefresh" class="text-xs text-gray-400"></span>
-          <button onclick="loadDashboard()" class="btn-secondary text-sm py-1 px-3">
-            <i class="fas fa-sync mr-1"></i>Actualiser
+      <div class="flex justify-between items-center mb-8">
+        <div>
+          <h1 class="text-[1.6rem] font-extrabold text-white tracking-tight" style="letter-spacing: -0.03em;"><span class="text-gradient">Dashboard</span></h1>
+          <p class="text-white/25 text-sm mt-1.5 font-medium">Vue d'ensemble en temps reel</p>
+        </div>
+        <div class="flex items-center space-x-3">
+          <div class="flex items-center space-x-2">
+            <div class="live-dot"></div>
+            <span id="lastRefresh" class="text-[10px] text-white/20 font-mono"></span>
+          </div>
+          <button onclick="loadDashboard()" class="btn-secondary text-xs py-2.5 px-5 rounded-xl font-semibold">
+            <i class="fas fa-sync mr-1.5"></i>Actualiser
           </button>
         </div>
       </div>
       <div id="dashboardContent">
-        <div class="text-center py-12"><i class="fas fa-spinner fa-spin text-maf-600 text-3xl"></i></div>
+        <div class="text-center py-20"><i class="fas fa-spinner fa-spin text-maf-400 text-2xl"></i></div>
       </div>
     </div>
   `;
   loadDashboard();
-  refreshInterval = setInterval(loadDashboard, 30000); // Refresh toutes les 30s
+  refreshInterval = setInterval(loadDashboard, 30000);
 }
 
 async function loadDashboard() {
@@ -605,81 +679,78 @@ async function loadDashboard() {
     const g = data.global;
     const ops = data.operators || [];
 
-    document.getElementById('lastRefresh').textContent = `Mis à jour: ${new Date().toLocaleTimeString('fr-FR')}`;
+    document.getElementById('lastRefresh').textContent = `${new Date().toLocaleTimeString('fr-FR')}`;
+
+    const progress = g.total > 0 ? Math.round(((g.rdv_pris || 0) + (g.clotures || 0)) / g.total * 100) : 0;
 
     document.getElementById('dashboardContent').innerHTML = `
       <!-- Stats globales -->
-      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
-        <div class="stat-card bg-white rounded-xl shadow-sm border p-4 text-center">
-          <div class="text-3xl font-bold text-blue-600">${g.nouveaux || 0}</div>
-          <div class="text-xs text-gray-500 mt-1"><i class="fas fa-star mr-1"></i>Nouveaux</div>
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8 stagger-children">
+        ${[
+          { val: g.nouveaux || 0, label: 'Nouveaux', icon: 'fa-star', color: '#3b82f6', bg: 'rgba(59,130,246,0.08)' },
+          { val: g.a_rappeler || 0, label: 'A rappeler', icon: 'fa-redo', color: '#f59e0b', bg: 'rgba(245,158,11,0.08)' },
+          { val: g.ar_en_retard || 0, label: 'AR retard', icon: 'fa-exclamation-triangle', color: '#ef4444', bg: 'rgba(239,68,68,0.08)', urgent: (g.ar_en_retard || 0) > 0 },
+          { val: g.rdv_pris || 0, label: 'RDV pris', icon: 'fa-calendar-check', color: '#10b981', bg: 'rgba(16,185,129,0.08)' },
+          { val: g.en_cours || 0, label: 'En cours', icon: 'fa-lock', color: '#e8642c', bg: 'rgba(232,100,44,0.08)' },
+          { val: g.clotures || 0, label: 'Clotures', icon: 'fa-ban', color: '#71717a', bg: 'rgba(113,113,122,0.08)' },
+        ].map(s => `
+          <div class="stat-card glass-card rounded-2xl p-5 text-center count-up ${s.urgent ? 'glow-pulse' : ''}" style="--accent:${s.color}50;">
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center mx-auto mb-3" style="background:${s.bg};">
+              <i class="fas ${s.icon} text-sm" style="color:${s.color};"></i>
+            </div>
+            <div class="text-[1.75rem] font-black mb-1.5 ${s.urgent ? 'timer-urgent' : ''}" style="color:${s.color};letter-spacing:-0.04em;">${s.val}</div>
+            <div class="text-[10px] text-white/25 uppercase tracking-widest font-semibold">${s.label}</div>
+          </div>
+        `).join('')}
+      </div>
+
+      <!-- Progression -->
+      <div class="glass-card rounded-2xl p-7 mb-8">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-sm font-bold text-white/45">Progression globale</h3>
+          <span class="text-sm font-mono font-extrabold text-maf-400">${progress}%</span>
         </div>
-        <div class="stat-card bg-white rounded-xl shadow-sm border p-4 text-center">
-          <div class="text-3xl font-bold text-amber-600">${g.a_rappeler || 0}</div>
-          <div class="text-xs text-gray-500 mt-1"><i class="fas fa-redo mr-1"></i>À rappeler</div>
+        <div class="w-full h-2.5 rounded-full" style="background:rgba(255,255,255,0.04);">
+          <div class="h-2.5 rounded-full progress-bar-glow transition-all duration-1000" 
+            style="width:${progress}%;background:linear-gradient(90deg,#e8642c,#f97316,#10b981);"></div>
         </div>
-        <div class="stat-card bg-white rounded-xl shadow-sm border p-4 text-center ${(g.ar_en_retard || 0) > 0 ? 'ring-2 ring-red-400' : ''}">
-          <div class="text-3xl font-bold text-red-600 ${(g.ar_en_retard || 0) > 0 ? 'timer-urgent' : ''}">${g.ar_en_retard || 0}</div>
-          <div class="text-xs text-gray-500 mt-1"><i class="fas fa-exclamation-triangle mr-1"></i>AR en retard</div>
-        </div>
-        <div class="stat-card bg-white rounded-xl shadow-sm border p-4 text-center">
-          <div class="text-3xl font-bold text-emerald-600">${g.rdv_pris || 0}</div>
-          <div class="text-xs text-gray-500 mt-1"><i class="fas fa-calendar-check mr-1"></i>RDV pris</div>
-        </div>
-        <div class="stat-card bg-white rounded-xl shadow-sm border p-4 text-center">
-          <div class="text-3xl font-bold text-maf-600">${g.en_cours || 0}</div>
-          <div class="text-xs text-gray-500 mt-1"><i class="fas fa-lock mr-1"></i>En cours</div>
-        </div>
-        <div class="stat-card bg-white rounded-xl shadow-sm border p-4 text-center">
-          <div class="text-3xl font-bold text-gray-600">${g.clotures || 0}</div>
-          <div class="text-xs text-gray-500 mt-1"><i class="fas fa-ban mr-1"></i>Clôturés</div>
+        <div class="flex justify-between text-[10px] text-white/15 mt-3 font-mono">
+          <span>${g.total || 0} prospects</span>
+          <span>${(g.rdv_pris || 0) + (g.clotures || 0)} traites</span>
         </div>
       </div>
 
-      <!-- Jauge de progression -->
-      <div class="bg-white rounded-xl shadow-sm border p-6 mb-6">
-        <h3 class="font-semibold text-gray-700 mb-3">Progression globale</h3>
-        <div class="w-full bg-gray-200 rounded-full h-4">
-          <div class="h-4 rounded-full bg-gradient-to-r from-maf-500 to-emerald-500" 
-            style="width: ${g.total > 0 ? Math.round(((g.rdv_pris || 0) + (g.clotures || 0)) / g.total * 100) : 0}%"></div>
-        </div>
-        <div class="flex justify-between text-xs text-gray-500 mt-1">
-          <span>${g.total || 0} prospects total</span>
-          <span>${g.total > 0 ? Math.round(((g.rdv_pris || 0) + (g.clotures || 0)) / g.total * 100) : 0}% traités</span>
-        </div>
-      </div>
-
-      <!-- Performance par opérateur -->
-      <div class="bg-white rounded-xl shadow-sm border p-6 mb-6">
-        <h3 class="font-semibold text-gray-700 mb-4"><i class="fas fa-users mr-2"></i>Performance du jour par opérateur</h3>
-        ${ops.length === 0 ? '<p class="text-gray-400 text-sm">Aucun opérateur actif</p>' : `
+      <!-- Performance par operateur -->
+      <div class="glass-card rounded-2xl p-7 mb-8 overflow-hidden">
+        <h3 class="text-sm font-bold text-white/45 mb-6"><i class="fas fa-users mr-2 text-white/15"></i>Performance des operateurs</h3>
+        ${ops.length === 0 ? '<p class="text-white/15 text-xs italic">Aucun operateur actif</p>' : `
           <div class="overflow-x-auto">
-            <table class="w-full text-sm">
+            <table class="w-full dark-table">
               <thead>
-                <tr class="border-b text-left text-gray-500">
-                  <th class="pb-2">Opérateur</th>
-                  <th class="pb-2 text-center">Appels</th>
-                  <th class="pb-2 text-center">RDV</th>
-                  <th class="pb-2 text-center">AR</th>
-                  <th class="pb-2 text-center">NRP</th>
-                  <th class="pb-2 text-center">FIN</th>
-                  <th class="pb-2 text-center">Tx conv.</th>
-                  <th class="pb-2 text-center">En cours</th>
+                <tr>
+                  <th class="text-left">Operateur</th>
+                  <th class="text-center">Appels</th>
+                  <th class="text-center">RDV</th>
+                  <th class="text-center">AR</th>
+                  <th class="text-center">NRP</th>
+                  <th class="text-center">FIN</th>
+                  <th class="text-center">Tx conv.</th>
+                  <th class="text-center">Statut</th>
                 </tr>
               </thead>
               <tbody>
                 ${ops.map(op => {
                   const taux = op.total_appels > 0 ? ((op.nb_rdv / op.total_appels) * 100).toFixed(1) : '0.0';
                   return `
-                    <tr class="border-b hover:bg-gray-50">
-                      <td class="py-3 font-medium">${op.prenom} ${op.nom}</td>
-                      <td class="py-3 text-center font-bold">${op.total_appels || 0}</td>
-                      <td class="py-3 text-center"><span class="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-bold">${op.nb_rdv || 0}</span></td>
-                      <td class="py-3 text-center text-amber-600">${op.nb_ar || 0}</td>
-                      <td class="py-3 text-center text-red-600">${op.nb_nrp || 0}</td>
-                      <td class="py-3 text-center text-gray-600">${op.nb_fin || 0}</td>
-                      <td class="py-3 text-center font-medium ${parseFloat(taux) >= 10 ? 'text-emerald-600' : 'text-gray-600'}">${taux}%</td>
-                      <td class="py-3 text-center">${op.prospect_en_cours ? '<span class="pulse-dot text-maf-600">●</span>' : '-'}</td>
+                    <tr>
+                      <td class="font-semibold text-white/70">${op.prenom} ${op.nom}</td>
+                      <td class="text-center font-extrabold text-white/80">${op.total_appels || 0}</td>
+                      <td class="text-center"><span class="badge" style="background:rgba(16,185,129,0.12);color:#6ee7b7;border:1px solid rgba(16,185,129,0.1);">${op.nb_rdv || 0}</span></td>
+                      <td class="text-center" style="color:#fcd34d80;">${op.nb_ar || 0}</td>
+                      <td class="text-center" style="color:#fca5a580;">${op.nb_nrp || 0}</td>
+                      <td class="text-center text-white/25">${op.nb_fin || 0}</td>
+                      <td class="text-center font-mono font-bold ${parseFloat(taux) >= 10 ? 'text-emerald-400' : 'text-white/35'}">${taux}%</td>
+                      <td class="text-center">${op.prospect_en_cours ? '<div class="live-dot mx-auto"></div>' : '<span class="text-white/10">-</span>'}</td>
                     </tr>
                   `;
                 }).join('')}
@@ -689,23 +760,23 @@ async function loadDashboard() {
         `}
       </div>
 
-      <!-- RDV à venir -->
-      <div class="bg-white rounded-xl shadow-sm border p-6">
-        <h3 class="font-semibold text-gray-700 mb-4"><i class="fas fa-calendar mr-2"></i>RDV à venir (7 jours)</h3>
-        ${(data.upcomingRdv || []).length === 0 ? '<p class="text-gray-400 text-sm">Aucun RDV planifié</p>' : `
-          <div class="space-y-2">
+      <!-- RDV a venir -->
+      <div class="glass-card rounded-2xl p-7">
+        <h3 class="text-sm font-bold text-white/45 mb-6"><i class="fas fa-calendar mr-2 text-white/15"></i>RDV a venir</h3>
+        ${(data.upcomingRdv || []).length === 0 ? '<p class="text-white/15 text-xs italic">Aucun RDV planifie</p>' : `
+          <div class="space-y-3 stagger-children">
             ${data.upcomingRdv.map(r => `
-              <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+              <div class="flex items-center justify-between p-4 rounded-xl hover-lift" style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04);">
                 <div>
-                  <span class="font-medium">${r.nom_entreprise}</span>
-                  <span class="text-gray-500 text-sm ml-2">${r.ville || ''}</span>
+                  <span class="font-semibold text-white/70 text-sm">${r.nom_entreprise}</span>
+                  <span class="text-white/20 text-xs ml-2">${r.ville || ''}</span>
                 </div>
-                <div class="flex items-center space-x-3 text-sm">
-                  <span class="badge ${r.type_rdv === 'presentiel' ? 'bg-blue-100 text-blue-700' : r.type_rdv === 'distance' ? 'bg-purple-100 text-purple-700' : 'bg-gray-100 text-gray-700'}">
+                <div class="flex items-center space-x-3 text-xs">
+                  <span class="badge" style="background:${r.type_rdv === 'presentiel' ? 'rgba(59,130,246,0.1)' : 'rgba(139,92,246,0.1)'};color:${r.type_rdv === 'presentiel' ? '#93c5fd' : '#c4b5fd'};border:1px solid ${r.type_rdv === 'presentiel' ? 'rgba(59,130,246,0.1)' : 'rgba(139,92,246,0.1)'};">
                     ${r.type_rdv}
                   </span>
-                  <span class="font-medium text-maf-700">${formatDate(r.date_rdv)}</span>
-                  <span class="text-gray-400">${r.pris_par_prenom} ${r.pris_par_nom}</span>
+                  <span class="font-mono font-bold text-maf-400 text-xs">${formatDate(r.date_rdv)}</span>
+                  <span class="text-white/15 font-medium">${r.pris_par_prenom}</span>
                 </div>
               </div>
             `).join('')}
@@ -715,9 +786,9 @@ async function loadDashboard() {
     `;
   } catch (err) {
     document.getElementById('dashboardContent').innerHTML = `
-      <div class="text-center py-12 text-red-500">
-        <i class="fas fa-exclamation-triangle text-3xl mb-3"></i>
-        <p>Erreur de chargement: ${err.response?.data?.error || err.message}</p>
+      <div class="text-center py-20 text-red-400">
+        <i class="fas fa-exclamation-triangle text-3xl mb-4"></i>
+        <p class="text-sm font-medium">Erreur: ${err.response?.data?.error || err.message}</p>
       </div>
     `;
   }
@@ -730,33 +801,37 @@ function renderProspectsList() {
   document.getElementById('app').innerHTML = `
     ${getNavbar('prospects')}
     <div class="max-w-7xl mx-auto p-6 fade-in">
-      <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-bold text-gray-800">
-          <i class="fas fa-users text-maf-600 mr-2"></i>Gestion des Prospects
-        </h1>
-        <button onclick="showAddProspectModal()" class="btn-primary">
+      <div class="flex justify-between items-center mb-8">
+        <div>
+          <h1 class="text-[1.6rem] font-extrabold text-white tracking-tight" style="letter-spacing: -0.03em;"><span class="text-gradient">Prospects</span></h1>
+          <p class="text-white/25 text-sm mt-1.5 font-medium">Base de donnees complete</p>
+        </div>
+        <button onclick="showAddProspectModal()" class="btn-primary rounded-xl text-sm py-2.5 px-5">
           <i class="fas fa-plus mr-2"></i>Ajouter
         </button>
       </div>
       <!-- Filtres -->
-      <div class="bg-white rounded-xl shadow-sm border p-4 mb-6 flex flex-wrap gap-3 items-center">
-        <div class="flex items-center space-x-2">
-          <label class="text-sm font-medium text-gray-600">Statut:</label>
-          <select id="filterStatut" onchange="loadProspects()" class="border rounded-lg px-3 py-1.5 text-sm">
+      <div class="glass-card-static rounded-2xl p-5 mb-6 flex flex-wrap gap-4 items-center">
+        <div class="flex items-center space-x-2.5">
+          <label class="text-[10px] font-semibold text-white/25 uppercase tracking-widest">Statut</label>
+          <select id="filterStatut" onchange="loadProspects()" class="px-4 py-2.5 rounded-xl text-xs font-medium">
             <option value="">Tous</option>
             <option value="NOUVEAU">Nouveau</option>
-            <option value="AR">À rappeler</option>
+            <option value="AR">A rappeler</option>
             <option value="RDV">RDV</option>
-            <option value="FIN">Clôturé</option>
+            <option value="FIN">Cloture</option>
           </select>
         </div>
-        <div class="flex-1">
-          <input type="text" id="filterSearch" placeholder="Rechercher entreprise, contact, ville..." 
-            onkeyup="debounce(loadProspects, 300)()" class="w-full border rounded-lg px-3 py-1.5 text-sm">
+        <div class="flex-1 min-w-[200px]">
+          <div class="relative group">
+            <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-white/15 text-xs transition-colors group-focus-within:text-maf-400/60"></i>
+            <input type="text" id="filterSearch" placeholder="Rechercher entreprise, contact, ville..." 
+              onkeyup="debounce(loadProspects, 300)()" class="w-full glass-input pl-11 pr-4 py-2.5 rounded-xl text-xs">
+          </div>
         </div>
       </div>
       <div id="prospectsTable">
-        <div class="text-center py-8"><i class="fas fa-spinner fa-spin text-maf-600 text-2xl"></i></div>
+        <div class="text-center py-16"><i class="fas fa-spinner fa-spin text-maf-400 text-xl"></i></div>
       </div>
     </div>
     <div id="modal" class="hidden"></div>
@@ -775,49 +850,51 @@ async function loadProspects() {
     const list = data.prospects || [];
 
     document.getElementById('prospectsTable').innerHTML = `
-      <div class="bg-white rounded-xl shadow-sm border overflow-hidden">
-        <table class="w-full text-sm">
+      <div class="glass-card-static rounded-2xl overflow-hidden">
+        <table class="w-full dark-table">
           <thead>
-            <tr class="bg-gray-50 text-left text-gray-500 text-xs uppercase">
-              <th class="px-4 py-3 text-center w-12">N°</th>
-              <th class="px-4 py-3">Entreprise</th>
-              <th class="px-4 py-3">Contact</th>
-              <th class="px-4 py-3">Téléphone</th>
-              <th class="px-4 py-3">Ville</th>
-              <th class="px-4 py-3">OPCO</th>
-              <th class="px-4 py-3">Statut</th>
-              <th class="px-4 py-3">NRP</th>
-              <th class="px-4 py-3">Verrouillé</th>
+            <tr>
+              <th class="text-center w-12">#</th>
+              <th class="text-left">Entreprise</th>
+              <th class="text-left">Contact</th>
+              <th class="text-left">Telephone</th>
+              <th class="text-left">Ville</th>
+              <th class="text-left">OPCO</th>
+              <th class="text-center">Statut</th>
+              <th class="text-center">NRP</th>
+              <th class="text-center">Lock</th>
             </tr>
           </thead>
           <tbody>
             ${list.map((p, idx) => `
-              <tr class="border-t hover:bg-gray-50 cursor-pointer" onclick="showProspectDetail(${p.id})">
-                <td class="px-4 py-3 text-center text-gray-400 font-mono text-xs">${(page - 1) * limit + idx + 1}</td>
-                <td class="px-4 py-3 font-medium">${p.nom_entreprise}</td>
-                <td class="px-4 py-3 text-gray-600">${p.nom_dirigeant || '-'}</td>
-                <td class="px-4 py-3">${p.telephone}</td>
-                <td class="px-4 py-3 text-gray-600">${p.ville || '-'}</td>
-                <td class="px-4 py-3"><span class="badge bg-gray-100 text-gray-700">${p.opco || '-'}</span></td>
-                <td class="px-4 py-3">${getStatusBadge(p.statut)}</td>
-                <td class="px-4 py-3 text-center">${p.compteur_nrp > 0 ? `<span class="text-red-600 font-bold">${p.compteur_nrp}</span>` : '-'}</td>
-                <td class="px-4 py-3">${p.locked_by ? `<span class="text-maf-600"><i class="fas fa-lock"></i> ${p.locked_by_prenom || ''}</span>` : '-'}</td>
+              <tr class="cursor-pointer" onclick="showProspectDetail(${p.id})">
+                <td class="text-center font-mono text-white/15 text-[10px]">${(page - 1) * limit + idx + 1}</td>
+                <td class="font-semibold text-white/75">${p.nom_entreprise}</td>
+                <td class="text-white/35 font-medium">${p.nom_dirigeant || '-'}</td>
+                <td class="font-mono text-white/45 text-[12px]">${p.telephone}</td>
+                <td class="text-white/35">${p.ville || '-'}</td>
+                <td><span class="badge" style="background:rgba(232,100,44,0.06);color:rgba(232,100,44,0.6);border:1px solid rgba(232,100,44,0.08);">${p.opco || '-'}</span></td>
+                <td class="text-center">${getStatusBadge(p.statut)}</td>
+                <td class="text-center">${p.compteur_nrp > 0 ? `<span class="font-bold text-xs" style="color:#fca5a5;">${p.compteur_nrp}</span>` : '<span class="text-white/8">-</span>'}</td>
+                <td class="text-center">${p.locked_by ? '<span class="text-maf-400"><i class="fas fa-lock text-[9px]"></i></span>' : '<span class="text-white/8">-</span>'}</td>
               </tr>
             `).join('')}
           </tbody>
         </table>
-        <div class="px-4 py-3 bg-gray-50 text-sm text-gray-500 flex justify-between items-center">
-          <span><strong>${data.pagination?.total || 0}</strong> prospects trouvés — affichés ${(page - 1) * limit + 1} à ${Math.min(page * limit, data.pagination?.total || 0)}</span>
+        <div class="px-6 py-4 flex justify-between items-center" style="border-top:1px solid rgba(255,255,255,0.03);">
+          <span class="text-[11px] text-white/20"><strong class="text-white/35 font-bold">${data.pagination?.total || 0}</strong> prospects — ${(page - 1) * limit + 1} a ${Math.min(page * limit, data.pagination?.total || 0)}</span>
           <div class="flex items-center space-x-2">
-            ${page > 1 ? `<button onclick="changePage(${page - 1})" class="px-3 py-1 bg-white border rounded hover:bg-gray-100 text-xs font-medium"><i class="fas fa-chevron-left mr-1"></i>Précédent</button>` : ''}
-            <span class="text-xs font-medium">Page <input type="number" id="filterPage" value="${page}" min="1" max="${data.pagination?.pages || 1}" onchange="loadProspects()" class="w-12 text-center border rounded px-1 py-0.5 mx-1"> / ${data.pagination?.pages || 1}</span>
-            ${page < (data.pagination?.pages || 1) ? `<button onclick="changePage(${page + 1})" class="px-3 py-1 bg-white border rounded hover:bg-gray-100 text-xs font-medium">Suivant<i class="fas fa-chevron-right ml-1"></i></button>` : ''}
+            ${page > 1 ? `<button onclick="changePage(${page - 1})" class="btn-secondary text-[10px] py-1.5 px-3 rounded-lg"><i class="fas fa-chevron-left"></i></button>` : ''}
+            <span class="text-[10px] text-white/25 font-mono">
+              <input type="number" id="filterPage" value="${page}" min="1" max="${data.pagination?.pages || 1}" onchange="loadProspects()" class="w-10 text-center text-[10px] rounded-lg py-1 mx-1"> / ${data.pagination?.pages || 1}
+            </span>
+            ${page < (data.pagination?.pages || 1) ? `<button onclick="changePage(${page + 1})" class="btn-secondary text-[10px] py-1.5 px-3 rounded-lg"><i class="fas fa-chevron-right"></i></button>` : ''}
           </div>
         </div>
       </div>
     `;
   } catch (err) {
-    document.getElementById('prospectsTable').innerHTML = `<p class="text-red-500">Erreur: ${err.message}</p>`;
+    document.getElementById('prospectsTable').innerHTML = `<p class="text-red-400 text-sm font-medium">Erreur: ${err.message}</p>`;
   }
 }
 
@@ -830,47 +907,48 @@ async function showProspectDetail(id) {
 
     document.getElementById('modal').innerHTML = `
       <div class="fixed inset-0 modal-overlay z-50 flex items-center justify-center p-4" onclick="closeModal(event)">
-        <div class="bg-white rounded-2xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()">
-          <div class="p-6">
-            <div class="flex justify-between items-start mb-4">
+        <div class="glass rounded-[2rem] max-w-2xl w-full max-h-[90vh] overflow-y-auto scale-in" onclick="event.stopPropagation()" style="background:rgba(20,20,24,0.95);box-shadow:0 40px 100px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04);">
+          <div class="p-8">
+            <div class="flex justify-between items-start mb-7">
               <div>
-                <h2 class="text-xl font-bold text-gray-800">${p.nom_entreprise}</h2>
-                <p class="text-gray-500">${p.nom_dirigeant || ''} - ${p.ville || ''}</p>
+                <h2 class="text-xl font-extrabold text-white tracking-tight" style="letter-spacing: -0.02em;">${p.nom_entreprise}</h2>
+                <p class="text-white/35 text-sm font-medium mt-1">${p.nom_dirigeant || ''} - ${p.ville || ''}</p>
               </div>
-              <button onclick="document.getElementById('modal').classList.add('hidden')" class="text-gray-400 hover:text-gray-600">
-                <i class="fas fa-times text-xl"></i>
+              <button onclick="document.getElementById('modal').classList.add('hidden')" class="w-9 h-9 rounded-xl flex items-center justify-center text-white/25 hover:text-white/60 hover:bg-white/5 transition-all">
+                <i class="fas fa-times"></i>
               </button>
             </div>
-            <div class="grid grid-cols-2 gap-3 text-sm mb-6">
-              <div><strong>Téléphone:</strong> ${p.telephone}</div>
-              <div><strong>Email:</strong> ${p.email || '-'}</div>
-              <div><strong>Code APE:</strong> ${p.code_ape || '-'}</div>
-              <div><strong>OPCO:</strong> ${p.opco || '-'}</div>
-              <div><strong>Statut:</strong> ${getStatusBadge(p.statut)}</div>
-              <div><strong>Budget:</strong> ${p.budget_identifie ? p.budget_identifie + '€' : '-'}</div>
+            <div class="grid grid-cols-2 gap-3 text-xs mb-7">
+              <div class="text-white/45"><strong class="text-white/25 font-semibold">Tel:</strong> <span class="font-mono">${p.telephone}</span></div>
+              <div class="text-white/45"><strong class="text-white/25 font-semibold">Email:</strong> ${p.email || '-'}</div>
+              <div class="text-white/45"><strong class="text-white/25 font-semibold">APE:</strong> ${p.code_ape || '-'}</div>
+              <div class="text-white/45"><strong class="text-white/25 font-semibold">OPCO:</strong> ${p.opco || '-'}</div>
+              <div><strong class="text-white/25 font-semibold">Statut:</strong> ${getStatusBadge(p.statut)}</div>
+              <div class="text-white/45"><strong class="text-white/25 font-semibold">Budget:</strong> ${p.budget_identifie ? p.budget_identifie + '&euro;' : '-'}</div>
             </div>
-            ${p.notes ? `<div class="bg-yellow-50 p-3 rounded-lg text-sm mb-4">${p.notes}</div>` : ''}
+            ${p.notes ? `<div class="rounded-xl p-4 text-xs text-yellow-200/50 mb-6 leading-relaxed" style="background:rgba(245,158,11,0.04);border:1px solid rgba(245,158,11,0.08);"><i class="fas fa-sticky-note text-yellow-400/30 mr-2"></i>${p.notes}</div>` : ''}
             
-            <h3 class="font-semibold text-gray-700 mb-2">Historique des appels (${appels.length})</h3>
-            <div class="space-y-1 mb-4 max-h-40 overflow-y-auto">
+            <div class="divider mb-6"></div>
+            
+            <h3 class="text-[11px] font-bold text-white/35 mb-4 uppercase tracking-widest">Historique (${appels.length})</h3>
+            <div class="space-y-1 mb-6 max-h-40 overflow-y-auto pr-1">
               ${appels.map(a => `
-                <div class="text-sm border-l-2 ${getResultBorderColor(a.statut_resultat)} pl-3 py-1">
-                  <span class="font-medium">${a.statut_resultat}</span> - 
-                  <span class="text-gray-500">${formatDate(a.created_at)}</span> - 
-                  <span class="text-gray-600">${a.commentaire || '-'}</span>
-                  <span class="text-gray-400 text-xs">(${a.operateur_prenom} ${a.operateur_nom})</span>
+                <div class="text-xs border-l-2 ${getResultBorderColor(a.statut_resultat)} pl-3.5 py-2 hover:bg-white/[0.02] rounded-r-lg transition-colors">
+                  <span class="font-bold text-white/55">${a.statut_resultat}</span>
+                  <span class="text-white/20 ml-2 font-mono text-[11px]">${formatDate(a.created_at)}</span>
+                  <span class="text-white/35 ml-2">${a.commentaire || '-'}</span>
+                  <span class="text-white/12 text-[10px] ml-2 font-medium">(${a.operateur_prenom})</span>
                 </div>
-              `).join('') || '<p class="text-gray-400 text-sm">Aucun appel</p>'}
+              `).join('') || '<p class="text-white/10 text-xs italic">Aucun appel</p>'}
             </div>
 
             ${rdvs.length > 0 ? `
-              <h3 class="font-semibold text-gray-700 mb-2">RDV (${rdvs.length})</h3>
-              <div class="space-y-2 mb-4">
+              <h3 class="text-[11px] font-bold text-white/35 mb-4 uppercase tracking-widest">RDV (${rdvs.length})</h3>
+              <div class="space-y-2">
                 ${rdvs.map(r => `
-                  <div class="bg-emerald-50 p-3 rounded-lg text-sm">
-                    <strong>${formatDate(r.date_rdv)}</strong> - ${r.type_rdv} - ${r.lieu || 'Non précisé'}
-                    <br>${r.formation_souhaitee || ''} 
-                    <span class="badge ${r.statut === 'PLANIFIE' ? 'bg-blue-100 text-blue-700' : 'bg-emerald-100 text-emerald-700'}">${r.statut}</span>
+                  <div class="rounded-xl p-4 text-xs" style="background:rgba(16,185,129,0.04);border:1px solid rgba(16,185,129,0.08);">
+                    <strong class="text-emerald-300/60 font-mono">${formatDate(r.date_rdv)}</strong> <span class="text-white/25"> - ${r.type_rdv}</span>
+                    ${r.formation_souhaitee ? `<br><span class="text-white/35 mt-1 inline-block">${r.formation_souhaitee}</span>` : ''}
                   </div>
                 `).join('')}
               </div>
@@ -888,61 +966,60 @@ async function showProspectDetail(id) {
 function showAddProspectModal() {
   document.getElementById('modal').innerHTML = `
     <div class="fixed inset-0 modal-overlay z-50 flex items-center justify-center p-4" onclick="closeModal(event)">
-      <div class="bg-white rounded-2xl shadow-xl max-w-lg w-full" onclick="event.stopPropagation()">
-        <div class="p-6">
-          <div class="flex justify-between items-center mb-4">
-            <h2 class="text-xl font-bold text-gray-800"><i class="fas fa-plus-circle text-maf-600 mr-2"></i>Ajouter un prospect</h2>
-            <button onclick="document.getElementById('modal').classList.add('hidden')" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times"></i></button>
+      <div class="glass rounded-[2rem] max-w-lg w-full scale-in" onclick="event.stopPropagation()" style="background:rgba(20,20,24,0.95);box-shadow:0 40px 100px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04);">
+        <div class="p-8">
+          <div class="flex justify-between items-center mb-7">
+            <h2 class="text-lg font-extrabold text-white tracking-tight"><i class="fas fa-plus-circle text-maf-400 mr-2"></i>Ajouter un prospect</h2>
+            <button onclick="document.getElementById('modal').classList.add('hidden')" class="text-white/25 hover:text-white/60 transition-colors"><i class="fas fa-times"></i></button>
           </div>
           <form id="addProspectForm" class="space-y-3">
             <div class="grid grid-cols-2 gap-3">
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Entreprise *</label>
-                <input type="text" id="pNom" required class="w-full border rounded-lg p-2 text-sm">
+                <label class="block text-[10px] font-semibold text-white/25 mb-1.5 uppercase tracking-wider">Entreprise *</label>
+                <input type="text" id="pNom" required class="w-full glass-input p-3 rounded-xl text-xs">
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Contact</label>
-                <input type="text" id="pContact" class="w-full border rounded-lg p-2 text-sm">
+                <label class="block text-[10px] font-semibold text-white/25 mb-1.5 uppercase tracking-wider">Contact</label>
+                <input type="text" id="pContact" class="w-full glass-input p-3 rounded-xl text-xs">
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Téléphone *</label>
-                <input type="tel" id="pTel" required class="w-full border rounded-lg p-2 text-sm">
+                <label class="block text-[10px] font-semibold text-white/25 mb-1.5 uppercase tracking-wider">Telephone *</label>
+                <input type="tel" id="pTel" required class="w-full glass-input p-3 rounded-xl text-xs">
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                <input type="email" id="pEmail" class="w-full border rounded-lg p-2 text-sm">
+                <label class="block text-[10px] font-semibold text-white/25 mb-1.5 uppercase tracking-wider">Email</label>
+                <input type="email" id="pEmail" class="w-full glass-input p-3 rounded-xl text-xs">
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Ville</label>
-                <input type="text" id="pVille" class="w-full border rounded-lg p-2 text-sm">
+                <label class="block text-[10px] font-semibold text-white/25 mb-1.5 uppercase tracking-wider">Ville</label>
+                <input type="text" id="pVille" class="w-full glass-input p-3 rounded-xl text-xs">
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Code Postal</label>
-                <input type="text" id="pCP" class="w-full border rounded-lg p-2 text-sm">
+                <label class="block text-[10px] font-semibold text-white/25 mb-1.5 uppercase tracking-wider">Code Postal</label>
+                <input type="text" id="pCP" class="w-full glass-input p-3 rounded-xl text-xs">
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Code APE</label>
-                <input type="text" id="pAPE" class="w-full border rounded-lg p-2 text-sm">
+                <label class="block text-[10px] font-semibold text-white/25 mb-1.5 uppercase tracking-wider">Code APE</label>
+                <input type="text" id="pAPE" class="w-full glass-input p-3 rounded-xl text-xs">
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">OPCO</label>
-                <select id="pOPCO" class="w-full border rounded-lg p-2 text-sm">
-                  <option value="">Non déterminé</option>
+                <label class="block text-[10px] font-semibold text-white/25 mb-1.5 uppercase tracking-wider">OPCO</label>
+                <select id="pOPCO" class="w-full p-3 rounded-xl text-xs">
+                  <option value="">Non determine</option>
                   <option value="AGEFICE">AGEFICE</option>
                   <option value="FAFCEA">FAFCEA</option>
                   <option value="AKTO">AKTO</option>
                   <option value="ATLAS">ATLAS</option>
                   <option value="OPCO_EP">OPCO EP</option>
-                  <option value="AUTRE">Autre</option>
                 </select>
               </div>
             </div>
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Notes</label>
-              <textarea id="pNotes" rows="2" class="w-full border rounded-lg p-2 text-sm"></textarea>
+              <label class="block text-[10px] font-semibold text-white/25 mb-1.5 uppercase tracking-wider">Notes</label>
+              <textarea id="pNotes" rows="2" class="w-full p-3 rounded-xl text-xs"></textarea>
             </div>
-            <button type="submit" class="w-full btn-primary py-2">
-              <i class="fas fa-plus mr-2"></i>Ajouter le prospect
+            <button type="submit" class="w-full btn-primary py-3.5 rounded-xl mt-3 font-semibold">
+              <i class="fas fa-plus mr-2"></i>Ajouter
             </button>
           </form>
         </div>
@@ -967,9 +1044,7 @@ function showAddProspectModal() {
       });
       document.getElementById('modal').classList.add('hidden');
       loadProspects();
-    } catch (err) {
-      alert(err.response?.data?.error || 'Erreur');
-    }
+    } catch (err) { alert(err.response?.data?.error || 'Erreur'); }
   });
 }
 
@@ -980,11 +1055,12 @@ function renderRDVList() {
   document.getElementById('app').innerHTML = `
     ${getNavbar('rdv')}
     <div class="max-w-7xl mx-auto p-6 fade-in">
-      <h1 class="text-2xl font-bold text-gray-800 mb-6">
-        <i class="fas fa-calendar-check text-maf-600 mr-2"></i>Rendez-vous
-      </h1>
+      <div class="mb-8">
+        <h1 class="text-[1.6rem] font-extrabold text-white tracking-tight" style="letter-spacing: -0.03em;"><span class="text-gradient">Rendez-vous</span></h1>
+        <p class="text-white/25 text-sm mt-1.5 font-medium">Tous les RDV planifies</p>
+      </div>
       <div id="rdvContent">
-        <div class="text-center py-8"><i class="fas fa-spinner fa-spin text-maf-600 text-2xl"></i></div>
+        <div class="text-center py-16"><i class="fas fa-spinner fa-spin text-maf-400 text-xl"></i></div>
       </div>
     </div>
   `;
@@ -997,29 +1073,32 @@ async function loadRDV() {
     const list = data.rdv || [];
 
     document.getElementById('rdvContent').innerHTML = list.length === 0
-      ? '<div class="text-center py-12 text-gray-400"><i class="fas fa-calendar text-4xl mb-3"></i><p>Aucun RDV enregistré</p></div>'
+      ? `<div class="text-center py-24 text-white/15">
+          <div class="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-5" style="background:rgba(255,255,255,0.02);">
+            <i class="fas fa-calendar text-3xl text-white/10"></i>
+          </div>
+          <p class="text-sm font-medium">Aucun RDV planifie</p>
+        </div>`
       : `
-        <div class="grid gap-4">
+        <div class="grid gap-4 stagger-children">
           ${list.map(r => `
-            <div class="bg-white rounded-xl shadow-sm border p-5 hover:shadow-md transition-shadow">
+            <div class="glass-card rounded-2xl p-6">
               <div class="flex justify-between items-start">
                 <div>
-                  <h3 class="font-bold text-gray-800">${r.nom_entreprise}</h3>
-                  <p class="text-gray-500 text-sm">${r.nom_dirigeant || ''} - ${r.ville || ''}</p>
-                  <p class="text-sm mt-1"><i class="fas fa-phone text-gray-400 mr-1"></i>${r.telephone}</p>
-                  ${r.formation_souhaitee ? `<p class="text-sm mt-1"><i class="fas fa-graduation-cap text-maf-500 mr-1"></i>${r.formation_souhaitee}</p>` : ''}
-                  ${r.commentaires ? `<p class="text-sm text-gray-500 mt-1">${r.commentaires}</p>` : ''}
+                  <h3 class="font-bold text-white/85 text-[15px] tracking-tight">${r.nom_entreprise}</h3>
+                  <p class="text-white/25 text-xs mt-1.5 font-medium">${r.nom_dirigeant || ''} - ${r.ville || ''}</p>
+                  <p class="text-xs mt-3"><i class="fas fa-phone text-white/10 mr-2"></i><span class="text-white/35 font-mono">${r.telephone}</span></p>
+                  ${r.formation_souhaitee ? `<p class="text-xs mt-1.5"><i class="fas fa-graduation-cap text-maf-400/40 mr-2"></i><span class="text-white/45">${r.formation_souhaitee}</span></p>` : ''}
+                  ${r.commentaires ? `<p class="text-xs text-white/20 mt-1.5 italic">${r.commentaires}</p>` : ''}
                 </div>
                 <div class="text-right">
-                  <div class="text-lg font-bold text-maf-700">${formatDate(r.date_rdv)}</div>
-                  <span class="badge ${r.type_rdv === 'presentiel' ? 'bg-blue-100 text-blue-700' : r.type_rdv === 'distance' ? 'bg-purple-100 text-purple-700' : 'bg-gray-100 text-gray-700'}">
-                    <i class="fas ${r.type_rdv === 'presentiel' ? 'fa-building' : r.type_rdv === 'distance' ? 'fa-video' : 'fa-phone'} mr-1"></i>${r.type_rdv}
+                  <div class="text-[15px] font-extrabold font-mono text-maf-400 tracking-tight">${formatDate(r.date_rdv)}</div>
+                  <span class="badge mt-2.5 inline-flex" style="background:${r.type_rdv === 'presentiel' ? 'rgba(59,130,246,0.1)' : 'rgba(139,92,246,0.1)'};color:${r.type_rdv === 'presentiel' ? '#93c5fd' : '#c4b5fd'};border:1px solid ${r.type_rdv === 'presentiel' ? 'rgba(59,130,246,0.08)' : 'rgba(139,92,246,0.08)'};">
+                    <i class="fas ${r.type_rdv === 'presentiel' ? 'fa-building' : r.type_rdv === 'distance' ? 'fa-video' : 'fa-phone'} mr-1.5"></i>${r.type_rdv}
                   </span>
-                  ${r.lieu ? `<p class="text-xs text-gray-500 mt-1">${r.lieu}</p>` : ''}
-                  <div class="mt-2">
-                    <span class="badge ${getStatutRDVColor(r.statut)}">${r.statut}</span>
-                  </div>
-                  <p class="text-xs text-gray-400 mt-1">Par ${r.pris_par_prenom} ${r.pris_par_nom}</p>
+                  ${r.lieu ? `<p class="text-[10px] text-white/15 mt-2 font-medium">${r.lieu}</p>` : ''}
+                  <div class="mt-2.5"><span class="badge" style="${getStatutRDVStyle(r.statut)}">${r.statut}</span></div>
+                  <p class="text-[10px] text-white/12 mt-2 font-medium">Par ${r.pris_par_prenom} ${r.pris_par_nom}</p>
                 </div>
               </div>
             </div>
@@ -1027,7 +1106,7 @@ async function loadRDV() {
         </div>
       `;
   } catch (err) {
-    document.getElementById('rdvContent').innerHTML = `<p class="text-red-500">Erreur: ${err.message}</p>`;
+    document.getElementById('rdvContent').innerHTML = `<p class="text-red-400 text-sm font-medium">Erreur: ${err.message}</p>`;
   }
 }
 
@@ -1038,17 +1117,18 @@ function renderAdmin() {
   document.getElementById('app').innerHTML = `
     ${getNavbar('admin')}
     <div class="max-w-7xl mx-auto p-6 fade-in">
-      <h1 class="text-2xl font-bold text-gray-800 mb-6">
-        <i class="fas fa-cog text-maf-600 mr-2"></i>Administration
-      </h1>
+      <div class="mb-8">
+        <h1 class="text-[1.6rem] font-extrabold text-white tracking-tight" style="letter-spacing: -0.03em;"><span class="text-gradient">Administration</span></h1>
+        <p class="text-white/25 text-sm mt-1.5 font-medium">Gestion de la plateforme</p>
+      </div>
       
       <!-- Tabs -->
-      <div class="flex space-x-1 mb-6 bg-gray-100 p-1 rounded-lg w-fit">
-        <button onclick="switchAdminTab('users')" id="tabUsers" class="px-4 py-2 rounded-md text-sm font-medium bg-white shadow-sm text-maf-700">
-          <i class="fas fa-users mr-1"></i>Utilisateurs
+      <div class="flex space-x-1 mb-8 p-1.5 rounded-2xl w-fit" style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04);">
+        <button onclick="switchAdminTab('users')" id="tabUsers" class="px-6 py-2.5 rounded-xl text-xs font-semibold transition-all duration-300" style="background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.7);">
+          <i class="fas fa-users mr-2 text-maf-400/60"></i>Utilisateurs
         </button>
-        <button onclick="switchAdminTab('import')" id="tabImport" class="px-4 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-200">
-          <i class="fas fa-file-import mr-1"></i>Import CSV
+        <button onclick="switchAdminTab('import')" id="tabImport" class="px-6 py-2.5 rounded-xl text-xs font-semibold text-white/25 hover:text-white/45 transition-all duration-300">
+          <i class="fas fa-file-import mr-2"></i>Import CSV
         </button>
       </div>
       
@@ -1061,10 +1141,14 @@ function renderAdmin() {
 
 function switchAdminTab(tab) {
   document.querySelectorAll('[id^="tab"]').forEach(el => {
-    el.className = 'px-4 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-200';
+    el.style.background = 'transparent';
+    el.style.color = 'rgba(255,255,255,0.25)';
   });
-  document.getElementById(`tab${tab.charAt(0).toUpperCase() + tab.slice(1)}`).className = 
-    'px-4 py-2 rounded-md text-sm font-medium bg-white shadow-sm text-maf-700';
+  const activeTab = document.getElementById(`tab${tab.charAt(0).toUpperCase() + tab.slice(1)}`);
+  if (activeTab) {
+    activeTab.style.background = 'rgba(255,255,255,0.06)';
+    activeTab.style.color = 'rgba(255,255,255,0.7)';
+  }
 
   if (tab === 'users') loadUsers();
   else if (tab === 'import') renderImportCSV();
@@ -1074,36 +1158,36 @@ async function loadUsers() {
   try {
     const { data } = await API.get('/users');
     document.getElementById('adminContent').innerHTML = `
-      <div class="bg-white rounded-xl shadow-sm border overflow-hidden">
-        <div class="px-6 py-4 border-b flex justify-between items-center">
-          <h3 class="font-semibold text-gray-700">Utilisateurs (${data.users.length})</h3>
-          <button onclick="showAddUserModal()" class="btn-primary text-sm py-1.5">
-            <i class="fas fa-user-plus mr-1"></i>Ajouter
+      <div class="glass-card-static rounded-2xl overflow-hidden">
+        <div class="px-7 py-5 flex justify-between items-center" style="border-bottom:1px solid rgba(255,255,255,0.04);">
+          <h3 class="text-sm font-bold text-white/45">Utilisateurs <span class="text-white/20">(${data.users.length})</span></h3>
+          <button onclick="showAddUserModal()" class="btn-primary text-xs py-2.5 px-5 rounded-xl font-semibold">
+            <i class="fas fa-user-plus mr-2"></i>Ajouter
           </button>
         </div>
-        <table class="w-full text-sm">
+        <table class="w-full dark-table">
           <thead>
-            <tr class="bg-gray-50 text-left text-gray-500 text-xs uppercase">
-              <th class="px-6 py-3">Nom</th>
-              <th class="px-6 py-3">Email</th>
-              <th class="px-6 py-3">Rôle</th>
-              <th class="px-6 py-3">Statut</th>
-              <th class="px-6 py-3">Actions</th>
+            <tr>
+              <th class="text-left">Nom</th>
+              <th class="text-left">Email</th>
+              <th class="text-center">Role</th>
+              <th class="text-center">Statut</th>
+              <th class="text-center">Actions</th>
             </tr>
           </thead>
           <tbody>
             ${data.users.map(u => `
-              <tr class="border-t hover:bg-gray-50">
-                <td class="px-6 py-3 font-medium">${u.prenom} ${u.nom}</td>
-                <td class="px-6 py-3 text-gray-600">${u.email}</td>
-                <td class="px-6 py-3"><span class="badge ${getRoleBadgeColor(u.role)}">${getRoleLabel(u.role)}</span></td>
-                <td class="px-6 py-3">${u.actif ? '<span class="text-emerald-600">● Actif</span>' : '<span class="text-red-600">● Inactif</span>'}</td>
-                <td class="px-6 py-3">
+              <tr>
+                <td class="font-semibold text-white/65">${u.prenom} ${u.nom}</td>
+                <td class="text-white/35 font-mono text-[12px]">${u.email}</td>
+                <td class="text-center"><span class="badge" style="${getRoleBadgeStyle(u.role)}">${getRoleLabel(u.role)}</span></td>
+                <td class="text-center">${u.actif ? '<div class="flex items-center justify-center space-x-1.5"><div class="live-dot" style="width:5px;height:5px;"></div><span class="text-emerald-400/70 text-[11px] font-semibold">Actif</span></div>' : '<span class="text-red-400/50 text-[11px] font-semibold">Inactif</span>'}</td>
+                <td class="text-center">
                   ${u.id !== currentUser.id ? `
-                    <button onclick="toggleUserActive(${u.id}, ${u.actif})" class="text-sm ${u.actif ? 'text-red-600 hover:text-red-800' : 'text-emerald-600 hover:text-emerald-800'}">
-                      <i class="fas ${u.actif ? 'fa-user-slash' : 'fa-user-check'} mr-1"></i>${u.actif ? 'Désactiver' : 'Activer'}
+                    <button onclick="toggleUserActive(${u.id}, ${u.actif})" class="text-xs transition-all font-semibold ${u.actif ? 'text-red-400/50 hover:text-red-400' : 'text-emerald-400/50 hover:text-emerald-400'}">
+                      <i class="fas ${u.actif ? 'fa-user-slash' : 'fa-user-check'} mr-1"></i>${u.actif ? 'Desact.' : 'Activer'}
                     </button>
-                  ` : '<span class="text-gray-400 text-xs">Vous</span>'}
+                  ` : '<span class="text-white/10 text-[10px] font-medium">Vous</span>'}
                 </td>
               </tr>
             `).join('')}
@@ -1112,31 +1196,31 @@ async function loadUsers() {
       </div>
     `;
   } catch (err) {
-    document.getElementById('adminContent').innerHTML = `<p class="text-red-500">Erreur: ${err.message}</p>`;
+    document.getElementById('adminContent').innerHTML = `<p class="text-red-400 text-sm font-medium">Erreur: ${err.message}</p>`;
   }
 }
 
 function showAddUserModal() {
   document.getElementById('modal').innerHTML = `
     <div class="fixed inset-0 modal-overlay z-50 flex items-center justify-center p-4" onclick="closeModal(event)">
-      <div class="bg-white rounded-2xl shadow-xl max-w-md w-full" onclick="event.stopPropagation()">
-        <div class="p-6">
-          <h2 class="text-xl font-bold text-gray-800 mb-4"><i class="fas fa-user-plus text-maf-600 mr-2"></i>Nouvel utilisateur</h2>
+      <div class="glass rounded-[2rem] max-w-md w-full scale-in" onclick="event.stopPropagation()" style="background:rgba(20,20,24,0.95);box-shadow:0 40px 100px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04);">
+        <div class="p-8">
+          <h2 class="text-lg font-extrabold text-white mb-7 tracking-tight"><i class="fas fa-user-plus text-maf-400 mr-2"></i>Nouvel utilisateur</h2>
           <form id="addUserForm" class="space-y-3">
             <div class="grid grid-cols-2 gap-3">
-              <div><label class="block text-sm font-medium mb-1">Prénom *</label><input type="text" id="uPrenom" required class="w-full border rounded-lg p-2 text-sm"></div>
-              <div><label class="block text-sm font-medium mb-1">Nom *</label><input type="text" id="uNom" required class="w-full border rounded-lg p-2 text-sm"></div>
+              <div><label class="block text-[10px] font-semibold text-white/25 mb-1.5 uppercase tracking-wider">Prenom *</label><input type="text" id="uPrenom" required class="w-full glass-input p-3 rounded-xl text-xs"></div>
+              <div><label class="block text-[10px] font-semibold text-white/25 mb-1.5 uppercase tracking-wider">Nom *</label><input type="text" id="uNom" required class="w-full glass-input p-3 rounded-xl text-xs"></div>
             </div>
-            <div><label class="block text-sm font-medium mb-1">Email *</label><input type="email" id="uEmail" required class="w-full border rounded-lg p-2 text-sm"></div>
-            <div><label class="block text-sm font-medium mb-1">Mot de passe *</label><input type="password" id="uPassword" required minlength="6" class="w-full border rounded-lg p-2 text-sm"></div>
-            <div><label class="block text-sm font-medium mb-1">Rôle</label>
-              <select id="uRole" class="w-full border rounded-lg p-2 text-sm">
-                <option value="operator">Téléopérateur</option>
+            <div><label class="block text-[10px] font-semibold text-white/25 mb-1.5 uppercase tracking-wider">Email *</label><input type="email" id="uEmail" required class="w-full glass-input p-3 rounded-xl text-xs"></div>
+            <div><label class="block text-[10px] font-semibold text-white/25 mb-1.5 uppercase tracking-wider">Mot de passe *</label><input type="password" id="uPassword" required minlength="6" class="w-full glass-input p-3 rounded-xl text-xs"></div>
+            <div><label class="block text-[10px] font-semibold text-white/25 mb-1.5 uppercase tracking-wider">Role</label>
+              <select id="uRole" class="w-full p-3 rounded-xl text-xs">
+                <option value="operator">Teleoperateur</option>
                 <option value="supervisor">Superviseur</option>
                 <option value="admin">Administrateur</option>
               </select>
             </div>
-            <button type="submit" class="w-full btn-primary py-2"><i class="fas fa-plus mr-2"></i>Créer l'utilisateur</button>
+            <button type="submit" class="w-full btn-primary py-3.5 rounded-xl mt-3 font-semibold"><i class="fas fa-plus mr-2"></i>Creer</button>
           </form>
         </div>
       </div>
@@ -1161,37 +1245,32 @@ function showAddUserModal() {
 }
 
 async function toggleUserActive(userId, currentActive) {
-  if (!confirm(currentActive ? 'Désactiver cet utilisateur ?' : 'Réactiver cet utilisateur ?')) return;
+  if (!confirm(currentActive ? 'Desactiver cet utilisateur ?' : 'Reactiver cet utilisateur ?')) return;
   try {
-    if (currentActive) {
-      await API.delete(`/users/${userId}`);
-    } else {
-      await API.put(`/users/${userId}`, { actif: true });
-    }
+    if (currentActive) await API.delete(`/users/${userId}`);
+    else await API.put(`/users/${userId}`, { actif: true });
     loadUsers();
   } catch (err) { alert(err.response?.data?.error || 'Erreur'); }
 }
 
 function renderImportCSV() {
   document.getElementById('adminContent').innerHTML = `
-    <div class="bg-white rounded-xl shadow-sm border p-6">
-      <h3 class="font-semibold text-gray-700 mb-4"><i class="fas fa-file-import text-maf-600 mr-2"></i>Import de prospects (CSV)</h3>
-      <div class="bg-gray-50 rounded-lg p-4 mb-4 text-sm">
-        <p class="font-medium mb-2">Format attendu (séparateur: point-virgule) :</p>
-        <code class="text-xs bg-gray-200 p-2 rounded block">nom_entreprise;nom_dirigeant;telephone;email;ville;code_postal;code_ape;opco;notes</code>
-        <p class="text-gray-500 mt-2">Les champs nom_entreprise et telephone sont obligatoires.</p>
+    <div class="glass-card rounded-2xl p-8">
+      <h3 class="text-sm font-bold text-white/45 mb-6"><i class="fas fa-file-import text-maf-400 mr-2"></i>Import CSV</h3>
+      <div class="rounded-xl p-5 mb-6 text-xs" style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04);">
+        <p class="font-semibold text-white/35 mb-2">Format (separateur: ;)</p>
+        <code class="text-[11px] p-3 rounded-lg block font-mono leading-relaxed" style="background:rgba(255,255,255,0.03);color:rgba(232,100,44,0.6);">nom_entreprise;nom_dirigeant;telephone;email;ville;code_postal;code_ape;opco;notes</code>
       </div>
-      <textarea id="csvData" rows="10" placeholder="Collez vos données CSV ici...&#10;Boulangerie Test;Jean Dupont;05 63 00 00 00;test@test.fr;Castres;81100;1071C;AGEFICE;Notes"
-        class="w-full border rounded-lg p-3 text-sm font-mono mb-4"></textarea>
-      <button onclick="importCSV()" class="btn-primary"><i class="fas fa-upload mr-2"></i>Importer</button>
-      <div id="importResult" class="mt-4 hidden"></div>
+      <textarea id="csvData" rows="8" placeholder="Collez vos donnees CSV ici..." class="w-full p-4 rounded-xl text-xs font-mono mb-5"></textarea>
+      <button onclick="importCSV()" class="btn-primary rounded-xl font-semibold"><i class="fas fa-upload mr-2"></i>Importer</button>
+      <div id="importResult" class="mt-5 hidden"></div>
     </div>
   `;
 }
 
 async function importCSV() {
   const raw = document.getElementById('csvData').value.trim();
-  if (!raw) { alert('Collez des données CSV'); return; }
+  if (!raw) { alert('Collez des donnees CSV'); return; }
 
   const lines = raw.split('\n').filter(l => l.trim());
   const prospects = lines.map(line => {
@@ -1208,21 +1287,17 @@ async function importCSV() {
     const resultDiv = document.getElementById('importResult');
     resultDiv.classList.remove('hidden');
     resultDiv.innerHTML = `
-      <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-4">
-        <p class="font-medium text-emerald-700"><i class="fas fa-check-circle mr-2"></i>${data.imported} prospects importés sur ${data.total}</p>
-        ${data.errors?.length ? `<div class="mt-2 text-sm text-red-600">${data.errors.join('<br>')}</div>` : ''}
+      <div class="rounded-xl p-5 scale-in" style="background:rgba(16,185,129,0.05);border:1px solid rgba(16,185,129,0.12);">
+        <p class="font-semibold text-emerald-300 text-xs"><i class="fas fa-check-circle mr-2"></i>${data.imported} importes sur ${data.total}</p>
+        ${data.errors?.length ? `<div class="mt-3 text-[10px] text-red-300/50 leading-relaxed">${data.errors.join('<br>')}</div>` : ''}
       </div>
     `;
-  } catch (err) {
-    alert(err.response?.data?.error || 'Erreur d\'import');
-  }
+  } catch (err) { alert(err.response?.data?.error || 'Erreur d\'import'); }
 }
 
 function changePage(newPage) {
   const pageInput = document.getElementById('filterPage');
-  if (pageInput) {
-    pageInput.value = newPage;
-  }
+  if (pageInput) pageInput.value = newPage;
   loadProspects();
 }
 
@@ -1239,31 +1314,41 @@ function formatDate(dateStr) {
 
 function getStatusBadge(statut) {
   const map = {
-    NOUVEAU: '<span class="badge bg-blue-100 text-blue-700">Nouveau</span>',
-    AR: '<span class="badge bg-amber-100 text-amber-700">À rappeler</span>',
-    RDV: '<span class="badge bg-emerald-100 text-emerald-700">RDV</span>',
-    FIN: '<span class="badge bg-gray-100 text-gray-700">Clôturé</span>',
+    NOUVEAU: '<span class="badge" style="background:rgba(59,130,246,0.1);color:#93c5fd;border:1px solid rgba(59,130,246,0.1);">Nouveau</span>',
+    AR: '<span class="badge" style="background:rgba(245,158,11,0.1);color:#fcd34d;border:1px solid rgba(245,158,11,0.1);">AR</span>',
+    RDV: '<span class="badge" style="background:rgba(16,185,129,0.1);color:#6ee7b7;border:1px solid rgba(16,185,129,0.1);">RDV</span>',
+    FIN: '<span class="badge" style="background:rgba(113,113,122,0.1);color:#a1a1aa;border:1px solid rgba(113,113,122,0.08);">Cloture</span>',
   };
   return map[statut] || statut;
 }
 
 function getResultBorderColor(statut) {
-  return { NRP: 'border-red-400', AR: 'border-amber-400', RDV: 'border-emerald-400', FIN: 'border-gray-400' }[statut] || 'border-gray-200';
+  return { NRP: 'border-red-500/30', AR: 'border-amber-500/30', RDV: 'border-emerald-500/30', FIN: 'border-white/8' }[statut] || 'border-white/5';
+}
+
+function getStatutRDVStyle(statut) {
+  return {
+    PLANIFIE: 'background:rgba(59,130,246,0.1);color:#93c5fd;border:1px solid rgba(59,130,246,0.08);',
+    CONFIRME: 'background:rgba(16,185,129,0.1);color:#6ee7b7;border:1px solid rgba(16,185,129,0.08);',
+    REALISE: 'background:rgba(34,197,94,0.1);color:#86efac;border:1px solid rgba(34,197,94,0.08);',
+    ANNULE: 'background:rgba(239,68,68,0.1);color:#fca5a5;border:1px solid rgba(239,68,68,0.08);',
+    REPORTE: 'background:rgba(245,158,11,0.1);color:#fcd34d;border:1px solid rgba(245,158,11,0.08);',
+  }[statut] || 'background:rgba(113,113,122,0.1);color:#a1a1aa;border:1px solid rgba(113,113,122,0.08);';
 }
 
 function getStatutRDVColor(statut) {
-  return {
-    PLANIFIE: 'bg-blue-100 text-blue-700',
-    CONFIRME: 'bg-emerald-100 text-emerald-700',
-    REALISE: 'bg-green-100 text-green-700',
-    ANNULE: 'bg-red-100 text-red-700',
-    REPORTE: 'bg-amber-100 text-amber-700',
-  }[statut] || 'bg-gray-100 text-gray-700';
+  return getStatutRDVStyle(statut);
 }
 
-function getRoleBadgeColor(role) {
-  return { admin: 'bg-red-100 text-red-700', supervisor: 'bg-purple-100 text-purple-700', operator: 'bg-blue-100 text-blue-700' }[role] || 'bg-gray-100';
+function getRoleBadgeStyle(role) {
+  return {
+    admin: 'background:rgba(232,100,44,0.1);color:#fca5a5;border:1px solid rgba(232,100,44,0.1);',
+    supervisor: 'background:rgba(139,92,246,0.1);color:#c4b5fd;border:1px solid rgba(139,92,246,0.08);',
+    operator: 'background:rgba(59,130,246,0.1);color:#93c5fd;border:1px solid rgba(59,130,246,0.08);',
+  }[role] || 'background:rgba(113,113,122,0.1);color:#a1a1aa;border:1px solid rgba(113,113,122,0.08);';
 }
+
+function getRoleBadgeColor(role) { return ''; }
 
 function getDefaultRappelDate() {
   const d = new Date();
