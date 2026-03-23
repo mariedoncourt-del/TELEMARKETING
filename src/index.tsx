@@ -123,10 +123,10 @@ function getMainHTML(): string {
         --bg-primary: #F5F5F5;
         --bg-white: #FFFFFF;
         --bg-card: #FFFFFF;
-        --text-dark: #333333;
-        --text-medium: #666666;
-        --text-light: #888888;
-        --text-muted: #AAAAAA;
+        --text-dark: #111111;
+        --text-medium: #222222;
+        --text-light: #444444;
+        --text-muted: #666666;
         --border-light: #E8E8E8;
         --border-medium: #DDDDDD;
         --shadow-soft: 0 2px 12px rgba(0,0,0,0.06);
@@ -216,7 +216,7 @@ function getMainHTML(): string {
         box-shadow: 0 0 0 3px var(--maf-orange-glow);
         outline: none;
       }
-      .glass-input::placeholder { color: var(--text-muted); }
+      .glass-input::placeholder { color: #999999; }
 
       /* ====== ANIMATIONS - Fluides Apple-like ====== */
       .fade-in { animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
@@ -346,7 +346,7 @@ function getMainHTML(): string {
       /* ====== TABLE - Claire et aeree ====== */
       .dark-table { border-collapse: separate; border-spacing: 0; width: 100%; }
       .dark-table thead th {
-        color: var(--text-light);
+        color: #444444;
         font-size: 0.68rem;
         font-weight: 700;
         text-transform: uppercase;
@@ -363,7 +363,7 @@ function getMainHTML(): string {
       .dark-table tbody td {
         padding: 0.875rem 1rem;
         border-bottom: 1px solid #F0F0F0;
-        color: var(--text-medium);
+        color: #1A1A1A;
         font-size: 0.82rem;
       }
 
@@ -451,7 +451,7 @@ function getMainHTML(): string {
         box-shadow: 0 0 0 3px var(--maf-orange-glow);
         background: var(--bg-white);
       }
-      textarea::placeholder { color: var(--text-muted); }
+      textarea::placeholder { color: #999999; }
       input[type="datetime-local"], input[type="text"], input[type="tel"], input[type="email"], input[type="password"] {
         color-scheme: light;
       }

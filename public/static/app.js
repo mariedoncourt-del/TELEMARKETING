@@ -94,7 +94,7 @@ function renderLogin() {
 
         <div class="mt-8 text-center">
           <div class="divider"></div>
-          <p class="text-xs mt-4 font-mono" style="color:#BBBBBB;">admin@maf-formation.fr / admin</p>
+          <p class="text-xs mt-4 font-mono" style="color:#888;">admin@maf-formation.fr / admin</p>
         </div>
       </div>
     </div>
@@ -167,7 +167,7 @@ function getNavbar(active = '') {
               <p class="text-xs font-bold" style="color: var(--text-dark);">${currentUser?.prenom} ${currentUser?.nom}</p>
               <p class="text-[11px] font-semibold" style="color: var(--maf-orange);">${getRoleLabel(currentUser?.role)}</p>
             </div>
-            <button onclick="logout()" class="w-9 h-9 rounded-xl flex items-center justify-center transition-all hover:bg-red-50" style="color:#CCCCCC;" title="Deconnexion">
+            <button onclick="logout()" class="w-9 h-9 rounded-xl flex items-center justify-center transition-all hover:bg-red-50" style="color:#888;" title="Deconnexion">
               <i class="fas fa-sign-out-alt text-sm"></i>
             </button>
           </div>
@@ -218,7 +218,7 @@ async function loadMyStats() {
     const s = data.today;
     document.getElementById('myStatsBar').innerHTML = `
       <div class="flex items-center space-x-2">
-        <span class="bg-gray-50 border border-gray-100 px-3 py-1.5 rounded-lg text-xs font-semibold text-gray-500"><i class="fas fa-phone mr-1 text-gray-300"></i>${s.total_appels || 0}</span>
+        <span class="bg-gray-50 border border-gray-100 px-3 py-1.5 rounded-lg text-xs font-semibold text-gray-900"><i class="fas fa-phone mr-1 text-gray-700"></i>${s.total_appels || 0}</span>
         <span class="bg-green-50 border border-green-100 px-3 py-1.5 rounded-lg text-xs font-bold text-green-600"><i class="fas fa-calendar-check mr-1"></i>${s.nb_rdv || 0}</span>
         <span class="bg-amber-50 border border-amber-100 px-3 py-1.5 rounded-lg text-xs font-bold text-amber-600"><i class="fas fa-redo mr-1"></i>${s.nb_ar || 0}</span>
         <span class="bg-red-50 border border-red-100 px-3 py-1.5 rounded-lg text-xs font-bold text-red-500"><i class="fas fa-phone-slash mr-1"></i>${s.nb_nrp || 0}</span>
@@ -229,7 +229,7 @@ async function loadMyStats() {
 
 async function fetchNextProspect() {
   const content = document.getElementById('operatorContent');
-  content.innerHTML = `<div class="text-center py-24"><div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style="background:var(--maf-peach);"><i class="fas fa-spinner fa-spin text-xl" style="color:var(--maf-orange);"></i></div><p class="text-sm" style="color:var(--text-light);">Recherche...</p></div>`;
+  content.innerHTML = `<div class="text-center py-24"><div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style="background:var(--maf-peach);"><i class="fas fa-spinner fa-spin text-xl" style="color:var(--maf-orange);"></i></div><p class="text-sm" style="color:var(--text-dark);">Recherche...</p></div>`;
   try {
     const { data } = await API.get('/prospects/next');
     if (!data.prospect) {
@@ -237,7 +237,7 @@ async function fetchNextProspect() {
         <div class="text-center py-24 slide-up">
           <div class="w-28 h-28 rounded-full flex items-center justify-center mx-auto mb-6" style="background:#ECFDF5;"><i class="fas fa-check-circle text-green-500 text-4xl"></i></div>
           <h2 class="text-xl font-extrabold mb-2" style="color:var(--text-dark);">File d'attente vide</h2>
-          <p class="mb-8 text-sm" style="color:var(--text-light);">${data.message || 'Tous les prospects sont traites.'}</p>
+          <p class="mb-8 text-sm" style="color:var(--text-dark);">${data.message || 'Tous les prospects sont traites.'}</p>
           <button onclick="fetchNextProspect()" class="btn-secondary px-6 py-3 rounded-xl"><i class="fas fa-sync mr-2"></i>Verifier</button>
         </div>`;
       return;
@@ -248,7 +248,7 @@ async function fetchNextProspect() {
     content.innerHTML = `
       <div class="text-center py-24 slide-up">
         <div class="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-5" style="background:#FFFBEB;"><i class="fas fa-exclamation-triangle text-amber-500 text-2xl"></i></div>
-        <p class="font-semibold mb-2" style="color:var(--text-medium);">${msg}</p>
+        <p class="font-semibold mb-2" style="color:var(--text-dark);">${msg}</p>
         <button onclick="fetchNextProspect()" class="btn-primary mt-6 px-8 py-3 rounded-xl"><i class="fas fa-redo mr-2"></i>Reessayer</button>
       </div>`;
   }
@@ -267,7 +267,7 @@ function renderCallCard(prospect, historique, lockedUntil) {
   content.innerHTML = `
     <div class="slide-up">
       <div class="rounded-xl p-4 mb-5 flex justify-between items-center" style="background:var(--maf-peach-light);border:1.5px solid rgba(232,100,44,0.15);">
-        <div class="flex items-center"><div class="live-dot mr-3"></div><span class="text-xs font-bold" style="color:var(--text-medium);">Prospect verrouille pour vous</span></div>
+        <div class="flex items-center"><div class="live-dot mr-3"></div><span class="text-xs font-bold" style="color:var(--text-dark);">Prospect verrouille pour vous</span></div>
         <div id="lockTimer" class="text-sm font-mono font-bold text-maf-600"></div>
       </div>
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
@@ -276,52 +276,52 @@ function renderCallCard(prospect, historique, lockedUntil) {
             <div class="flex justify-between items-start mb-5">
               <div>
                 <h2 class="text-lg font-extrabold" style="color:var(--text-dark);">${prospect.nom_entreprise}</h2>
-                <p class="text-sm mt-0.5" style="color:var(--text-light);">${prospect.nom_dirigeant || 'Contact non renseigne'}</p>
+                <p class="text-sm mt-0.5" style="color:var(--text-dark);">${prospect.nom_dirigeant || 'Contact non renseigne'}</p>
               </div>
               <div class="flex space-x-2">${statusBadge} ${nrpBadge}</div>
             </div>
             <div class="grid grid-cols-2 gap-3 text-sm">
               <div class="flex items-center"><div class="w-8 h-8 rounded-lg bg-orange-50 flex items-center justify-center mr-3"><i class="fas fa-phone text-maf-500 text-xs"></i></div><a href="tel:${prospect.telephone}" class="text-maf-600 font-bold text-base hover:text-maf-700">${prospect.telephone}</a></div>
-              <div class="flex items-center"><div class="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center mr-3"><i class="fas fa-map-marker-alt text-gray-300 text-xs"></i></div><span class="text-gray-500">${prospect.ville || 'Non renseigne'} ${prospect.code_postal || ''}</span></div>
-              ${prospect.email ? `<div class="flex items-center"><div class="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center mr-3"><i class="fas fa-envelope text-gray-300 text-xs"></i></div><span class="text-gray-500">${prospect.email}</span></div>` : ''}
-              ${prospect.code_ape ? `<div class="flex items-center"><div class="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center mr-3"><i class="fas fa-industry text-gray-300 text-xs"></i></div><span class="text-gray-500">APE: ${prospect.code_ape}</span></div>` : ''}
+              <div class="flex items-center"><div class="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center mr-3"><i class="fas fa-map-marker-alt text-gray-700 text-xs"></i></div><span class="text-gray-900">${prospect.ville || 'Non renseigne'} ${prospect.code_postal || ''}</span></div>
+              ${prospect.email ? `<div class="flex items-center"><div class="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center mr-3"><i class="fas fa-envelope text-gray-700 text-xs"></i></div><span class="text-gray-900">${prospect.email}</span></div>` : ''}
+              ${prospect.code_ape ? `<div class="flex items-center"><div class="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center mr-3"><i class="fas fa-industry text-gray-700 text-xs"></i></div><span class="text-gray-900">APE: ${prospect.code_ape}</span></div>` : ''}
               ${prospect.opco ? `<div class="flex items-center"><div class="w-8 h-8 rounded-lg bg-orange-50 flex items-center justify-center mr-3"><i class="fas fa-building text-maf-400 text-xs"></i></div><span class="text-gray-700 font-semibold">OPCO: ${prospect.opco}</span></div>` : ''}
-              ${prospect.budget_identifie ? `<div class="flex items-center"><div class="w-8 h-8 rounded-lg bg-green-50 flex items-center justify-center mr-3"><i class="fas fa-euro-sign text-green-400 text-xs"></i></div><span class="text-gray-500">Budget: ${prospect.budget_identifie}&euro;</span></div>` : ''}
+              ${prospect.budget_identifie ? `<div class="flex items-center"><div class="w-8 h-8 rounded-lg bg-green-50 flex items-center justify-center mr-3"><i class="fas fa-euro-sign text-green-400 text-xs"></i></div><span class="text-gray-900">Budget: ${prospect.budget_identifie}&euro;</span></div>` : ''}
             </div>
             ${prospect.notes ? `<div class="mt-5 p-3.5 rounded-lg text-xs text-amber-700 bg-amber-50 border border-amber-100"><i class="fas fa-sticky-note text-amber-400 mr-2"></i>${prospect.notes}</div>` : ''}
             ${prospect.date_rappel ? `<div class="mt-3 p-3.5 rounded-lg text-xs text-amber-700 bg-amber-50 border border-amber-100"><i class="fas fa-clock text-amber-400 mr-2"></i>Rappel prevu: ${formatDate(prospect.date_rappel)}</div>` : ''}
           </div>
           <div class="glass-card rounded-xl p-5">
-            <h3 class="font-semibold text-gray-500 text-sm mb-3"><i class="fas fa-history mr-2 text-gray-300"></i>Historique (${historique.length})</h3>
-            ${historique.length === 0 ? '<p class="text-gray-300 text-xs italic">Premier appel</p>'
+            <h3 class="font-semibold text-gray-900 text-sm mb-3"><i class="fas fa-history mr-2 text-gray-700"></i>Historique (${historique.length})</h3>
+            ${historique.length === 0 ? '<p class="text-gray-700 text-xs italic">Premier appel</p>'
               : `<div class="space-y-1.5 max-h-48 overflow-y-auto">${historique.map(h => `
                   <div class="flex items-start text-xs border-l-2 ${getResultBorderColor(h.statut_resultat)} pl-3 py-1.5 hover:bg-gray-50 rounded-r transition-colors">
                     <span class="font-bold w-10 text-gray-600">${h.statut_resultat}</span>
-                    <span class="text-gray-300 w-32 font-mono text-[11px]">${formatDate(h.created_at)}</span>
-                    <span class="text-gray-500 flex-1">${h.commentaire || '-'}</span>
-                    <span class="text-gray-300 text-[10px]">${h.operateur_prenom} ${h.operateur_nom}</span>
+                    <span class="text-gray-700 w-32 font-mono text-[11px]">${formatDate(h.created_at)}</span>
+                    <span class="text-gray-900 flex-1">${h.commentaire || '-'}</span>
+                    <span class="text-gray-700 text-[10px]">${h.operateur_prenom} ${h.operateur_nom}</span>
                   </div>`).join('')}</div>`}
           </div>
         </div>
         <div class="space-y-4">
           <div class="glass-card rounded-xl p-5">
-            <h3 class="font-semibold text-gray-500 text-sm mb-4"><i class="fas fa-clipboard-check mr-2 text-gray-300"></i>Resultat</h3>
+            <h3 class="font-semibold text-gray-900 text-sm mb-4"><i class="fas fa-clipboard-check mr-2 text-gray-700"></i>Resultat</h3>
             <div class="space-y-2.5">
               <button onclick="showResultForm('NRP', ${prospect.id})" class="action-btn" style="--btn-color:#fca5a5;--btn-bg:#fef2f2;--btn-glow:rgba(239,68,68,0.06);">
                 <span class="flex items-center"><i class="fas fa-phone-slash text-red-400 mr-3"></i><span class="font-semibold text-gray-600 text-sm">NRP</span></span>
-                <span class="text-[10px] text-gray-300">Ne repond pas</span>
+                <span class="text-[10px] text-gray-700">Ne repond pas</span>
               </button>
               <button onclick="showResultForm('AR', ${prospect.id})" class="action-btn" style="--btn-color:#fcd34d;--btn-bg:#fffbeb;--btn-glow:rgba(245,158,11,0.06);">
                 <span class="flex items-center"><i class="fas fa-redo text-amber-400 mr-3"></i><span class="font-semibold text-gray-600 text-sm">AR</span></span>
-                <span class="text-[10px] text-gray-300">A rappeler</span>
+                <span class="text-[10px] text-gray-700">A rappeler</span>
               </button>
               <button onclick="showResultForm('RDV', ${prospect.id})" class="action-btn" style="--btn-color:#6ee7b7;--btn-bg:#ecfdf5;--btn-glow:rgba(16,185,129,0.06);">
                 <span class="flex items-center"><i class="fas fa-calendar-check text-green-500 mr-3"></i><span class="font-semibold text-gray-600 text-sm">RDV</span></span>
-                <span class="text-[10px] text-gray-300">Rendez-vous !</span>
+                <span class="text-[10px] text-gray-700">Rendez-vous !</span>
               </button>
               <button onclick="showResultForm('FIN', ${prospect.id})" class="action-btn" style="--btn-color:#d1d5db;--btn-bg:#f9fafb;--btn-glow:rgba(0,0,0,0.02);">
-                <span class="flex items-center"><i class="fas fa-ban text-gray-300 mr-3"></i><span class="font-semibold text-gray-400 text-sm">FIN</span></span>
-                <span class="text-[10px] text-gray-300">Cloturer</span>
+                <span class="flex items-center"><i class="fas fa-ban text-gray-700 mr-3"></i><span class="font-semibold text-gray-800 text-sm">FIN</span></span>
+                <span class="text-[10px] text-gray-700">Cloturer</span>
               </button>
             </div>
           </div>
@@ -351,19 +351,21 @@ function startLockTimer() {
 function showResultForm(type, prospectId) {
   const formDiv = document.getElementById('resultForm');
   formDiv.classList.remove('hidden');
+  const dateAppelField = `<label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:#555;">Date de l'appel *</label><input type="datetime-local" id="callDate" class="w-full glass-input p-3 rounded-lg text-xs mb-3" value="${getCurrentDateTime()}">`;
   const forms = {
-    NRP: `<div class="glass-card rounded-xl p-5 scale-in border-red-100"><h4 class="font-bold text-red-600 text-sm mb-3"><i class="fas fa-phone-slash mr-2"></i>NRP</h4><textarea id="nrpComment" placeholder="Commentaire..." rows="2" class="w-full p-3 rounded-lg text-xs mb-3"></textarea><button onclick="submitResult('NRP', ${prospectId})" class="w-full btn-danger py-2.5 rounded-lg text-sm"><i class="fas fa-check mr-2"></i>Confirmer</button></div>`,
-    AR: `<div class="glass-card rounded-xl p-5 scale-in border-amber-100"><h4 class="font-bold text-amber-600 text-sm mb-3"><i class="fas fa-redo mr-2"></i>A rappeler</h4><label class="block text-[10px] font-semibold text-gray-400 mb-1 uppercase tracking-wider">Date *</label><input type="datetime-local" id="arDate" required class="w-full glass-input p-3 rounded-lg text-xs mb-3" value="${getDefaultRappelDate()}"><textarea id="arComment" placeholder="Raison..." rows="2" class="w-full p-3 rounded-lg text-xs mb-3"></textarea><button onclick="submitResult('AR', ${prospectId})" class="w-full btn-warning py-2.5 rounded-lg text-sm"><i class="fas fa-check mr-2"></i>Confirmer AR</button></div>`,
+    NRP: `<div class="glass-card rounded-xl p-5 scale-in border-red-100"><h4 class="font-bold text-red-600 text-sm mb-3"><i class="fas fa-phone-slash mr-2"></i>NRP</h4>${dateAppelField}<textarea id="nrpComment" placeholder="Commentaire..." rows="2" class="w-full p-3 rounded-lg text-xs mb-3"></textarea><button onclick="submitResult('NRP', ${prospectId})" class="w-full btn-danger py-2.5 rounded-lg text-sm"><i class="fas fa-check mr-2"></i>Confirmer</button></div>`,
+    AR: `<div class="glass-card rounded-xl p-5 scale-in border-amber-100"><h4 class="font-bold text-amber-600 text-sm mb-3"><i class="fas fa-redo mr-2"></i>A rappeler</h4>${dateAppelField}<label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:#555;">Date de rappel *</label><input type="datetime-local" id="arDate" required class="w-full glass-input p-3 rounded-lg text-xs mb-3" value="${getDefaultRappelDate()}"><textarea id="arComment" placeholder="Raison..." rows="2" class="w-full p-3 rounded-lg text-xs mb-3"></textarea><button onclick="submitResult('AR', ${prospectId})" class="w-full btn-warning py-2.5 rounded-lg text-sm"><i class="fas fa-check mr-2"></i>Confirmer AR</button></div>`,
     RDV: `<div class="glass-card rounded-xl p-5 scale-in border-green-100"><h4 class="font-bold text-green-600 text-sm mb-3"><i class="fas fa-calendar-check mr-2"></i>Rendez-vous</h4>
       <div class="space-y-2.5">
-        <div><label class="block text-[10px] font-semibold text-gray-400 mb-1 uppercase tracking-wider">Date et heure *</label><input type="datetime-local" id="rdvDate" required class="w-full glass-input p-3 rounded-lg text-xs"></div>
-        <div><label class="block text-[10px] font-semibold text-gray-400 mb-1 uppercase tracking-wider">Type</label><select id="rdvType" class="w-full p-3 rounded-lg text-xs"><option value="presentiel">Presentiel</option><option value="distance">A distance</option><option value="telephone">Telephone</option></select></div>
-        <div><label class="block text-[10px] font-semibold text-gray-400 mb-1 uppercase tracking-wider">Lieu</label><input type="text" id="rdvLieu" placeholder="Adresse ou lien..." class="w-full glass-input p-3 rounded-lg text-xs"></div>
-        <div><label class="block text-[10px] font-semibold text-gray-400 mb-1 uppercase tracking-wider">Formation</label><textarea id="rdvFormation" placeholder="Formation souhaitee..." rows="2" class="w-full p-3 rounded-lg text-xs"></textarea></div>
-        <div><label class="block text-[10px] font-semibold text-gray-400 mb-1 uppercase tracking-wider">Notes</label><textarea id="rdvComments" placeholder="Notes..." rows="2" class="w-full p-3 rounded-lg text-xs"></textarea></div>
+        ${dateAppelField.replace('mb-3','mb-1')}
+        <div><label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:#555;">Date et heure du RDV *</label><input type="datetime-local" id="rdvDate" required class="w-full glass-input p-3 rounded-lg text-xs"></div>
+        <div><label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:#555;">Type</label><select id="rdvType" class="w-full p-3 rounded-lg text-xs"><option value="presentiel">Presentiel</option><option value="distance">A distance</option><option value="telephone">Telephone</option></select></div>
+        <div><label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:#555;">Lieu</label><input type="text" id="rdvLieu" placeholder="Adresse ou lien..." class="w-full glass-input p-3 rounded-lg text-xs"></div>
+        <div><label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:#555;">Formation</label><textarea id="rdvFormation" placeholder="Formation souhaitee..." rows="2" class="w-full p-3 rounded-lg text-xs"></textarea></div>
+        <div><label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:#555;">Notes</label><textarea id="rdvComments" placeholder="Notes..." rows="2" class="w-full p-3 rounded-lg text-xs"></textarea></div>
       </div>
       <button onclick="submitResult('RDV', ${prospectId})" class="w-full btn-success py-2.5 rounded-lg text-sm mt-3"><i class="fas fa-check mr-2"></i>Confirmer RDV</button></div>`,
-    FIN: `<div class="glass-card rounded-xl p-5 scale-in"><h4 class="font-bold text-gray-500 text-sm mb-3"><i class="fas fa-ban mr-2"></i>Cloturer</h4><label class="block text-[10px] font-semibold text-gray-400 mb-1 uppercase tracking-wider">Motif *</label><select id="finMotif" class="w-full p-3 rounded-lg text-xs mb-3"><option value="PAS_INTERESSE">Pas interesse</option><option value="HORS_CIBLE">Hors cible</option><option value="FAUX_NUMERO">Faux numero</option><option value="DOUBLON">Doublon</option><option value="AUTRE">Autre</option></select><textarea id="finComment" placeholder="Commentaire..." rows="2" class="w-full p-3 rounded-lg text-xs mb-3"></textarea><button onclick="submitResult('FIN', ${prospectId})" class="w-full btn-secondary py-2.5 rounded-lg text-sm"><i class="fas fa-check mr-2"></i>Confirmer</button></div>`
+    FIN: `<div class="glass-card rounded-xl p-5 scale-in"><h4 class="font-bold text-sm mb-3" style="color:#555;"><i class="fas fa-ban mr-2"></i>Cloturer</h4>${dateAppelField}<label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:#555;">Motif *</label><select id="finMotif" class="w-full p-3 rounded-lg text-xs mb-3"><option value="PAS_INTERESSE">Pas interesse</option><option value="HORS_CIBLE">Hors cible</option><option value="FAUX_NUMERO">Faux numero</option><option value="DOUBLON">Doublon</option><option value="AUTRE">Autre</option></select><textarea id="finComment" placeholder="Commentaire..." rows="2" class="w-full p-3 rounded-lg text-xs mb-3"></textarea><button onclick="submitResult('FIN', ${prospectId})" class="w-full btn-secondary py-2.5 rounded-lg text-sm"><i class="fas fa-check mr-2"></i>Confirmer</button></div>`
   };
   formDiv.innerHTML = forms[type];
 }
@@ -386,6 +388,7 @@ function showConfetti() {
 
 async function submitResult(type, prospectId) {
   const payload = { prospect_id: prospectId, statut_resultat: type };
+  payload.date_appel = document.getElementById('callDate')?.value || null;
   switch (type) {
     case 'NRP': payload.commentaire = document.getElementById('nrpComment')?.value; break;
     case 'AR':
@@ -444,7 +447,7 @@ function renderDashboard() {
           <p class="section-subtitle">Vue d'ensemble en temps reel</p>
         </div>
         <div class="flex items-center space-x-3">
-          <div class="flex items-center space-x-2"><div class="live-dot"></div><span id="lastRefresh" class="text-[10px] font-mono" style="color:var(--text-muted);"></span></div>
+          <div class="flex items-center space-x-2"><div class="live-dot"></div><span id="lastRefresh" class="text-[10px] font-mono" style="color:#555;"></span></div>
           <button onclick="loadDashboard()" class="btn-secondary text-xs py-2.5 px-5 rounded-lg"><i class="fas fa-sync mr-1.5"></i>Actualiser</button>
         </div>
       </div>
@@ -474,24 +477,24 @@ async function loadDashboard() {
           <div class="stat-card glass-card rounded-xl p-5 text-center count-up ${s.urgent?'glow-pulse':''}" style="--accent:${s.color};">
             <div class="w-10 h-10 rounded-lg flex items-center justify-center mx-auto mb-3" style="background:${s.bg};"><i class="fas ${s.icon} text-sm" style="color:${s.color};"></i></div>
             <div class="text-2xl font-extrabold mb-1" style="color:${s.color};">${s.val}</div>
-            <div class="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">${s.label}</div>
+            <div class="text-[10px] text-gray-800 uppercase tracking-wider font-semibold">${s.label}</div>
           </div>`).join('')}
       </div>
 
       <div class="glass-card rounded-xl p-6 mb-6">
         <div class="flex justify-between items-center mb-3">
-          <h3 class="text-sm font-bold text-gray-500">Progression globale</h3>
+          <h3 class="text-sm font-bold text-gray-900">Progression globale</h3>
           <span class="text-sm font-mono font-bold text-maf-600">${progress}%</span>
         </div>
         <div class="w-full h-2.5 rounded-full bg-gray-100">
           <div class="h-2.5 rounded-full progress-bar-glow transition-all duration-1000" style="width:${progress}%;background:linear-gradient(90deg,#e8642c,#f97316,#10b981);"></div>
         </div>
-        <div class="flex justify-between text-[10px] text-gray-300 mt-2 font-mono"><span>${g.total||0} prospects</span><span>${(g.rdv_pris||0)+(g.clotures||0)} traites</span></div>
+        <div class="flex justify-between text-[10px] text-gray-700 mt-2 font-mono"><span>${g.total||0} prospects</span><span>${(g.rdv_pris||0)+(g.clotures||0)} traites</span></div>
       </div>
 
       <div class="glass-card rounded-xl p-6 mb-6 overflow-hidden">
-        <h3 class="text-sm font-bold text-gray-500 mb-4"><i class="fas fa-users mr-2 text-gray-300"></i>Performance operateurs</h3>
-        ${ops.length===0?'<p class="text-gray-300 text-xs italic">Aucun operateur actif</p>':`
+        <h3 class="text-sm font-bold text-gray-900 mb-4"><i class="fas fa-users mr-2 text-gray-700"></i>Performance operateurs</h3>
+        ${ops.length===0?'<p class="text-gray-700 text-xs italic">Aucun operateur actif</p>':`
           <div class="overflow-x-auto"><table class="w-full dark-table"><thead><tr>
             <th class="text-left">Operateur</th><th class="text-center">Appels</th><th class="text-center">RDV</th><th class="text-center">AR</th><th class="text-center">NRP</th><th class="text-center">FIN</th><th class="text-center">Tx conv.</th><th class="text-center">Statut</th>
           </tr></thead><tbody>
@@ -503,23 +506,23 @@ async function loadDashboard() {
                 <td class="text-center"><span class="badge bg-green-50 text-green-600 border border-green-100">${op.nb_rdv||0}</span></td>
                 <td class="text-center text-amber-500">${op.nb_ar||0}</td>
                 <td class="text-center text-red-400">${op.nb_nrp||0}</td>
-                <td class="text-center text-gray-300">${op.nb_fin||0}</td>
-                <td class="text-center font-mono font-bold ${parseFloat(taux)>=10?'text-green-600':'text-gray-400'}">${taux}%</td>
-                <td class="text-center">${op.prospect_en_cours?'<div class="live-dot mx-auto"></div>':'<span class="text-gray-200">-</span>'}</td>
+                <td class="text-center text-gray-700">${op.nb_fin||0}</td>
+                <td class="text-center font-mono font-bold ${parseFloat(taux)>=10?'text-green-600':'text-gray-800'}">${taux}%</td>
+                <td class="text-center">${op.prospect_en_cours?'<div class="live-dot mx-auto"></div>':'<span class="text-gray-600">-</span>'}</td>
               </tr>`;}).join('')}
           </tbody></table></div>`}
       </div>
 
       <div class="glass-card rounded-xl p-6">
-        <h3 class="text-sm font-bold text-gray-500 mb-4"><i class="fas fa-calendar mr-2 text-gray-300"></i>RDV a venir</h3>
-        ${(data.upcomingRdv||[]).length===0?'<p class="text-gray-300 text-xs italic">Aucun RDV</p>':`
+        <h3 class="text-sm font-bold text-gray-900 mb-4"><i class="fas fa-calendar mr-2 text-gray-700"></i>RDV a venir</h3>
+        ${(data.upcomingRdv||[]).length===0?'<p class="text-gray-700 text-xs italic">Aucun RDV</p>':`
           <div class="space-y-2.5">${data.upcomingRdv.map(r => `
             <div class="flex items-center justify-between p-4 rounded-lg bg-gray-50/50 border border-gray-100 hover-lift">
-              <div><span class="font-semibold text-gray-700 text-sm">${r.nom_entreprise}</span><span class="text-gray-300 text-xs ml-2">${r.ville||''}</span></div>
+              <div><span class="font-semibold text-gray-700 text-sm">${r.nom_entreprise}</span><span class="text-gray-700 text-xs ml-2">${r.ville||''}</span></div>
               <div class="flex items-center space-x-3 text-xs">
                 <span class="badge ${r.type_rdv==='presentiel'?'bg-blue-50 text-blue-600 border border-blue-100':'bg-purple-50 text-purple-600 border border-purple-100'}">${r.type_rdv}</span>
                 <span class="font-mono font-bold text-maf-600">${formatDate(r.date_rdv)}</span>
-                <span class="text-gray-300">${r.pris_par_prenom}</span>
+                <span class="text-gray-700">${r.pris_par_prenom}</span>
               </div>
             </div>`).join('')}</div>`}
       </div>`;
@@ -541,10 +544,10 @@ function renderProspectsList() {
       </div>
       <div class="glass-card-static rounded-xl p-4 mb-5 flex flex-wrap gap-3 items-center">
         <div class="flex items-center space-x-2">
-          <label class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Statut</label>
+          <label class="text-[10px] font-semibold text-gray-800 uppercase tracking-wider">Statut</label>
           <select id="filterStatut" onchange="loadProspects()" class="px-3 py-2 rounded-lg text-xs"><option value="">Tous</option><option value="NOUVEAU">Nouveau</option><option value="AR">A rappeler</option><option value="RDV">RDV</option><option value="FIN">Cloture</option></select>
         </div>
-        <div class="flex-1 min-w-[200px]"><div class="relative"><i class="fas fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-300 text-xs"></i><input type="text" id="filterSearch" placeholder="Rechercher..." onkeyup="debounce(loadProspects, 300)()" class="w-full glass-input pl-10 pr-4 py-2.5 rounded-lg text-xs"></div></div>
+        <div class="flex-1 min-w-[200px]"><div class="relative"><i class="fas fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-700 text-xs"></i><input type="text" id="filterSearch" placeholder="Rechercher..." onkeyup="debounce(loadProspects, 300)()" class="w-full glass-input pl-10 pr-4 py-2.5 rounded-lg text-xs"></div></div>
       </div>
       <div id="prospectsTable"><div class="text-center py-12"><i class="fas fa-spinner fa-spin text-maf-500"></i></div></div>
     </div>
@@ -567,22 +570,22 @@ async function loadProspects() {
         </tr></thead><tbody>
           ${list.map((p,idx)=>`
             <tr class="cursor-pointer" onclick="showProspectDetail(${p.id})">
-              <td class="text-center font-mono text-gray-300 text-[10px]">${(page-1)*limit+idx+1}</td>
+              <td class="text-center font-mono text-gray-700 text-[10px]">${(page-1)*limit+idx+1}</td>
               <td class="font-semibold text-gray-700">${p.nom_entreprise}</td>
-              <td class="text-gray-400">${p.nom_dirigeant||'-'}</td>
-              <td class="font-mono text-gray-500 text-[12px]">${p.telephone}</td>
-              <td class="text-gray-400">${p.ville||'-'}</td>
+              <td class="text-gray-800">${p.nom_dirigeant||'-'}</td>
+              <td class="font-mono text-gray-900 text-[12px]">${p.telephone}</td>
+              <td class="text-gray-800">${p.ville||'-'}</td>
               <td><span class="badge bg-orange-50 text-maf-600 border border-orange-100">${p.opco||'-'}</span></td>
               <td class="text-center">${getStatusBadge(p.statut)}</td>
-              <td class="text-center">${p.compteur_nrp>0?`<span class="font-bold text-xs text-red-500">${p.compteur_nrp}</span>`:'<span class="text-gray-200">-</span>'}</td>
-              <td class="text-center">${p.locked_by?'<i class="fas fa-lock text-maf-400 text-[9px]"></i>':'<span class="text-gray-200">-</span>'}</td>
+              <td class="text-center">${p.compteur_nrp>0?`<span class="font-bold text-xs text-red-500">${p.compteur_nrp}</span>`:'<span class="text-gray-600">-</span>'}</td>
+              <td class="text-center">${p.locked_by?'<i class="fas fa-lock text-maf-400 text-[9px]"></i>':'<span class="text-gray-600">-</span>'}</td>
             </tr>`).join('')}
         </tbody></table>
         <div class="px-5 py-3.5 flex justify-between items-center border-t border-gray-100">
-          <span class="text-[11px] text-gray-400"><strong class="text-gray-600">${data.pagination?.total||0}</strong> prospects</span>
+          <span class="text-[11px] text-gray-800"><strong class="text-gray-600">${data.pagination?.total||0}</strong> prospects</span>
           <div class="flex items-center space-x-2">
             ${page>1?`<button onclick="changePage(${page-1})" class="btn-secondary text-[10px] py-1 px-2.5 rounded-lg"><i class="fas fa-chevron-left"></i></button>`:''}
-            <span class="text-[10px] text-gray-400"><input type="number" id="filterPage" value="${page}" min="1" max="${data.pagination?.pages||1}" onchange="loadProspects()" class="w-10 text-center text-[10px] rounded py-0.5 mx-1"> / ${data.pagination?.pages||1}</span>
+            <span class="text-[10px] text-gray-800"><input type="number" id="filterPage" value="${page}" min="1" max="${data.pagination?.pages||1}" onchange="loadProspects()" class="w-10 text-center text-[10px] rounded py-0.5 mx-1"> / ${data.pagination?.pages||1}</span>
             ${page<(data.pagination?.pages||1)?`<button onclick="changePage(${page+1})" class="btn-secondary text-[10px] py-1 px-2.5 rounded-lg"><i class="fas fa-chevron-right"></i></button>`:''}
           </div>
         </div>
@@ -609,9 +612,9 @@ async function showProspectDetail(id) {
                   <span class="ml-3">${getStatusBadge(p.statut)}</span>
                   ${nrpBadge}
                 </div>
-                <p class="text-sm mt-1" style="color:var(--text-light);">${p.nom_dirigeant||'Contact non renseigne'} — ${p.ville||''} ${p.code_postal||''}</p>
+                <p class="text-sm mt-1" style="color:var(--text-dark);">${p.nom_dirigeant||'Contact non renseigne'} — ${p.ville||''} ${p.code_postal||''}</p>
               </div>
-              <button onclick="document.getElementById('modal').classList.add('hidden')" class="w-9 h-9 rounded-xl flex items-center justify-center hover:bg-gray-100 transition-all" style="color:#CCCCCC;"><i class="fas fa-times text-sm"></i></button>
+              <button onclick="document.getElementById('modal').classList.add('hidden')" class="w-9 h-9 rounded-xl flex items-center justify-center hover:bg-gray-100 transition-all" style="color:#888;"><i class="fas fa-times text-sm"></i></button>
             </div>
           </div>
 
@@ -626,12 +629,12 @@ async function showProspectDetail(id) {
                   <a href="tel:${p.telephone}" class="font-bold text-base hover:underline" style="color:var(--maf-orange);">${p.telephone}</a>
                 </div>
                 <div class="flex items-center">
-                  <div class="w-8 h-8 rounded-lg flex items-center justify-center mr-3" style="background:#F5F5F5;"><i class="fas fa-envelope text-xs" style="color:#AAAAAA;"></i></div>
-                  <span style="color:var(--text-medium);">${p.email||'-'}</span>
+                  <div class="w-8 h-8 rounded-lg flex items-center justify-center mr-3" style="background:#F5F5F5;"><i class="fas fa-envelope text-xs" style="color:#888;"></i></div>
+                  <span style="color:var(--text-dark);">${p.email||'-'}</span>
                 </div>
-                ${p.code_ape ? `<div class="flex items-center"><div class="w-8 h-8 rounded-lg flex items-center justify-center mr-3" style="background:#F5F5F5;"><i class="fas fa-industry text-xs" style="color:#AAAAAA;"></i></div><span style="color:var(--text-medium);">APE: ${p.code_ape}</span></div>` : ''}
+                ${p.code_ape ? `<div class="flex items-center"><div class="w-8 h-8 rounded-lg flex items-center justify-center mr-3" style="background:#F5F5F5;"><i class="fas fa-industry text-xs" style="color:#888;"></i></div><span style="color:var(--text-dark);">APE: ${p.code_ape}</span></div>` : ''}
                 ${p.opco ? `<div class="flex items-center"><div class="w-8 h-8 rounded-lg flex items-center justify-center mr-3" style="background:var(--maf-peach);"><i class="fas fa-building text-xs" style="color:var(--maf-orange);"></i></div><span class="font-semibold" style="color:var(--text-dark);">OPCO: ${p.opco}</span></div>` : ''}
-                ${p.budget_identifie ? `<div class="flex items-center"><div class="w-8 h-8 rounded-lg flex items-center justify-center mr-3" style="background:#ECFDF5;"><i class="fas fa-euro-sign text-xs" style="color:#10B981;"></i></div><span style="color:var(--text-medium);">Budget: ${p.budget_identifie}&euro;</span></div>` : ''}
+                ${p.budget_identifie ? `<div class="flex items-center"><div class="w-8 h-8 rounded-lg flex items-center justify-center mr-3" style="background:#ECFDF5;"><i class="fas fa-euro-sign text-xs" style="color:#10B981;"></i></div><span style="color:var(--text-dark);">Budget: ${p.budget_identifie}&euro;</span></div>` : ''}
               </div>
 
               ${p.notes ? `<div class="rounded-xl p-3.5 text-xs mb-5" style="background:#FFFBEB;border:1.5px solid #FDE68A;color:#92400E;"><i class="fas fa-sticky-note mr-2" style="color:#F59E0B;"></i>${p.notes}</div>` : ''}
@@ -639,38 +642,38 @@ async function showProspectDetail(id) {
 
               <!-- Historique -->
               <div class="divider mb-4"></div>
-              <h3 class="text-[11px] font-bold mb-3 uppercase tracking-wider" style="color:var(--text-muted);">Historique des appels (${appels.length})</h3>
+              <h3 class="text-[11px] font-bold mb-3 uppercase tracking-wider" style="color:#555;">Historique des appels (${appels.length})</h3>
               <div class="space-y-1.5 mb-5 max-h-44 overflow-y-auto">
-                ${appels.map(a=>`<div class="text-xs border-l-2 ${getResultBorderColor(a.statut_resultat)} pl-3 py-2 hover:bg-gray-50 rounded-r transition-colors"><span class="font-bold" style="color:var(--text-dark);">${a.statut_resultat}</span><span class="ml-2 font-mono text-[11px]" style="color:var(--text-muted);">${formatDate(a.created_at)}</span><span class="ml-2" style="color:var(--text-medium);">${a.commentaire||'-'}</span><span class="text-[10px] ml-2" style="color:var(--text-muted);">(${a.operateur_prenom})</span></div>`).join('')||'<p class="text-xs italic" style="color:var(--text-muted);">Premier appel — aucun historique</p>'}
+                ${appels.map(a=>`<div class="text-xs border-l-2 ${getResultBorderColor(a.statut_resultat)} pl-3 py-2 hover:bg-gray-50 rounded-r transition-colors"><span class="font-bold" style="color:var(--text-dark);">${a.statut_resultat}</span><span class="ml-2 font-mono text-[11px]" style="color:#555;">${formatDate(a.created_at)}</span><span class="ml-2" style="color:var(--text-dark);">${a.commentaire||'-'}</span><span class="text-[10px] ml-2" style="color:#555;">(${a.operateur_prenom})</span></div>`).join('')||'<p class="text-xs italic" style="color:#555;">Premier appel — aucun historique</p>'}
               </div>
 
               <!-- RDV existants -->
               ${rdvs.length>0?`
-                <h3 class="text-[11px] font-bold mb-3 uppercase tracking-wider" style="color:var(--text-muted);">Rendez-vous (${rdvs.length})</h3>
-                <div class="space-y-2 mb-4">${rdvs.map(r=>`<div class="rounded-xl p-3 text-xs" style="background:#ECFDF5;border:1.5px solid #A7F3D0;"><strong class="font-mono" style="color:#059669;">${formatDate(r.date_rdv)}</strong> <span style="color:var(--text-light);">— ${r.type_rdv}</span>${r.formation_souhaitee?`<br><span style="color:var(--text-medium);">${r.formation_souhaitee}</span>`:''}</div>`).join('')}</div>
+                <h3 class="text-[11px] font-bold mb-3 uppercase tracking-wider" style="color:#555;">Rendez-vous (${rdvs.length})</h3>
+                <div class="space-y-2 mb-4">${rdvs.map(r=>`<div class="rounded-xl p-3 text-xs" style="background:#ECFDF5;border:1.5px solid #A7F3D0;"><strong class="font-mono" style="color:#059669;">${formatDate(r.date_rdv)}</strong> <span style="color:var(--text-dark);">— ${r.type_rdv}</span>${r.formation_souhaitee?`<br><span style="color:var(--text-dark);">${r.formation_souhaitee}</span>`:''}</div>`).join('')}</div>
               `:''}
             </div>
 
             <!-- COLONNE DROITE : Actions -->
             <div class="p-6 pl-4 lg:border-l" style="border-color:#F0F0F0;background:#FAFAFA;border-radius:0 0 1rem 0;">
-              <h3 class="text-[11px] font-bold mb-4 uppercase tracking-wider" style="color:var(--text-muted);"><i class="fas fa-clipboard-check mr-1.5"></i>Actions</h3>
+              <h3 class="text-[11px] font-bold mb-4 uppercase tracking-wider" style="color:#555;"><i class="fas fa-clipboard-check mr-1.5"></i>Actions</h3>
               
               <div class="space-y-2.5 mb-5">
                 <button onclick="showModalResultForm('NRP', ${p.id})" class="action-btn" style="--btn-color:#fca5a5;--btn-bg:#fef2f2;--btn-glow:rgba(239,68,68,0.06);">
                   <span class="flex items-center"><i class="fas fa-phone-slash text-red-400 mr-3"></i><span class="font-semibold text-sm" style="color:var(--text-dark);">NRP</span></span>
-                  <span class="text-[10px]" style="color:var(--text-muted);">Ne repond pas</span>
+                  <span class="text-[10px]" style="color:#555;">Ne repond pas</span>
                 </button>
                 <button onclick="showModalResultForm('AR', ${p.id})" class="action-btn" style="--btn-color:#fcd34d;--btn-bg:#fffbeb;--btn-glow:rgba(245,158,11,0.06);">
                   <span class="flex items-center"><i class="fas fa-redo text-amber-400 mr-3"></i><span class="font-semibold text-sm" style="color:var(--text-dark);">AR</span></span>
-                  <span class="text-[10px]" style="color:var(--text-muted);">A rappeler</span>
+                  <span class="text-[10px]" style="color:#555;">A rappeler</span>
                 </button>
                 <button onclick="showModalResultForm('RDV', ${p.id})" class="action-btn" style="--btn-color:#6ee7b7;--btn-bg:#ecfdf5;--btn-glow:rgba(16,185,129,0.06);">
                   <span class="flex items-center"><i class="fas fa-calendar-check text-green-500 mr-3"></i><span class="font-semibold text-sm" style="color:var(--text-dark);">RDV</span></span>
-                  <span class="text-[10px]" style="color:var(--text-muted);">Rendez-vous</span>
+                  <span class="text-[10px]" style="color:#555;">Rendez-vous</span>
                 </button>
                 <button onclick="showModalResultForm('FIN', ${p.id})" class="action-btn" style="--btn-color:#d1d5db;--btn-bg:#f9fafb;--btn-glow:rgba(0,0,0,0.02);">
-                  <span class="flex items-center"><i class="fas fa-ban mr-3" style="color:#CCCCCC;"></i><span class="font-semibold text-sm" style="color:var(--text-light);">FIN</span></span>
-                  <span class="text-[10px]" style="color:var(--text-muted);">Cloturer</span>
+                  <span class="flex items-center"><i class="fas fa-ban mr-3" style="color:#888;"></i><span class="font-semibold text-sm" style="color:var(--text-dark);">FIN</span></span>
+                  <span class="text-[10px]" style="color:#555;">Cloturer</span>
                 </button>
               </div>
 
@@ -688,15 +691,18 @@ async function showProspectDetail(id) {
 // Formulaire de resultat dans la modal prospect
 function showModalResultForm(type, prospectId) {
   const formDiv = document.getElementById('modalResultForm');
+  const dateAppelField = `<label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:#555;">Date de l'appel *</label><input type="datetime-local" id="modalCallDate" class="w-full glass-input p-2.5 rounded-lg text-xs mb-2" value="${getCurrentDateTime()}">`;
   const forms = {
     NRP: `<div class="glass-card-static rounded-xl p-4 scale-in" style="border-color:#FECACA;">
       <h4 class="font-bold text-red-600 text-sm mb-3"><i class="fas fa-phone-slash mr-2"></i>NRP</h4>
+      ${dateAppelField}
       <textarea id="modalNrpComment" placeholder="Commentaire optionnel..." rows="2" class="w-full p-3 rounded-lg text-xs"></textarea>
       <button onclick="submitModalResult('NRP', ${prospectId})" class="w-full btn-danger py-2.5 rounded-lg text-sm mt-2"><i class="fas fa-check mr-2"></i>Confirmer NRP</button>
     </div>`,
     AR: `<div class="glass-card-static rounded-xl p-4 scale-in" style="border-color:#FDE68A;">
       <h4 class="font-bold text-amber-600 text-sm mb-3"><i class="fas fa-redo mr-2"></i>A rappeler</h4>
-      <label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:var(--text-muted);">Date de rappel *</label>
+      ${dateAppelField}
+      <label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:#555;">Date de rappel *</label>
       <input type="datetime-local" id="modalArDate" required class="w-full glass-input p-3 rounded-lg text-xs mb-2" value="${getDefaultRappelDate()}">
       <textarea id="modalArComment" placeholder="Raison du rappel..." rows="2" class="w-full p-3 rounded-lg text-xs mb-2"></textarea>
       <button onclick="submitModalResult('AR', ${prospectId})" class="w-full btn-warning py-2.5 rounded-lg text-sm"><i class="fas fa-check mr-2"></i>Confirmer AR</button>
@@ -704,17 +710,19 @@ function showModalResultForm(type, prospectId) {
     RDV: `<div class="glass-card-static rounded-xl p-4 scale-in" style="border-color:#A7F3D0;">
       <h4 class="font-bold text-green-600 text-sm mb-3"><i class="fas fa-calendar-check mr-2"></i>Rendez-vous</h4>
       <div class="space-y-2">
-        <div><label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:var(--text-muted);">Date et heure *</label><input type="datetime-local" id="modalRdvDate" required class="w-full glass-input p-2.5 rounded-lg text-xs"></div>
-        <div><label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:var(--text-muted);">Type</label><select id="modalRdvType" class="w-full p-2.5 rounded-lg text-xs"><option value="presentiel">Presentiel</option><option value="distance">A distance</option><option value="telephone">Telephone</option></select></div>
-        <div><label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:var(--text-muted);">Lieu</label><input type="text" id="modalRdvLieu" placeholder="Adresse ou lien visio..." class="w-full glass-input p-2.5 rounded-lg text-xs"></div>
-        <div><label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:var(--text-muted);">Formation souhaitee</label><textarea id="modalRdvFormation" placeholder="Formation souhaitee..." rows="2" class="w-full p-2.5 rounded-lg text-xs"></textarea></div>
-        <div><label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:var(--text-muted);">Notes</label><textarea id="modalRdvComments" placeholder="Notes..." rows="2" class="w-full p-2.5 rounded-lg text-xs"></textarea></div>
+        ${dateAppelField.replace('mb-2','mb-1')}
+        <div><label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:#555;">Date et heure du RDV *</label><input type="datetime-local" id="modalRdvDate" required class="w-full glass-input p-2.5 rounded-lg text-xs"></div>
+        <div><label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:#555;">Type</label><select id="modalRdvType" class="w-full p-2.5 rounded-lg text-xs"><option value="presentiel">Presentiel</option><option value="distance">A distance</option><option value="telephone">Telephone</option></select></div>
+        <div><label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:#555;">Lieu</label><input type="text" id="modalRdvLieu" placeholder="Adresse ou lien visio..." class="w-full glass-input p-2.5 rounded-lg text-xs"></div>
+        <div><label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:#555;">Formation souhaitee</label><textarea id="modalRdvFormation" placeholder="Formation souhaitee..." rows="2" class="w-full p-2.5 rounded-lg text-xs"></textarea></div>
+        <div><label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:#555;">Notes</label><textarea id="modalRdvComments" placeholder="Notes..." rows="2" class="w-full p-2.5 rounded-lg text-xs"></textarea></div>
       </div>
       <button onclick="submitModalResult('RDV', ${prospectId})" class="w-full btn-success py-2.5 rounded-lg text-sm mt-3"><i class="fas fa-check mr-2"></i>Confirmer RDV</button>
     </div>`,
     FIN: `<div class="glass-card-static rounded-xl p-4 scale-in">
-      <h4 class="font-bold text-sm mb-3" style="color:var(--text-light);"><i class="fas fa-ban mr-2"></i>Cloturer</h4>
-      <label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:var(--text-muted);">Motif *</label>
+      <h4 class="font-bold text-sm mb-3" style="color:#555;"><i class="fas fa-ban mr-2"></i>Cloturer</h4>
+      ${dateAppelField}
+      <label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:#555;">Motif *</label>
       <select id="modalFinMotif" class="w-full p-2.5 rounded-lg text-xs mb-2"><option value="PAS_INTERESSE">Pas interesse</option><option value="HORS_CIBLE">Hors cible</option><option value="FAUX_NUMERO">Faux numero</option><option value="DOUBLON">Doublon</option><option value="AUTRE">Autre</option></select>
       <textarea id="modalFinComment" placeholder="Commentaire..." rows="2" class="w-full p-2.5 rounded-lg text-xs mb-2"></textarea>
       <button onclick="submitModalResult('FIN', ${prospectId})" class="w-full btn-secondary py-2.5 rounded-lg text-sm"><i class="fas fa-check mr-2"></i>Confirmer</button>
@@ -726,6 +734,7 @@ function showModalResultForm(type, prospectId) {
 // Soumettre un resultat depuis la modal
 async function submitModalResult(type, prospectId) {
   const payload = { prospect_id: prospectId, statut_resultat: type };
+  payload.date_appel = document.getElementById('modalCallDate')?.value || null;
   switch (type) {
     case 'NRP': payload.commentaire = document.getElementById('modalNrpComment')?.value; break;
     case 'AR':
@@ -785,19 +794,19 @@ function showAddProspectModal() {
     <div class="fixed inset-0 modal-overlay z-50 flex items-center justify-center p-4" onclick="closeModal(event)">
       <div class="bg-white rounded-2xl max-w-lg w-full scale-in" onclick="event.stopPropagation()" style="box-shadow:0 20px 60px rgba(0,0,0,0.15);">
         <div class="p-7">
-          <div class="flex justify-between items-center mb-6"><h2 class="text-lg font-bold text-gray-800"><i class="fas fa-plus-circle text-maf-500 mr-2"></i>Ajouter</h2><button onclick="document.getElementById('modal').classList.add('hidden')" class="text-gray-300 hover:text-gray-600"><i class="fas fa-times"></i></button></div>
+          <div class="flex justify-between items-center mb-6"><h2 class="text-lg font-bold text-gray-800"><i class="fas fa-plus-circle text-maf-500 mr-2"></i>Ajouter</h2><button onclick="document.getElementById('modal').classList.add('hidden')" class="text-gray-700 hover:text-gray-600"><i class="fas fa-times"></i></button></div>
           <form id="addProspectForm" class="space-y-3">
             <div class="grid grid-cols-2 gap-3">
-              <div><label class="block text-[10px] font-semibold text-gray-400 mb-1 uppercase tracking-wider">Entreprise *</label><input type="text" id="pNom" required class="w-full glass-input p-2.5 rounded-lg text-xs"></div>
-              <div><label class="block text-[10px] font-semibold text-gray-400 mb-1 uppercase tracking-wider">Contact</label><input type="text" id="pContact" class="w-full glass-input p-2.5 rounded-lg text-xs"></div>
-              <div><label class="block text-[10px] font-semibold text-gray-400 mb-1 uppercase tracking-wider">Telephone *</label><input type="tel" id="pTel" required class="w-full glass-input p-2.5 rounded-lg text-xs"></div>
-              <div><label class="block text-[10px] font-semibold text-gray-400 mb-1 uppercase tracking-wider">Email</label><input type="email" id="pEmail" class="w-full glass-input p-2.5 rounded-lg text-xs"></div>
-              <div><label class="block text-[10px] font-semibold text-gray-400 mb-1 uppercase tracking-wider">Ville</label><input type="text" id="pVille" class="w-full glass-input p-2.5 rounded-lg text-xs"></div>
-              <div><label class="block text-[10px] font-semibold text-gray-400 mb-1 uppercase tracking-wider">CP</label><input type="text" id="pCP" class="w-full glass-input p-2.5 rounded-lg text-xs"></div>
-              <div><label class="block text-[10px] font-semibold text-gray-400 mb-1 uppercase tracking-wider">APE</label><input type="text" id="pAPE" class="w-full glass-input p-2.5 rounded-lg text-xs"></div>
-              <div><label class="block text-[10px] font-semibold text-gray-400 mb-1 uppercase tracking-wider">OPCO</label><select id="pOPCO" class="w-full p-2.5 rounded-lg text-xs"><option value="">-</option><option value="AGEFICE">AGEFICE</option><option value="FAFCEA">FAFCEA</option><option value="AKTO">AKTO</option><option value="ATLAS">ATLAS</option><option value="OPCO_EP">OPCO EP</option></select></div>
+              <div><label class="block text-[10px] font-semibold text-gray-800 mb-1 uppercase tracking-wider">Entreprise *</label><input type="text" id="pNom" required class="w-full glass-input p-2.5 rounded-lg text-xs"></div>
+              <div><label class="block text-[10px] font-semibold text-gray-800 mb-1 uppercase tracking-wider">Contact</label><input type="text" id="pContact" class="w-full glass-input p-2.5 rounded-lg text-xs"></div>
+              <div><label class="block text-[10px] font-semibold text-gray-800 mb-1 uppercase tracking-wider">Telephone *</label><input type="tel" id="pTel" required class="w-full glass-input p-2.5 rounded-lg text-xs"></div>
+              <div><label class="block text-[10px] font-semibold text-gray-800 mb-1 uppercase tracking-wider">Email</label><input type="email" id="pEmail" class="w-full glass-input p-2.5 rounded-lg text-xs"></div>
+              <div><label class="block text-[10px] font-semibold text-gray-800 mb-1 uppercase tracking-wider">Ville</label><input type="text" id="pVille" class="w-full glass-input p-2.5 rounded-lg text-xs"></div>
+              <div><label class="block text-[10px] font-semibold text-gray-800 mb-1 uppercase tracking-wider">CP</label><input type="text" id="pCP" class="w-full glass-input p-2.5 rounded-lg text-xs"></div>
+              <div><label class="block text-[10px] font-semibold text-gray-800 mb-1 uppercase tracking-wider">APE</label><input type="text" id="pAPE" class="w-full glass-input p-2.5 rounded-lg text-xs"></div>
+              <div><label class="block text-[10px] font-semibold text-gray-800 mb-1 uppercase tracking-wider">OPCO</label><select id="pOPCO" class="w-full p-2.5 rounded-lg text-xs"><option value="">-</option><option value="AGEFICE">AGEFICE</option><option value="FAFCEA">FAFCEA</option><option value="AKTO">AKTO</option><option value="ATLAS">ATLAS</option><option value="OPCO_EP">OPCO EP</option></select></div>
             </div>
-            <div><label class="block text-[10px] font-semibold text-gray-400 mb-1 uppercase tracking-wider">Notes</label><textarea id="pNotes" rows="2" class="w-full p-2.5 rounded-lg text-xs"></textarea></div>
+            <div><label class="block text-[10px] font-semibold text-gray-800 mb-1 uppercase tracking-wider">Notes</label><textarea id="pNotes" rows="2" class="w-full p-2.5 rounded-lg text-xs"></textarea></div>
             <button type="submit" class="w-full btn-primary py-3 rounded-lg mt-2"><i class="fas fa-plus mr-2"></i>Ajouter</button>
           </form>
         </div>
@@ -831,23 +840,23 @@ async function loadRDV() {
     const { data } = await API.get('/rdv');
     const list = data.rdv||[];
     document.getElementById('rdvContent').innerHTML = list.length===0
-      ? '<div class="text-center py-20 text-gray-300"><div class="w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-4 bg-gray-50"><i class="fas fa-calendar text-2xl text-gray-200"></i></div><p class="text-sm">Aucun RDV</p></div>'
+      ? '<div class="text-center py-20 text-gray-700"><div class="w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-4 bg-gray-50"><i class="fas fa-calendar text-2xl text-gray-600"></i></div><p class="text-sm">Aucun RDV</p></div>'
       : `<div class="grid gap-3 stagger-children">${list.map(r=>`
           <div class="glass-card rounded-xl p-5">
             <div class="flex justify-between items-start">
               <div>
                 <h3 class="font-bold text-gray-800 text-sm">${r.nom_entreprise}</h3>
-                <p class="text-gray-400 text-xs mt-1">${r.nom_dirigeant||''} - ${r.ville||''}</p>
-                <p class="text-xs mt-2"><i class="fas fa-phone text-gray-200 mr-1.5"></i><span class="text-gray-500 font-mono">${r.telephone}</span></p>
+                <p class="text-gray-800 text-xs mt-1">${r.nom_dirigeant||''} - ${r.ville||''}</p>
+                <p class="text-xs mt-2"><i class="fas fa-phone text-gray-600 mr-1.5"></i><span class="text-gray-900 font-mono">${r.telephone}</span></p>
                 ${r.formation_souhaitee?`<p class="text-xs mt-1"><i class="fas fa-graduation-cap text-maf-400 mr-1.5"></i><span class="text-gray-600">${r.formation_souhaitee}</span></p>`:''}
-                ${r.commentaires?`<p class="text-xs text-gray-300 mt-1 italic">${r.commentaires}</p>`:''}
+                ${r.commentaires?`<p class="text-xs text-gray-700 mt-1 italic">${r.commentaires}</p>`:''}
               </div>
               <div class="text-right">
                 <div class="text-sm font-bold font-mono text-maf-600">${formatDate(r.date_rdv)}</div>
                 <span class="badge mt-2 inline-flex ${r.type_rdv==='presentiel'?'bg-blue-50 text-blue-600 border border-blue-100':'bg-purple-50 text-purple-600 border border-purple-100'}"><i class="fas ${r.type_rdv==='presentiel'?'fa-building':r.type_rdv==='distance'?'fa-video':'fa-phone'} mr-1"></i>${r.type_rdv}</span>
-                ${r.lieu?`<p class="text-[10px] text-gray-300 mt-1">${r.lieu}</p>`:''}
+                ${r.lieu?`<p class="text-[10px] text-gray-700 mt-1">${r.lieu}</p>`:''}
                 <div class="mt-2"><span class="badge" style="${getStatutRDVStyle(r.statut)}">${r.statut}</span></div>
-                <p class="text-[10px] text-gray-300 mt-1">Par ${r.pris_par_prenom} ${r.pris_par_nom}</p>
+                <p class="text-[10px] text-gray-700 mt-1">Par ${r.pris_par_prenom} ${r.pris_par_nom}</p>
               </div>
             </div>
           </div>`).join('')}</div>`;
@@ -864,7 +873,7 @@ function renderAdmin() {
       <div class="mb-6"><h1 class="section-title"><span class="text-gradient">Administration</span></h1><p class="section-subtitle">Gestion de la plateforme</p></div>
       <div class="flex space-x-1 mb-6 p-1 rounded-xl w-fit bg-gray-50 border border-gray-100">
         <button onclick="switchAdminTab('users')" id="tabUsers" class="px-5 py-2 rounded-lg text-xs font-semibold transition-all bg-white text-gray-700 shadow-sm"><i class="fas fa-users mr-1.5 text-maf-500"></i>Utilisateurs</button>
-        <button onclick="switchAdminTab('import')" id="tabImport" class="px-5 py-2 rounded-lg text-xs font-semibold text-gray-400 hover:text-gray-600 transition-all"><i class="fas fa-file-import mr-1.5"></i>Import CSV</button>
+        <button onclick="switchAdminTab('import')" id="tabImport" class="px-5 py-2 rounded-lg text-xs font-semibold text-gray-800 hover:text-gray-600 transition-all"><i class="fas fa-file-import mr-1.5"></i>Import CSV</button>
       </div>
       <div id="adminContent"></div>
     </div>
@@ -873,9 +882,9 @@ function renderAdmin() {
 }
 
 function switchAdminTab(tab) {
-  document.querySelectorAll('[id^="tab"]').forEach(el => { el.style.background='transparent'; el.className=el.className.replace('bg-white text-gray-700 shadow-sm','text-gray-400'); });
+  document.querySelectorAll('[id^="tab"]').forEach(el => { el.style.background='transparent'; el.className=el.className.replace('bg-white text-gray-700 shadow-sm','text-gray-800'); });
   const a = document.getElementById(`tab${tab.charAt(0).toUpperCase()+tab.slice(1)}`);
-  if (a) { a.style.background='#fff'; a.className=a.className.replace('text-gray-400','bg-white text-gray-700 shadow-sm'); }
+  if (a) { a.style.background='#fff'; a.className=a.className.replace('text-gray-800','bg-white text-gray-700 shadow-sm'); }
   if (tab==='users') loadUsers(); else renderImportCSV();
 }
 
@@ -885,16 +894,16 @@ async function loadUsers() {
     document.getElementById('adminContent').innerHTML = `
       <div class="glass-card-static rounded-xl overflow-hidden">
         <div class="px-6 py-4 flex justify-between items-center border-b border-gray-100">
-          <h3 class="text-sm font-bold text-gray-500">Utilisateurs (${data.users.length})</h3>
+          <h3 class="text-sm font-bold text-gray-900">Utilisateurs (${data.users.length})</h3>
           <button onclick="showAddUserModal()" class="btn-primary text-xs py-2 px-4 rounded-lg"><i class="fas fa-user-plus mr-1.5"></i>Ajouter</button>
         </div>
         <table class="w-full dark-table"><thead><tr><th class="text-left">Nom</th><th class="text-left">Email</th><th class="text-center">Role</th><th class="text-center">Statut</th><th class="text-center">Actions</th></tr></thead><tbody>
           ${data.users.map(u=>`<tr>
             <td class="font-semibold text-gray-700">${u.prenom} ${u.nom}</td>
-            <td class="text-gray-400 font-mono text-[12px]">${u.email}</td>
+            <td class="text-gray-800 font-mono text-[12px]">${u.email}</td>
             <td class="text-center"><span class="badge" style="${getRoleBadgeStyle(u.role)}">${getRoleLabel(u.role)}</span></td>
             <td class="text-center">${u.actif?'<span class="flex items-center justify-center space-x-1.5"><span class="live-dot" style="width:5px;height:5px;"></span><span class="text-green-600 text-[11px] font-semibold">Actif</span></span>':'<span class="text-red-400 text-[11px] font-semibold">Inactif</span>'}</td>
-            <td class="text-center">${u.id!==currentUser.id?`<button onclick="toggleUserActive(${u.id}, ${u.actif})" class="text-xs font-semibold ${u.actif?'text-red-400 hover:text-red-600':'text-green-500 hover:text-green-700'}"><i class="fas ${u.actif?'fa-user-slash':'fa-user-check'} mr-1"></i>${u.actif?'Desact.':'Activer'}</button>`:'<span class="text-gray-200 text-[10px]">Vous</span>'}</td>
+            <td class="text-center">${u.id!==currentUser.id?`<button onclick="toggleUserActive(${u.id}, ${u.actif})" class="text-xs font-semibold ${u.actif?'text-red-400 hover:text-red-600':'text-green-500 hover:text-green-700'}"><i class="fas ${u.actif?'fa-user-slash':'fa-user-check'} mr-1"></i>${u.actif?'Desact.':'Activer'}</button>`:'<span class="text-gray-600 text-[10px]">Vous</span>'}</td>
           </tr>`).join('')}
         </tbody></table>
       </div>`;
@@ -909,12 +918,12 @@ function showAddUserModal() {
           <h2 class="text-lg font-bold text-gray-800 mb-6"><i class="fas fa-user-plus text-maf-500 mr-2"></i>Nouvel utilisateur</h2>
           <form id="addUserForm" class="space-y-3">
             <div class="grid grid-cols-2 gap-3">
-              <div><label class="block text-[10px] font-semibold text-gray-400 mb-1 uppercase tracking-wider">Prenom *</label><input type="text" id="uPrenom" required class="w-full glass-input p-2.5 rounded-lg text-xs"></div>
-              <div><label class="block text-[10px] font-semibold text-gray-400 mb-1 uppercase tracking-wider">Nom *</label><input type="text" id="uNom" required class="w-full glass-input p-2.5 rounded-lg text-xs"></div>
+              <div><label class="block text-[10px] font-semibold text-gray-800 mb-1 uppercase tracking-wider">Prenom *</label><input type="text" id="uPrenom" required class="w-full glass-input p-2.5 rounded-lg text-xs"></div>
+              <div><label class="block text-[10px] font-semibold text-gray-800 mb-1 uppercase tracking-wider">Nom *</label><input type="text" id="uNom" required class="w-full glass-input p-2.5 rounded-lg text-xs"></div>
             </div>
-            <div><label class="block text-[10px] font-semibold text-gray-400 mb-1 uppercase tracking-wider">Email *</label><input type="email" id="uEmail" required class="w-full glass-input p-2.5 rounded-lg text-xs"></div>
-            <div><label class="block text-[10px] font-semibold text-gray-400 mb-1 uppercase tracking-wider">Mot de passe *</label><input type="password" id="uPassword" required minlength="6" class="w-full glass-input p-2.5 rounded-lg text-xs"></div>
-            <div><label class="block text-[10px] font-semibold text-gray-400 mb-1 uppercase tracking-wider">Role</label><select id="uRole" class="w-full p-2.5 rounded-lg text-xs"><option value="operator">Teleoperateur</option><option value="supervisor">Superviseur</option><option value="admin">Administrateur</option></select></div>
+            <div><label class="block text-[10px] font-semibold text-gray-800 mb-1 uppercase tracking-wider">Email *</label><input type="email" id="uEmail" required class="w-full glass-input p-2.5 rounded-lg text-xs"></div>
+            <div><label class="block text-[10px] font-semibold text-gray-800 mb-1 uppercase tracking-wider">Mot de passe *</label><input type="password" id="uPassword" required minlength="6" class="w-full glass-input p-2.5 rounded-lg text-xs"></div>
+            <div><label class="block text-[10px] font-semibold text-gray-800 mb-1 uppercase tracking-wider">Role</label><select id="uRole" class="w-full p-2.5 rounded-lg text-xs"><option value="operator">Teleoperateur</option><option value="supervisor">Superviseur</option><option value="admin">Administrateur</option></select></div>
             <button type="submit" class="w-full btn-primary py-3 rounded-lg mt-2"><i class="fas fa-plus mr-2"></i>Creer</button>
           </form>
         </div>
@@ -939,9 +948,9 @@ async function toggleUserActive(userId, currentActive) {
 function renderImportCSV() {
   document.getElementById('adminContent').innerHTML = `
     <div class="glass-card rounded-xl p-7">
-      <h3 class="text-sm font-bold text-gray-500 mb-5"><i class="fas fa-file-import text-maf-500 mr-2"></i>Import CSV</h3>
+      <h3 class="text-sm font-bold text-gray-900 mb-5"><i class="fas fa-file-import text-maf-500 mr-2"></i>Import CSV</h3>
       <div class="rounded-lg p-4 mb-5 text-xs bg-gray-50 border border-gray-100">
-        <p class="font-semibold text-gray-500 mb-2">Format (separateur: ;)</p>
+        <p class="font-semibold text-gray-900 mb-2">Format (separateur: ;)</p>
         <code class="text-[11px] p-2.5 rounded-lg block font-mono bg-white border border-gray-100 text-maf-600">nom_entreprise;nom_dirigeant;telephone;email;ville;code_postal;code_ape;opco;notes</code>
       </div>
       <textarea id="csvData" rows="8" placeholder="Collez vos donnees CSV ici..." class="w-full p-4 rounded-lg text-xs font-mono mb-4"></textarea>
@@ -973,7 +982,7 @@ function getStatusBadge(s) {
     NOUVEAU: '<span class="badge bg-blue-50 text-blue-600 border border-blue-100">Nouveau</span>',
     AR: '<span class="badge bg-amber-50 text-amber-600 border border-amber-100">AR</span>',
     RDV: '<span class="badge bg-green-50 text-green-600 border border-green-100">RDV</span>',
-    FIN: '<span class="badge bg-gray-50 text-gray-500 border border-gray-200">Cloture</span>',
+    FIN: '<span class="badge bg-gray-50 text-gray-900 border border-gray-200">Cloture</span>',
   }[s] || s;
 }
 function getResultBorderColor(s) { return {NRP:'border-red-300',AR:'border-amber-300',RDV:'border-green-300',FIN:'border-gray-200'}[s]||'border-gray-100'; }
@@ -986,6 +995,7 @@ function getRoleBadgeStyle(r) {
 }
 function getRoleBadgeColor(r) { return ''; }
 function getDefaultRappelDate() { const d=new Date(); d.setHours(d.getHours()+2); return d.toISOString().slice(0,16); }
+function getCurrentDateTime() { return new Date().toISOString().slice(0,16); }
 function closeModal(e) { if(e.target===e.currentTarget) document.getElementById('modal').classList.add('hidden'); }
 let debounceTimer;
 function debounce(fn, delay) { return function() { clearTimeout(debounceTimer); debounceTimer=setTimeout(fn, delay); }; }

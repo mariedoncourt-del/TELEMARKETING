@@ -13,6 +13,7 @@ appels.post('/', async (c) => {
     commentaire?: string;
     duree_secondes?: number;
     date_rappel?: string;
+    date_appel?: string;
     motif_fin?: string;
     // Données RDV (si statut_resultat === 'RDV')
     rdv_date?: string;
@@ -39,15 +40,15 @@ appels.post('/', async (c) => {
     // Batch de requêtes pour atomicité
     const statements: D1PreparedStatement[] = [];
 
-    // 1. Enregistrer l'appel
+    // 1. Enregistrer l'appel avec date_appel saisie par l'opérateur
     statements.push(
       db.prepare(`
-        INSERT INTO appels (prospect_id, user_id, statut_resultat, commentaire, duree_secondes, date_rappel)
-        VALUES (?, ?, ?, ?, ?, ?)
+        INSERT INTO appels (prospect_id, user_id, statut_resultat, commentaire, duree_secondes, date_rappel, date_appel)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
       `).bind(
         data.prospect_id, user.id, data.statut_resultat,
         data.commentaire || null, data.duree_secondes || null,
-        data.date_rappel || null
+        data.date_rappel || null, data.date_appel || null
       )
     );
 
