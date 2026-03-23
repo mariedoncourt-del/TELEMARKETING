@@ -222,7 +222,8 @@ prospects.post('/', requireRole('admin', 'supervisor'), async (c) => {
   return c.json({ id: result.meta.last_row_id, message: 'Prospect créé' }, 201);
 });
 
-// POST /api/prospects/import - Import CSV (admin)
+// POST /api/prospects/import - Import CSV/Excel (admin)
+// Accepte statut (NOUVEAU/AR/RDV/FIN) et nrp_count pour préserver les données Excel
 prospects.post('/import', requireRole('admin'), async (c) => {
   const db = c.env.DB;
   const { prospects: prospectsList } = await c.req.json<{ prospects: any[] }>();
@@ -233,6 +234,7 @@ prospects.post('/import', requireRole('admin'), async (c) => {
 
   let imported = 0;
   let errors: string[] = [];
+  const validStatuts = ['NOUVEAU', 'AR', 'RDV', 'FIN'];
 
   for (const p of prospectsList) {
     try {
@@ -240,14 +242,18 @@ prospects.post('/import', requireRole('admin'), async (c) => {
         errors.push(`Ligne ignorée: nom_entreprise et telephone obligatoires`);
         continue;
       }
+      // Valider et normaliser le statut
+      const statut = validStatuts.includes(p.statut) ? p.statut : 'NOUVEAU';
+      const nrpCount = typeof p.nrp_count === 'number' ? p.nrp_count : 0;
+
       await db.prepare(`
-        INSERT INTO prospects (nom_entreprise, nom_dirigeant, telephone, email, ville, code_postal, code_ape, opco, budget_identifie, notes)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO prospects (nom_entreprise, nom_dirigeant, telephone, email, ville, code_postal, code_ape, opco, budget_identifie, notes, statut, compteur_nrp)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `).bind(
         p.nom_entreprise, p.nom_dirigeant || null, p.telephone,
         p.email || null, p.ville || null, p.code_postal || null,
         p.code_ape || null, p.opco || null, p.budget_identifie || null,
-        p.notes || null
+        p.notes || null, statut, nrpCount
       ).run();
       imported++;
     } catch (e: any) {
@@ -256,6 +262,21 @@ prospects.post('/import', requireRole('admin'), async (c) => {
   }
 
   return c.json({ imported, total: prospectsList.length, errors });
+});
+
+// DELETE /api/prospects/purge - Supprimer tous les prospects (admin only)
+prospects.delete('/purge', requireRole('admin'), async (c) => {
+  const db = c.env.DB;
+  
+  // Supprimer d'abord les tables dépendantes
+  await db.prepare('DELETE FROM rdv').run();
+  await db.prepare('DELETE FROM appels').run();
+  await db.prepare('DELETE FROM prospects').run();
+  
+  // Reset auto-increment
+  await db.prepare("DELETE FROM sqlite_sequence WHERE name IN ('prospects', 'appels', 'rdv')").run();
+  
+  return c.json({ message: 'Tous les prospects, appels et RDV ont été supprimés' });
 });
 
 // PUT /api/prospects/:id - Modifier un prospect (admin/supervisor)
