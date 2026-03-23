@@ -769,7 +769,9 @@ async function loadProspects() {
   const search = document.getElementById('filterSearch')?.value || '';
 
   try {
-    const { data } = await API.get('/prospects', { params: { statut, search, limit: 100 } });
+    const page = parseInt(document.getElementById('filterPage')?.value || '1');
+    const limit = 50;
+    const { data } = await API.get('/prospects', { params: { statut, search, limit, page } });
     const list = data.prospects || [];
 
     document.getElementById('prospectsTable').innerHTML = `
@@ -777,6 +779,7 @@ async function loadProspects() {
         <table class="w-full text-sm">
           <thead>
             <tr class="bg-gray-50 text-left text-gray-500 text-xs uppercase">
+              <th class="px-4 py-3 text-center w-12">N°</th>
               <th class="px-4 py-3">Entreprise</th>
               <th class="px-4 py-3">Contact</th>
               <th class="px-4 py-3">Téléphone</th>
@@ -788,8 +791,9 @@ async function loadProspects() {
             </tr>
           </thead>
           <tbody>
-            ${list.map(p => `
+            ${list.map((p, idx) => `
               <tr class="border-t hover:bg-gray-50 cursor-pointer" onclick="showProspectDetail(${p.id})">
+                <td class="px-4 py-3 text-center text-gray-400 font-mono text-xs">${(page - 1) * limit + idx + 1}</td>
                 <td class="px-4 py-3 font-medium">${p.nom_entreprise}</td>
                 <td class="px-4 py-3 text-gray-600">${p.nom_dirigeant || '-'}</td>
                 <td class="px-4 py-3">${p.telephone}</td>
@@ -802,8 +806,13 @@ async function loadProspects() {
             `).join('')}
           </tbody>
         </table>
-        <div class="px-4 py-3 bg-gray-50 text-sm text-gray-500">
-          ${data.pagination?.total || 0} prospects trouvés
+        <div class="px-4 py-3 bg-gray-50 text-sm text-gray-500 flex justify-between items-center">
+          <span><strong>${data.pagination?.total || 0}</strong> prospects trouvés — affichés ${(page - 1) * limit + 1} à ${Math.min(page * limit, data.pagination?.total || 0)}</span>
+          <div class="flex items-center space-x-2">
+            ${page > 1 ? `<button onclick="changePage(${page - 1})" class="px-3 py-1 bg-white border rounded hover:bg-gray-100 text-xs font-medium"><i class="fas fa-chevron-left mr-1"></i>Précédent</button>` : ''}
+            <span class="text-xs font-medium">Page <input type="number" id="filterPage" value="${page}" min="1" max="${data.pagination?.pages || 1}" onchange="loadProspects()" class="w-12 text-center border rounded px-1 py-0.5 mx-1"> / ${data.pagination?.pages || 1}</span>
+            ${page < (data.pagination?.pages || 1) ? `<button onclick="changePage(${page + 1})" class="px-3 py-1 bg-white border rounded hover:bg-gray-100 text-xs font-medium">Suivant<i class="fas fa-chevron-right ml-1"></i></button>` : ''}
+          </div>
         </div>
       </div>
     `;
@@ -1209,6 +1218,14 @@ async function importCSV() {
   }
 }
 
+function changePage(newPage) {
+  const pageInput = document.getElementById('filterPage');
+  if (pageInput) {
+    pageInput.value = newPage;
+  }
+  loadProspects();
+}
+
 // =============================================
 // UTILITAIRES
 // =============================================
@@ -1278,6 +1295,7 @@ window.showProspectDetail = showProspectDetail;
 window.showAddProspectModal = showAddProspectModal;
 window.closeModal = closeModal;
 window.loadProspects = loadProspects;
+window.changePage = changePage;
 window.switchAdminTab = switchAdminTab;
 window.showAddUserModal = showAddUserModal;
 window.toggleUserActive = toggleUserActive;
