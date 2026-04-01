@@ -26,3 +26,8 @@ logs/
 # OS files
 .DS_Store
 Thumbs.db
+
+# SQLite databases (données sensibles)
+*.db
+*.db-shm
+*.db-wal

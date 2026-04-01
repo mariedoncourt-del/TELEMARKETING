@@ -891,84 +891,456 @@ function switchAdminTab(tab) {
 async function loadUsers() {
   try {
     const { data } = await API.get('/users');
+    const actifs = data.users.filter(u=>u.actif).length;
     document.getElementById('adminContent').innerHTML = `
-      <div class="glass-card-static rounded-xl overflow-hidden">
+      <div class="glass-card rounded-xl overflow-hidden fade-in">
         <div class="px-6 py-4 flex justify-between items-center border-b border-gray-100">
-          <h3 class="text-sm font-bold text-gray-900">Utilisateurs (${data.users.length})</h3>
-          <button onclick="showAddUserModal()" class="btn-primary text-xs py-2 px-4 rounded-lg"><i class="fas fa-user-plus mr-1.5"></i>Ajouter</button>
+          <div>
+            <h3 class="text-sm font-bold text-gray-900">Utilisateurs</h3>
+            <p class="text-[10px] text-gray-400 mt-0.5">${actifs} actifs · ${data.users.length} total</p>
+          </div>
+          <button onclick="showAddUserModal()" class="btn-primary text-xs py-2.5 px-4 rounded-lg">
+            <i class="fas fa-user-plus mr-1.5"></i>Ajouter un utilisateur
+          </button>
         </div>
-        <table class="w-full dark-table"><thead><tr><th class="text-left">Nom</th><th class="text-left">Email</th><th class="text-center">Role</th><th class="text-center">Statut</th><th class="text-center">Actions</th></tr></thead><tbody>
-          ${data.users.map(u=>`<tr>
-            <td class="font-semibold text-gray-700">${u.prenom} ${u.nom}</td>
-            <td class="text-gray-800 font-mono text-[12px]">${u.email}</td>
-            <td class="text-center"><span class="badge" style="${getRoleBadgeStyle(u.role)}">${getRoleLabel(u.role)}</span></td>
-            <td class="text-center">${u.actif?'<span class="flex items-center justify-center space-x-1.5"><span class="live-dot" style="width:5px;height:5px;"></span><span class="text-green-600 text-[11px] font-semibold">Actif</span></span>':'<span class="text-red-400 text-[11px] font-semibold">Inactif</span>'}</td>
-            <td class="text-center">${u.id!==currentUser.id?`<button onclick="toggleUserActive(${u.id}, ${u.actif})" class="text-xs font-semibold ${u.actif?'text-red-400 hover:text-red-600':'text-green-500 hover:text-green-700'}"><i class="fas ${u.actif?'fa-user-slash':'fa-user-check'} mr-1"></i>${u.actif?'Desact.':'Activer'}</button>`:'<span class="text-gray-600 text-[10px]">Vous</span>'}</td>
-          </tr>`).join('')}
-        </tbody></table>
+        <div class="divide-y divide-gray-50">
+          ${data.users.map(u=>`
+            <div class="flex items-center justify-between px-6 py-4 hover:bg-orange-50/20 transition-all group">
+              <div class="flex items-center space-x-4">
+                <div class="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white flex-shrink-0"
+                  style="background:${u.role==='admin'?'#e8642c':u.role==='supervisor'?'#7c3aed':'#2563eb'}">
+                  ${u.prenom.charAt(0)}${u.nom.charAt(0)}
+                </div>
+                <div>
+                  <p class="text-sm font-semibold text-gray-800">${u.prenom} ${u.nom}</p>
+                  <p class="text-[11px] text-gray-400 font-mono">${u.email}</p>
+                </div>
+              </div>
+              <div class="flex items-center space-x-3">
+                <span class="badge text-[10px]" style="${getRoleBadgeStyle(u.role)}">${getRoleLabel(u.role)}</span>
+                <span class="text-[10px] font-semibold px-2 py-1 rounded-full ${u.actif?'bg-green-50 text-green-600':'bg-red-50 text-red-400'}">
+                  ${u.actif?'Actif':'Inactif'}
+                </span>
+                ${u.id!==currentUser.id ? `
+                  <div class="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button onclick="showEditUserModal(${u.id},'${u.prenom}','${u.nom}','${u.email}','${u.role}')"
+                      class="w-7 h-7 rounded-lg bg-blue-50 hover:bg-blue-100 flex items-center justify-center transition-colors" title="Modifier">
+                      <i class="fas fa-pen text-blue-500 text-[10px]"></i>
+                    </button>
+                    <button onclick="toggleUserActive(${u.id}, ${u.actif})"
+                      class="w-7 h-7 rounded-lg ${u.actif?'bg-amber-50 hover:bg-amber-100':'bg-green-50 hover:bg-green-100'} flex items-center justify-center transition-colors"
+                      title="${u.actif?'Désactiver':'Réactiver'}">
+                      <i class="fas ${u.actif?'fa-user-slash text-amber-500':'fa-user-check text-green-500'} text-[10px]"></i>
+                    </button>
+                    <button onclick="deleteUser(${u.id},'${u.prenom} ${u.nom}')"
+                      class="w-7 h-7 rounded-lg bg-red-50 hover:bg-red-100 flex items-center justify-center transition-colors" title="Supprimer définitivement">
+                      <i class="fas fa-trash text-red-400 text-[10px]"></i>
+                    </button>
+                  </div>
+                ` : '<span class="text-[10px] text-gray-300 italic">Vous</span>'}
+              </div>
+            </div>`).join('')}
+        </div>
       </div>`;
-  } catch (err) { document.getElementById('adminContent').innerHTML = `<p class="text-red-500 text-sm">Erreur: ${err.message}</p>`; }
+  } catch (err) { document.getElementById('adminContent').innerHTML = `<p class="text-red-500 text-sm p-6">Erreur: ${err.message}</p>`; }
 }
 
-function showAddUserModal() {
-  document.getElementById('modal').innerHTML = `
+function userModalHTML(title, icon, submitLabel, submitColor='btn-primary', fields='') {
+  return `
     <div class="fixed inset-0 modal-overlay z-50 flex items-center justify-center p-4" onclick="closeModal(event)">
       <div class="bg-white rounded-2xl max-w-md w-full scale-in" onclick="event.stopPropagation()" style="box-shadow:0 20px 60px rgba(0,0,0,0.15);">
         <div class="p-7">
-          <h2 class="text-lg font-bold text-gray-800 mb-6"><i class="fas fa-user-plus text-maf-500 mr-2"></i>Nouvel utilisateur</h2>
-          <form id="addUserForm" class="space-y-3">
-            <div class="grid grid-cols-2 gap-3">
-              <div><label class="block text-[10px] font-semibold text-gray-800 mb-1 uppercase tracking-wider">Prenom *</label><input type="text" id="uPrenom" required class="w-full glass-input p-2.5 rounded-lg text-xs"></div>
-              <div><label class="block text-[10px] font-semibold text-gray-800 mb-1 uppercase tracking-wider">Nom *</label><input type="text" id="uNom" required class="w-full glass-input p-2.5 rounded-lg text-xs"></div>
-            </div>
-            <div><label class="block text-[10px] font-semibold text-gray-800 mb-1 uppercase tracking-wider">Email *</label><input type="email" id="uEmail" required class="w-full glass-input p-2.5 rounded-lg text-xs"></div>
-            <div><label class="block text-[10px] font-semibold text-gray-800 mb-1 uppercase tracking-wider">Mot de passe *</label><input type="password" id="uPassword" required minlength="6" class="w-full glass-input p-2.5 rounded-lg text-xs"></div>
-            <div><label class="block text-[10px] font-semibold text-gray-800 mb-1 uppercase tracking-wider">Role</label><select id="uRole" class="w-full p-2.5 rounded-lg text-xs"><option value="operator">Teleoperateur</option><option value="supervisor">Superviseur</option><option value="admin">Administrateur</option></select></div>
-            <button type="submit" class="w-full btn-primary py-3 rounded-lg mt-2"><i class="fas fa-plus mr-2"></i>Creer</button>
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="text-base font-bold text-gray-800"><i class="fas ${icon} text-maf-500 mr-2"></i>${title}</h2>
+            <button onclick="document.getElementById('modal').classList.add('hidden')" class="w-7 h-7 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors">
+              <i class="fas fa-times text-gray-400 text-xs"></i>
+            </button>
+          </div>
+          <form id="userForm" class="space-y-4">
+            ${fields}
+            <button type="submit" class="${submitColor} w-full py-3 rounded-xl mt-2 text-sm font-semibold">${submitLabel}</button>
           </form>
         </div>
       </div>
     </div>`;
+}
+
+function fieldGroup(label, id, type='text', required=true, placeholder='', value='', extra='') {
+  return `<div>
+    <label class="block text-[10px] font-semibold text-gray-600 mb-1.5 uppercase tracking-wider">${label}${required?' *':''}</label>
+    <input type="${type}" id="${id}" ${required?'required':''} placeholder="${placeholder}" value="${value}" ${extra}
+      class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:border-maf-400 focus:outline-none transition-colors">
+  </div>`;
+}
+
+function roleSelect(selectedRole='operator') {
+  const roles = [{v:'operator',l:'Téléopérateur'},{v:'supervisor',l:'Superviseur'},{v:'admin',l:'Administrateur'}];
+  return `<div>
+    <label class="block text-[10px] font-semibold text-gray-600 mb-1.5 uppercase tracking-wider">Rôle *</label>
+    <select id="uRole" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:border-maf-400 focus:outline-none transition-colors">
+      ${roles.map(r=>`<option value="${r.v}" ${r.v===selectedRole?'selected':''}>${r.l}</option>`).join('')}
+    </select>
+  </div>`;
+}
+
+function showAddUserModal() {
+  document.getElementById('modal').innerHTML = userModalHTML(
+    'Nouvel utilisateur', 'fa-user-plus', '<i class="fas fa-plus mr-2"></i>Créer le compte', 'btn-primary',
+    `<div class="grid grid-cols-2 gap-3">
+      ${fieldGroup('Prénom','uPrenom','text',true,'Marie')}
+      ${fieldGroup('Nom','uNom','text',true,'Dupont')}
+    </div>
+    ${fieldGroup('Email','uEmail','email',true,'marie@maf-formation.fr')}
+    ${fieldGroup('Mot de passe','uPassword','password',true,'Min. 6 caractères','','minlength="6"')}
+    ${roleSelect('operator')}`
+  );
   document.getElementById('modal').classList.remove('hidden');
-  document.getElementById('addUserForm').addEventListener('submit', async (e) => {
+  document.getElementById('userForm').addEventListener('submit', async (e) => {
     e.preventDefault();
+    const btn = e.target.querySelector('button[type=submit]');
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Création...'; btn.disabled = true;
     try {
-      await API.post('/users', { prenom:document.getElementById('uPrenom').value, nom:document.getElementById('uNom').value, email:document.getElementById('uEmail').value, password:document.getElementById('uPassword').value, role:document.getElementById('uRole').value });
-      document.getElementById('modal').classList.add('hidden'); loadUsers();
-    } catch (err) { alert(err.response?.data?.error||'Erreur'); }
+      await API.post('/users', {
+        prenom: document.getElementById('uPrenom').value,
+        nom:    document.getElementById('uNom').value,
+        email:  document.getElementById('uEmail').value,
+        password: document.getElementById('uPassword').value,
+        role:   document.getElementById('uRole').value
+      });
+      document.getElementById('modal').classList.add('hidden');
+      loadUsers();
+    } catch (err) {
+      btn.innerHTML = '<i class="fas fa-plus mr-2"></i>Créer le compte'; btn.disabled = false;
+      alert(err.response?.data?.error || 'Erreur');
+    }
+  });
+}
+
+function showEditUserModal(id, prenom, nom, email, role) {
+  document.getElementById('modal').innerHTML = userModalHTML(
+    'Modifier l\'utilisateur', 'fa-user-pen', '<i class="fas fa-save mr-2"></i>Enregistrer', 'btn-primary',
+    `<div class="grid grid-cols-2 gap-3">
+      ${fieldGroup('Prénom','uPrenom','text',true,'',prenom)}
+      ${fieldGroup('Nom','uNom','text',true,'',nom)}
+    </div>
+    ${fieldGroup('Email','uEmail','email',true,'',email)}
+    ${roleSelect(role)}
+    <div class="border-t border-gray-100 pt-4">
+      <label class="block text-[10px] font-semibold text-gray-600 mb-1.5 uppercase tracking-wider">Nouveau mot de passe <span class="text-gray-300 normal-case font-normal">(laisser vide pour ne pas changer)</span></label>
+      <input type="password" id="uPassword" placeholder="Laisser vide pour garder l'actuel" minlength="6"
+        class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:border-maf-400 focus:outline-none transition-colors">
+    </div>`
+  );
+  document.getElementById('modal').classList.remove('hidden');
+  document.getElementById('userForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = e.target.querySelector('button[type=submit]');
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Enregistrement...'; btn.disabled = true;
+    const payload = {
+      prenom: document.getElementById('uPrenom').value,
+      nom:    document.getElementById('uNom').value,
+      email:  document.getElementById('uEmail').value,
+      role:   document.getElementById('uRole').value,
+    };
+    const pwd = document.getElementById('uPassword').value;
+    if (pwd) payload.password = pwd;
+    try {
+      await API.put(`/users/${id}`, payload);
+      document.getElementById('modal').classList.add('hidden');
+      loadUsers();
+    } catch (err) {
+      btn.innerHTML = '<i class="fas fa-save mr-2"></i>Enregistrer'; btn.disabled = false;
+      alert(err.response?.data?.error || 'Erreur');
+    }
+  });
+}
+
+async function deleteUser(userId, userName) {
+  document.getElementById('modal').innerHTML = `
+    <div class="fixed inset-0 modal-overlay z-50 flex items-center justify-center p-4" onclick="closeModal(event)">
+      <div class="bg-white rounded-2xl max-w-sm w-full scale-in" onclick="event.stopPropagation()" style="box-shadow:0 20px 60px rgba(0,0,0,0.15);">
+        <div class="p-7 text-center">
+          <div class="w-14 h-14 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-trash text-red-400 text-xl"></i>
+          </div>
+          <h2 class="text-base font-bold text-gray-800 mb-2">Supprimer ${userName} ?</h2>
+          <p class="text-xs text-gray-400 mb-6">Cette action est irréversible. L'historique des appels sera conservé.</p>
+          <div class="flex gap-3">
+            <button onclick="document.getElementById('modal').classList.add('hidden')"
+              class="flex-1 btn-secondary py-2.5 rounded-xl text-sm">Annuler</button>
+            <button id="confirmDeleteBtn"
+              class="flex-1 bg-red-500 hover:bg-red-600 text-white font-semibold py-2.5 rounded-xl text-sm transition-colors">
+              <i class="fas fa-trash mr-1.5"></i>Supprimer
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  document.getElementById('modal').classList.remove('hidden');
+  document.getElementById('confirmDeleteBtn').addEventListener('click', async () => {
+    const btn = document.getElementById('confirmDeleteBtn');
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1.5"></i>Suppression...'; btn.disabled = true;
+    try {
+      await API.delete(`/users/${userId}`);
+      document.getElementById('modal').classList.add('hidden');
+      loadUsers();
+    } catch (err) { alert(err.response?.data?.error || 'Erreur'); }
   });
 }
 
 async function toggleUserActive(userId, currentActive) {
-  if (!confirm(currentActive?'Desactiver ?':'Reactiver ?')) return;
-  try { if (currentActive) await API.delete(`/users/${userId}`); else await API.put(`/users/${userId}`, { actif: true }); loadUsers(); }
-  catch (err) { alert(err.response?.data?.error||'Erreur'); }
+  try {
+    await API.put(`/users/${userId}`, { actif: currentActive ? 0 : 1 });
+    loadUsers();
+  } catch (err) { alert(err.response?.data?.error||'Erreur'); }
 }
+
+// =============================================
+// IMPORT PROSPECTS - Upload fichier Excel/CSV
+// =============================================
+
+let importData = []; // données parsées en attente de confirmation
 
 function renderImportCSV() {
   document.getElementById('adminContent').innerHTML = `
-    <div class="glass-card rounded-xl p-7">
-      <h3 class="text-sm font-bold text-gray-900 mb-5"><i class="fas fa-file-import text-maf-500 mr-2"></i>Import CSV</h3>
-      <div class="rounded-lg p-4 mb-5 text-xs bg-gray-50 border border-gray-100">
-        <p class="font-semibold text-gray-900 mb-2">Format (separateur: ;)</p>
-        <code class="text-[11px] p-2.5 rounded-lg block font-mono bg-white border border-gray-100 text-maf-600">nom_entreprise;nom_dirigeant;telephone;email;ville;code_postal;code_ape;opco;notes</code>
+    <div class="glass-card rounded-xl p-7 fade-in">
+      <h3 class="text-sm font-bold text-gray-900 mb-1"><i class="fas fa-file-import text-maf-500 mr-2"></i>Import de prospects en masse</h3>
+      <p class="text-xs text-gray-500 mb-6">Importez un fichier Excel (.xlsx) ou CSV (.csv) — colonnes détectées automatiquement</p>
+
+      <!-- Zone de drop -->
+      <div id="dropZone" onclick="document.getElementById('fileInput').click()"
+        ondragover="event.preventDefault();this.classList.add('border-maf-400','bg-maf-50')"
+        ondragleave="this.classList.remove('border-maf-400','bg-maf-50')"
+        ondrop="handleFileDrop(event)"
+        class="border-2 border-dashed border-gray-200 rounded-xl p-10 text-center cursor-pointer hover:border-maf-400 hover:bg-orange-50/30 transition-all mb-6">
+        <div class="w-14 h-14 bg-orange-50 rounded-xl flex items-center justify-center mx-auto mb-4">
+          <i class="fas fa-cloud-upload-alt text-2xl text-maf-500"></i>
+        </div>
+        <p class="text-sm font-semibold text-gray-700 mb-1">Glissez votre fichier ici</p>
+        <p class="text-xs text-gray-400">ou cliquez pour parcourir — .xlsx, .xls, .csv acceptés</p>
+        <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" class="hidden" onchange="handleFileSelect(this)">
       </div>
-      <textarea id="csvData" rows="8" placeholder="Collez vos donnees CSV ici..." class="w-full p-4 rounded-lg text-xs font-mono mb-4"></textarea>
-      <button onclick="importCSV()" class="btn-primary rounded-lg"><i class="fas fa-upload mr-2"></i>Importer</button>
-      <div id="importResult" class="mt-4 hidden"></div>
+
+      <!-- Mapping des colonnes -->
+      <div id="mappingZone" class="hidden mb-6">
+        <div class="flex items-center justify-between mb-3">
+          <h4 class="text-xs font-bold text-gray-700"><i class="fas fa-columns mr-1.5 text-maf-500"></i>Mapping des colonnes détectées</h4>
+          <span id="fileInfo" class="text-[10px] text-gray-400 font-mono"></span>
+        </div>
+        <div id="mappingGrid" class="grid grid-cols-2 md:grid-cols-3 gap-3 mb-5"></div>
+        <div class="flex items-center gap-3">
+          <button onclick="previewImport()" class="btn-primary rounded-lg text-xs px-5 py-2.5">
+            <i class="fas fa-eye mr-1.5"></i>Prévisualiser (<span id="rowCount">0</span> lignes)
+          </button>
+          <button onclick="resetImport()" class="btn-secondary rounded-lg text-xs px-4 py-2.5">
+            <i class="fas fa-times mr-1.5"></i>Annuler
+          </button>
+        </div>
+      </div>
+
+      <!-- Prévisualisation -->
+      <div id="previewZone" class="hidden mb-6">
+        <div class="flex items-center justify-between mb-3">
+          <h4 class="text-xs font-bold text-gray-700"><i class="fas fa-table mr-1.5 text-maf-500"></i>Aperçu — <span id="previewCount">0</span> prospects à importer</h4>
+          <button onclick="document.getElementById('previewZone').classList.add('hidden');document.getElementById('mappingZone').classList.remove('hidden')" class="text-xs text-gray-400 hover:text-gray-600">
+            <i class="fas fa-arrow-left mr-1"></i>Modifier
+          </button>
+        </div>
+        <div class="overflow-x-auto rounded-xl border border-gray-100 mb-5" style="max-height:320px;overflow-y:auto">
+          <table class="w-full dark-table text-xs" id="previewTable"></table>
+        </div>
+        <button onclick="confirmImport()" class="btn-primary rounded-lg px-6 py-3 text-sm">
+          <i class="fas fa-check mr-2"></i>Confirmer l'import
+        </button>
+        <button onclick="resetImport()" class="btn-secondary rounded-lg px-5 py-3 text-sm ml-3">Annuler</button>
+      </div>
+
+      <!-- Résultat -->
+      <div id="importResult" class="hidden"></div>
+
+      <!-- Format CSV info -->
+      <div class="rounded-lg p-4 mt-4 text-xs bg-gray-50 border border-gray-100">
+        <p class="font-semibold text-gray-700 mb-2"><i class="fas fa-info-circle mr-1.5 text-blue-400"></i>Colonnes reconnues automatiquement</p>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+          ${['nom_entreprise / entreprise / société','nom_dirigeant / dirigeant / contact','telephone / tel / phone','email / mail','ville / city','code_postal / cp','code_ape / ape / naf','opco','notes / commentaires'].map(c=>`<code class="text-[10px] bg-white px-2 py-1 rounded border border-gray-200 text-maf-600">${c}</code>`).join('')}
+        </div>
+      </div>
     </div>`;
 }
 
-async function importCSV() {
-  const raw = document.getElementById('csvData').value.trim();
-  if (!raw) { alert('Collez des donnees'); return; }
-  const prospects = raw.split('\n').filter(l=>l.trim()).map(line => { const c=line.split(';').map(x=>x.trim()); return {nom_entreprise:c[0],nom_dirigeant:c[1],telephone:c[2],email:c[3],ville:c[4],code_postal:c[5],code_ape:c[6],opco:c[7],notes:c[8]}; });
-  try {
-    const { data } = await API.post('/prospects/import', { prospects });
-    const r = document.getElementById('importResult'); r.classList.remove('hidden');
-    r.innerHTML = `<div class="rounded-lg p-4 bg-green-50 border border-green-100 scale-in"><p class="font-semibold text-green-600 text-xs"><i class="fas fa-check-circle mr-2"></i>${data.imported} importes sur ${data.total}</p>${data.errors?.length?`<div class="mt-2 text-[10px] text-red-400">${data.errors.join('<br>')}</div>`:''}</div>`;
-  } catch (err) { alert(err.response?.data?.error||'Erreur'); }
+// Correspondances colonnes -> champ interne
+const COLUMN_MAP = {
+  nom_entreprise: ['nom_entreprise','entreprise','societe','société','raison_sociale','company','nom'],
+  nom_dirigeant:  ['nom_dirigeant','dirigeant','contact','gerant','gérant','responsable','prenom_nom'],
+  telephone:      ['telephone','tel','phone','portable','mobile','fixe','numero','téléphone'],
+  email:          ['email','mail','courriel','e-mail'],
+  ville:          ['ville','city','commune','localite','localité'],
+  code_postal:    ['code_postal','cp','codepostal','code postal','postal'],
+  code_ape:       ['code_ape','ape','naf','activite','activité'],
+  opco:           ['opco','organisme','fonds'],
+  notes:          ['notes','commentaire','commentaires','observation','remarque'],
+};
+
+let columnMapping = {}; // header original -> champ interne
+
+function detectColumn(header) {
+  const h = header.toLowerCase().trim().replace(/[\s_-]+/g,'_');
+  for (const [field, aliases] of Object.entries(COLUMN_MAP)) {
+    if (aliases.some(a => h.includes(a.replace(/[\s_-]+/g,'_')) || a.replace(/[\s_-]+/g,'_').includes(h))) {
+      return field;
+    }
+  }
+  return '';
 }
+
+function handleFileDrop(e) {
+  e.preventDefault();
+  document.getElementById('dropZone').classList.remove('border-maf-400','bg-maf-50');
+  const file = e.dataTransfer.files[0];
+  if (file) processFile(file);
+}
+
+function handleFileSelect(input) {
+  const file = input.files[0];
+  if (file) processFile(file);
+}
+
+function processFile(file) {
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      let rows = [];
+      if (file.name.endsWith('.csv')) {
+        // Parsing CSV
+        const text = new TextDecoder('utf-8').decode(e.target.result);
+        const lines = text.split(/\r?\n/).filter(l => l.trim());
+        const sep = lines[0].includes(';') ? ';' : ',';
+        rows = lines.map(l => l.split(sep).map(c => c.trim().replace(/^"|"$/g,'')));
+      } else {
+        // Parsing Excel avec SheetJS
+        const wb = XLSX.read(e.target.result, { type: 'array' });
+        const ws = wb.Sheets[wb.SheetNames[0]];
+        rows = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' });
+      }
+
+      if (rows.length < 2) { alert('Fichier vide ou non reconnu'); return; }
+
+      const headers = rows[0].map(h => String(h).trim());
+      const dataRows = rows.slice(1).filter(r => r.some(c => c !== ''));
+
+      // Détecter les mappings
+      columnMapping = {};
+      headers.forEach(h => { columnMapping[h] = detectColumn(h); });
+
+      // Stocker les données brutes
+      importData = { headers, rows: dataRows };
+
+      // Afficher le mapping
+      showMappingUI(headers, dataRows.length, file.name);
+    } catch(err) {
+      alert('Erreur lecture fichier: ' + err.message);
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function showMappingUI(headers, rowCount, fileName) {
+  document.getElementById('dropZone').classList.add('hidden');
+  document.getElementById('mappingZone').classList.remove('hidden');
+  document.getElementById('fileInfo').textContent = fileName + ' — ' + rowCount + ' lignes';
+  document.getElementById('rowCount').textContent = rowCount;
+
+  const fieldOptions = Object.keys(COLUMN_MAP).map(f => `<option value="${f}">${f}</option>`).join('');
+
+  document.getElementById('mappingGrid').innerHTML = headers.map(h => `
+    <div class="bg-white rounded-lg border border-gray-100 p-3">
+      <p class="text-[10px] font-mono text-gray-400 mb-1.5 truncate" title="${h}">${h}</p>
+      <select onchange="columnMapping['${h}']=this.value" class="w-full text-xs rounded-lg border border-gray-200 px-2 py-1.5 focus:border-maf-400 outline-none">
+        <option value="">— ignorer —</option>
+        ${fieldOptions}
+      </select>
+    </div>
+  `).join('');
+
+  // Pré-sélectionner les mappings détectés
+  document.querySelectorAll('#mappingGrid select').forEach((sel, i) => {
+    const detected = columnMapping[headers[i]];
+    if (detected) sel.value = detected;
+  });
+}
+
+function previewImport() {
+  const { headers, rows } = importData;
+
+  // Construire les prospects depuis le mapping courant
+  const prospects = rows.slice(0, rows.length).map(row => {
+    const p = {};
+    headers.forEach((h, i) => {
+      const field = columnMapping[h];
+      if (field) p[field] = String(row[i] || '').trim();
+    });
+    return p;
+  }).filter(p => p.nom_entreprise && p.telephone);
+
+  importData.prospects = prospects;
+
+  document.getElementById('previewCount').textContent = prospects.length;
+  document.getElementById('mappingZone').classList.add('hidden');
+  document.getElementById('previewZone').classList.remove('hidden');
+
+  const cols = ['nom_entreprise','nom_dirigeant','telephone','email','ville','opco'];
+  document.getElementById('previewTable').innerHTML = `
+    <thead><tr>${cols.map(c=>`<th class="text-left px-3 py-2 bg-gray-50 text-gray-500 font-semibold uppercase text-[10px] tracking-wider">${c}</th>`).join('')}</tr></thead>
+    <tbody>${prospects.slice(0,50).map(p=>`<tr class="hover:bg-orange-50/30">${cols.map(c=>`<td class="px-3 py-2 border-b border-gray-50 text-gray-700">${p[c]||'—'}</td>`).join('')}</tr>`).join('')}
+    ${prospects.length>50?`<tr><td colspan="${cols.length}" class="px-3 py-2 text-center text-gray-400 text-[10px]">... et ${prospects.length-50} autres lignes</td></tr>`:''}</tbody>`;
+}
+
+async function confirmImport() {
+  const { prospects } = importData;
+  if (!prospects || prospects.length === 0) { alert('Aucun prospect valide'); return; }
+
+  const btn = document.querySelector('#previewZone button[onclick="confirmImport()"]');
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Import en cours...';
+  btn.disabled = true;
+
+  // Envoyer par lots de 500
+  let totalImported = 0, allErrors = [];
+  const batchSize = 500;
+
+  for (let i = 0; i < prospects.length; i += batchSize) {
+    const batch = prospects.slice(i, i + batchSize);
+    try {
+      const { data } = await API.post('/prospects/import', { prospects: batch });
+      totalImported += data.imported;
+      if (data.errors) allErrors = allErrors.concat(data.errors);
+    } catch(err) {
+      allErrors.push('Erreur lot ' + (i/batchSize+1) + ': ' + (err.response?.data?.error||err.message));
+    }
+    btn.innerHTML = `<i class="fas fa-spinner fa-spin mr-2"></i>${totalImported} importés...`;
+  }
+
+  document.getElementById('previewZone').classList.add('hidden');
+  const r = document.getElementById('importResult');
+  r.classList.remove('hidden');
+  r.innerHTML = `
+    <div class="rounded-xl p-6 ${allErrors.length===0?'bg-green-50 border border-green-100':'bg-amber-50 border border-amber-100'} scale-in">
+      <div class="flex items-center mb-3">
+        <i class="fas ${allErrors.length===0?'fa-check-circle text-green-500':'fa-exclamation-triangle text-amber-500'} text-xl mr-3"></i>
+        <p class="font-bold text-sm ${allErrors.length===0?'text-green-700':'text-amber-700'}">${totalImported} prospects importés sur ${prospects.length}</p>
+      </div>
+      ${allErrors.length>0?`<div class="mt-2 text-[10px] text-red-500 max-h-24 overflow-y-auto">${allErrors.slice(0,10).join('<br>')}${allErrors.length>10?`<br>...et ${allErrors.length-10} autres erreurs`:''}</div>`:''}
+      <button onclick="resetImport()" class="btn-secondary rounded-lg text-xs px-4 py-2 mt-4"><i class="fas fa-plus mr-1.5"></i>Nouvel import</button>
+    </div>`;
+}
+
+function resetImport() {
+  importData = {};
+  columnMapping = {};
+  renderImportCSV();
+}
+
+// Garder l'ancienne fonction pour compatibilité
+async function importCSV() { confirmImport(); }
 
 function changePage(p) { const i=document.getElementById('filterPage'); if(i) i.value=p; loadProspects(); }
 
@@ -1007,6 +1379,10 @@ window.loadDashboard = loadDashboard; window.showProspectDetail = showProspectDe
 window.showAddProspectModal = showAddProspectModal; window.closeModal = closeModal;
 window.loadProspects = loadProspects; window.changePage = changePage;
 window.switchAdminTab = switchAdminTab; window.showAddUserModal = showAddUserModal;
+window.showEditUserModal = showEditUserModal; window.deleteUser = deleteUser;
 window.toggleUserActive = toggleUserActive; window.importCSV = importCSV;
+window.handleFileDrop = handleFileDrop; window.handleFileSelect = handleFileSelect;
+window.previewImport = previewImport; window.confirmImport = confirmImport;
+window.resetImport = resetImport;
 window.logout = logout; window.debounce = debounce; window.loadRDV = loadRDV;
 window.showModalResultForm = showModalResultForm; window.submitModalResult = submitModalResult;
