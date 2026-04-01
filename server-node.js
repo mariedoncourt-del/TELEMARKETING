@@ -39,6 +39,9 @@ function initDB() {
   // migration 2 — ALTER TABLE est idempotent via try/catch
   const m2 = join(__dirname, 'migrations/0002_add_date_appel.sql');
   if (existsSync(m2)) { try { db.exec(readFileSync(m2, 'utf8')); } catch(e) { /* colonne déjà présente */ } }
+  // migration 3 — Table objectifs
+  const m3 = join(__dirname, 'migrations/0003_objectifs.sql');
+  if (existsSync(m3)) { try { db.exec(readFileSync(m3, 'utf8')); } catch(e) { /* table déjà présente */ } }
   console.log('✅ Base de données initialisée');
 }
 
@@ -354,10 +357,122 @@ app.get('/api/dashboard/stats', authMiddleware, requireRole('admin', 'supervisor
 });
 
 app.get('/api/dashboard/my-stats', authMiddleware, (req, res) => {
-  const today = db.prepare("SELECT COUNT(*) as n FROM appels WHERE user_id=? AND date(created_at)=date('now')").get(req.user.id).n;
-  const rdvToday = db.prepare("SELECT COUNT(*) as n FROM appels WHERE user_id=? AND statut_resultat='RDV' AND date(created_at)=date('now')").get(req.user.id).n;
-  const nrpToday = db.prepare("SELECT COUNT(*) as n FROM appels WHERE user_id=? AND statut_resultat='NRP' AND date(created_at)=date('now')").get(req.user.id).n;
-  res.json({ appels_aujourd_hui: today, rdv_aujourd_hui: rdvToday, nrp_aujourd_hui: nrpToday });
+  const todayStats = db.prepare(`
+    SELECT COUNT(*) as total_appels,
+      SUM(CASE WHEN statut_resultat='RDV' THEN 1 ELSE 0 END) as nb_rdv,
+      SUM(CASE WHEN statut_resultat='AR'  THEN 1 ELSE 0 END) as nb_ar,
+      SUM(CASE WHEN statut_resultat='NRP' THEN 1 ELSE 0 END) as nb_nrp,
+      SUM(CASE WHEN statut_resultat='FIN' THEN 1 ELSE 0 END) as nb_fin
+    FROM appels WHERE user_id=? AND date(created_at)=date('now')
+  `).get(req.user.id);
+
+  const weekStats = db.prepare(`
+    SELECT date(created_at) as jour, COUNT(*) as total_appels,
+      SUM(CASE WHEN statut_resultat='RDV' THEN 1 ELSE 0 END) as rdv
+    FROM appels WHERE user_id=? AND date(created_at) >= date('now', '-7 days')
+    GROUP BY date(created_at) ORDER BY jour ASC
+  `).all(req.user.id);
+
+  const myRdv = db.prepare(`
+    SELECT r.date_rdv, r.statut, r.type_rdv, p.nom_entreprise, p.ville
+    FROM rdv r JOIN prospects p ON r.prospect_id = p.id
+    WHERE r.pris_par = ? AND r.date_rdv >= datetime('now')
+    ORDER BY r.date_rdv ASC LIMIT 10
+  `).all(req.user.id);
+
+  // Objectifs actifs
+  let objectifs = null;
+  try { objectifs = db.prepare('SELECT cible_appels, cible_rdv, cible_ar FROM objectifs WHERE actif = 1 LIMIT 1').get(); } catch(e) {}
+  if (!objectifs) objectifs = { cible_appels: 50, cible_rdv: 3, cible_ar: 10 };
+
+  // Mon rang
+  const ranking = db.prepare(`
+    SELECT user_id, COUNT(*) as total_appels,
+      SUM(CASE WHEN statut_resultat='RDV' THEN 1 ELSE 0 END) as nb_rdv
+    FROM appels WHERE date(created_at) = date('now')
+    GROUP BY user_id ORDER BY nb_rdv DESC, total_appels DESC
+  `).all();
+  let monRang = 1, totalOperateurs = ranking.length || 0;
+  const idx = ranking.findIndex(r => r.user_id === req.user.id);
+  if (idx >= 0) monRang = idx + 1; else totalOperateurs += 1;
+
+  const taux = todayStats.total_appels > 0
+    ? parseFloat(((todayStats.nb_rdv / todayStats.total_appels) * 100).toFixed(1))
+    : 0;
+
+  res.json({
+    today: todayStats,
+    week: weekStats,
+    upcoming_rdv: myRdv,
+    objectifs,
+    rang: monRang,
+    total_operateurs: totalOperateurs,
+    taux_conversion: taux
+  });
+});
+
+// Leaderboard
+app.get('/api/dashboard/leaderboard', authMiddleware, (req, res) => {
+  const todayLb = db.prepare(`
+    SELECT u.id, u.nom, u.prenom, COUNT(a.id) as total_appels,
+      SUM(CASE WHEN a.statut_resultat='RDV' THEN 1 ELSE 0 END) as nb_rdv,
+      SUM(CASE WHEN a.statut_resultat='AR'  THEN 1 ELSE 0 END) as nb_ar,
+      SUM(CASE WHEN a.statut_resultat='NRP' THEN 1 ELSE 0 END) as nb_nrp,
+      CASE WHEN COUNT(a.id) > 0 THEN ROUND(CAST(SUM(CASE WHEN a.statut_resultat='RDV' THEN 1 ELSE 0 END) AS REAL) / COUNT(a.id) * 100, 1) ELSE 0 END as taux_conversion,
+      MAX(CASE WHEN p2.locked_by = u.id THEN 1 ELSE 0 END) as en_ligne
+    FROM users u
+    LEFT JOIN appels a ON u.id = a.user_id AND date(a.created_at) = date('now')
+    LEFT JOIN prospects p2 ON p2.locked_by = u.id
+    WHERE u.role = 'operator' AND u.actif = 1
+    GROUP BY u.id ORDER BY nb_rdv DESC, total_appels DESC
+  `).all();
+
+  const weekLb = db.prepare(`
+    SELECT u.id, u.nom, u.prenom, COUNT(a.id) as total_appels,
+      SUM(CASE WHEN a.statut_resultat='RDV' THEN 1 ELSE 0 END) as nb_rdv,
+      SUM(CASE WHEN a.statut_resultat='AR'  THEN 1 ELSE 0 END) as nb_ar,
+      CASE WHEN COUNT(a.id) > 0 THEN ROUND(CAST(SUM(CASE WHEN a.statut_resultat='RDV' THEN 1 ELSE 0 END) AS REAL) / COUNT(a.id) * 100, 1) ELSE 0 END as taux_conversion
+    FROM users u
+    LEFT JOIN appels a ON u.id = a.user_id AND date(a.created_at) >= date('now', '-7 days')
+    WHERE u.role = 'operator' AND u.actif = 1
+    GROUP BY u.id ORDER BY nb_rdv DESC, total_appels DESC
+  `).all();
+
+  let objectifs = null;
+  try { objectifs = db.prepare('SELECT cible_appels, cible_rdv, cible_ar FROM objectifs WHERE actif = 1 LIMIT 1').get(); } catch(e) {}
+  if (!objectifs) objectifs = { cible_appels: 50, cible_rdv: 3, cible_ar: 10 };
+
+  let dernierRdv = null;
+  try {
+    dernierRdv = db.prepare(`
+      SELECT a.created_at, u.prenom, u.nom, p.nom_entreprise
+      FROM appels a JOIN users u ON a.user_id = u.id JOIN prospects p ON a.prospect_id = p.id
+      WHERE a.statut_resultat = 'RDV' AND date(a.created_at) = date('now')
+      ORDER BY a.created_at DESC LIMIT 1
+    `).get();
+  } catch(e) {}
+
+  res.json({ today: todayLb, week: weekLb, objectifs, dernier_rdv: dernierRdv || null, timestamp: new Date().toISOString() });
+});
+
+// Objectifs GET/PUT (admin)
+app.get('/api/dashboard/objectifs', authMiddleware, requireRole('admin'), (req, res) => {
+  let objectifs = null;
+  try { objectifs = db.prepare('SELECT * FROM objectifs WHERE actif = 1 LIMIT 1').get(); } catch(e) {}
+  res.json({ objectifs: objectifs || { cible_appels: 50, cible_rdv: 3, cible_ar: 10 } });
+});
+
+app.put('/api/dashboard/objectifs', authMiddleware, requireRole('admin'), (req, res) => {
+  const { cible_appels, cible_rdv, cible_ar } = req.body;
+  if (!cible_appels || !cible_rdv) return res.status(400).json({ error: 'cible_appels et cible_rdv sont obligatoires' });
+  try {
+    db.prepare(`
+      INSERT INTO objectifs (id, cible_appels, cible_rdv, cible_ar, actif, created_by, updated_at)
+      VALUES (1, ?, ?, ?, 1, ?, datetime('now'))
+      ON CONFLICT(id) DO UPDATE SET cible_appels=excluded.cible_appels, cible_rdv=excluded.cible_rdv, cible_ar=excluded.cible_ar, created_by=excluded.created_by, updated_at=datetime('now')
+    `).run(cible_appels, cible_rdv, cible_ar || 10, req.user.id);
+    res.json({ success: true, objectifs: { cible_appels, cible_rdv, cible_ar: cible_ar || 10 } });
+  } catch(e) { res.status(500).json({ error: 'Erreur sauvegarde objectifs: ' + e.message }); }
 });
 
 // =============================================
@@ -828,6 +943,25 @@ const HTML = `<!DOCTYPE html>
       .hover-lift:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.08); }
       
       .particle-field { display: none; }
+
+      /* ====== GAUGE CIRCULAIRE OBJECTIFS ====== */
+      .gauge-ring { transform: rotate(-90deg); }
+      .gauge-ring circle { fill: none; stroke-linecap: round; transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1); }
+      .gauge-bg { stroke: #EEEEEE; }
+      .gauge-fill { stroke: var(--maf-orange); filter: drop-shadow(0 2px 4px rgba(232,100,44,0.3)); }
+      .gauge-fill.gauge-green { stroke: #10B981; filter: drop-shadow(0 2px 4px rgba(16,185,129,0.3)); }
+      .gauge-fill.gauge-amber { stroke: #F59E0B; filter: drop-shadow(0 2px 4px rgba(245,158,11,0.3)); }
+      .leaderboard-row { transition: all 0.3s ease; position: relative; }
+      .leaderboard-row:hover { background: var(--maf-peach-light); transform: translateX(4px); }
+      .leaderboard-rank { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.75rem; flex-shrink: 0; }
+      .rank-gold { background: linear-gradient(135deg, #FDE68A, #F59E0B); color: #92400E; box-shadow: 0 2px 8px rgba(245,158,11,0.3); }
+      .rank-silver { background: linear-gradient(135deg, #E5E7EB, #9CA3AF); color: #374151; box-shadow: 0 2px 8px rgba(156,163,175,0.3); }
+      .rank-bronze { background: linear-gradient(135deg, #FED7AA, #EA580C); color: #7C2D12; box-shadow: 0 2px 8px rgba(234,88,12,0.3); }
+      .rank-default { background: #F3F4F6; color: #6B7280; }
+      .toast-container { position: fixed; top: 1rem; right: 1rem; z-index: 9998; display: flex; flex-direction: column; gap: 0.5rem; pointer-events: none; }
+      .toast { pointer-events: auto; background: var(--bg-white); border: 1.5px solid #A7F3D0; border-radius: var(--radius-md); padding: 1rem 1.25rem; box-shadow: 0 12px 40px rgba(16,185,129,0.15), 0 4px 12px rgba(0,0,0,0.06); animation: toastIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), toastOut 0.4s 5s ease forwards; max-width: 360px; display: flex; align-items: center; gap: 0.75rem; }
+      @keyframes toastIn { from { opacity: 0; transform: translateX(100px) scale(0.9); } to { opacity: 1; transform: translateX(0) scale(1); } }
+      @keyframes toastOut { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(100px); } }
 
       /* ====== LOGIN PAGE SPECIFIC ====== */
       .login-bg {

@@ -216,15 +216,67 @@ async function loadMyStats() {
   try {
     const { data } = await API.get('/dashboard/my-stats');
     const s = data.today;
+    const obj = data.objectifs || { cible_appels: 50, cible_rdv: 3, cible_ar: 10 };
+    const rang = data.rang || '-';
+    const totalOps = data.total_operateurs || 1;
+    const taux = data.taux_conversion || 0;
+
+    // Calculer les progressions
+    const pctAppels = Math.min(100, Math.round(((s.total_appels||0) / obj.cible_appels) * 100));
+    const pctRdv = Math.min(100, Math.round(((s.nb_rdv||0) / obj.cible_rdv) * 100));
+    const pctAr = Math.min(100, Math.round(((s.nb_ar||0) / obj.cible_ar) * 100));
+
     document.getElementById('myStatsBar').innerHTML = `
-      <div class="flex items-center space-x-2">
-        <span class="bg-gray-50 border border-gray-100 px-3 py-1.5 rounded-lg text-xs font-semibold text-gray-900"><i class="fas fa-phone mr-1 text-gray-700"></i>${s.total_appels || 0}</span>
-        <span class="bg-green-50 border border-green-100 px-3 py-1.5 rounded-lg text-xs font-bold text-green-600"><i class="fas fa-calendar-check mr-1"></i>${s.nb_rdv || 0}</span>
-        <span class="bg-amber-50 border border-amber-100 px-3 py-1.5 rounded-lg text-xs font-bold text-amber-600"><i class="fas fa-redo mr-1"></i>${s.nb_ar || 0}</span>
-        <span class="bg-red-50 border border-red-100 px-3 py-1.5 rounded-lg text-xs font-bold text-red-500"><i class="fas fa-phone-slash mr-1"></i>${s.nb_nrp || 0}</span>
+      <div class="flex items-center space-x-3">
+        <!-- Jauge Appels -->
+        <div class="flex items-center space-x-1.5 bg-white border border-gray-100 rounded-xl px-3 py-2 shadow-sm" title="Appels: ${s.total_appels||0}/${obj.cible_appels}">
+          ${buildMiniGauge(pctAppels, 28, 3, pctAppels >= 100 ? 'gauge-green' : '')}
+          <div class="text-center leading-tight">
+            <div class="text-[11px] font-extrabold text-gray-900">${s.total_appels||0}<span class="text-gray-500 font-normal">/${obj.cible_appels}</span></div>
+            <div class="text-[8px] font-semibold text-gray-500 uppercase">Appels</div>
+          </div>
+        </div>
+        <!-- Jauge RDV -->
+        <div class="flex items-center space-x-1.5 bg-green-50 border border-green-100 rounded-xl px-3 py-2 shadow-sm" title="RDV: ${s.nb_rdv||0}/${obj.cible_rdv}">
+          ${buildMiniGauge(pctRdv, 28, 3, 'gauge-green')}
+          <div class="text-center leading-tight">
+            <div class="text-[11px] font-extrabold text-green-700">${s.nb_rdv||0}<span class="text-green-500 font-normal">/${obj.cible_rdv}</span></div>
+            <div class="text-[8px] font-semibold text-green-600 uppercase">RDV</div>
+          </div>
+        </div>
+        <!-- AR -->
+        <div class="flex items-center space-x-1.5 bg-amber-50 border border-amber-100 rounded-xl px-3 py-2 shadow-sm" title="AR: ${s.nb_ar||0}/${obj.cible_ar}">
+          ${buildMiniGauge(pctAr, 28, 3, 'gauge-amber')}
+          <div class="text-center leading-tight">
+            <div class="text-[11px] font-extrabold text-amber-700">${s.nb_ar||0}<span class="text-amber-500 font-normal">/${obj.cible_ar}</span></div>
+            <div class="text-[8px] font-semibold text-amber-600 uppercase">AR</div>
+          </div>
+        </div>
+        <!-- Taux conversion -->
+        <div class="bg-white border border-gray-100 rounded-xl px-3 py-2 text-center shadow-sm" title="Taux de conversion">
+          <div class="text-[13px] font-extrabold ${taux >= 10 ? 'text-green-600' : taux >= 5 ? 'text-amber-600' : 'text-gray-800'}">${taux}%</div>
+          <div class="text-[8px] font-semibold text-gray-500 uppercase">Conv.</div>
+        </div>
+        <!-- Rang -->
+        <div class="bg-white border border-gray-100 rounded-xl px-3 py-2 text-center shadow-sm" title="Votre classement">
+          <div class="text-[13px] font-extrabold" style="color:var(--maf-orange);">${rang}<span class="text-gray-500 font-normal text-[10px]">/${totalOps}</span></div>
+          <div class="text-[8px] font-semibold text-gray-500 uppercase">${rang === 1 ? '🥇' : rang === 2 ? '🥈' : rang === 3 ? '🥉' : ''} Rang</div>
+        </div>
       </div>
     `;
   } catch (e) { console.error(e); }
+}
+
+// Mini jauge SVG circulaire
+function buildMiniGauge(pct, size, strokeW, colorClass) {
+  const r = (size - strokeW) / 2;
+  const circ = 2 * Math.PI * r;
+  const offset = circ - (pct / 100) * circ;
+  return `<svg width="${size}" height="${size}" class="gauge-ring">
+    <circle class="gauge-bg" cx="${size/2}" cy="${size/2}" r="${r}" stroke-width="${strokeW}" />
+    <circle class="gauge-fill ${colorClass||''}" cx="${size/2}" cy="${size/2}" r="${r}" stroke-width="${strokeW}" 
+      stroke-dasharray="${circ}" stroke-dashoffset="${offset}" />
+  </svg>`;
 }
 
 async function fetchNextProspect() {
@@ -459,10 +511,22 @@ function renderDashboard() {
 
 async function loadDashboard() {
   try {
-    const { data } = await API.get('/dashboard/stats');
+    const [statsRes, lbRes] = await Promise.all([
+      API.get('/dashboard/stats'),
+      API.get('/dashboard/leaderboard')
+    ]);
+    const data = statsRes.data;
+    const lb = lbRes.data;
     const g = data.global; const ops = data.operators || [];
     document.getElementById('lastRefresh').textContent = new Date().toLocaleTimeString('fr-FR');
     const progress = g.total > 0 ? Math.round(((g.rdv_pris||0)+(g.clotures||0))/g.total*100) : 0;
+    const obj = lb.objectifs || { cible_appels: 50, cible_rdv: 3, cible_ar: 10 };
+    const lbToday = lb.today || [];
+    const lbWeek = lb.week || [];
+    const dernierRdv = lb.dernier_rdv;
+
+    // Vérifier nouveau RDV pour toast
+    checkNewRdvNotification(dernierRdv);
 
     document.getElementById('dashboardContent').innerHTML = `
       <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6 stagger-children">
@@ -490,6 +554,76 @@ async function loadDashboard() {
           <div class="h-2.5 rounded-full progress-bar-glow transition-all duration-1000" style="width:${progress}%;background:linear-gradient(90deg,#e8642c,#f97316,#10b981);"></div>
         </div>
         <div class="flex justify-between text-[10px] text-gray-700 mt-2 font-mono"><span>${g.total||0} prospects</span><span>${(g.rdv_pris||0)+(g.clotures||0)} traites</span></div>
+      </div>
+
+      <!-- LEADERBOARD JOUR -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-6">
+        <div class="glass-card rounded-xl p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-sm font-bold text-gray-900"><i class="fas fa-trophy mr-2 text-amber-500"></i>Classement du jour</h3>
+            <div class="flex items-center space-x-2">
+              <span class="text-[10px] font-mono text-gray-600">Objectif: ${obj.cible_appels} appels / ${obj.cible_rdv} RDV</span>
+            </div>
+          </div>
+          ${lbToday.length === 0 ? '<p class="text-gray-600 text-xs italic py-4">Aucune activite aujourd\'hui</p>' : `
+            <div class="space-y-2">
+              ${lbToday.map((op, idx) => {
+                const pctAppels = Math.min(100, Math.round((op.total_appels / obj.cible_appels) * 100));
+                const rankClass = idx === 0 ? 'rank-gold' : idx === 1 ? 'rank-silver' : idx === 2 ? 'rank-bronze' : 'rank-default';
+                const medal = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : '';
+                return `
+                <div class="leaderboard-row flex items-center p-3 rounded-xl border border-gray-50 hover:border-orange-100">
+                  <div class="leaderboard-rank ${rankClass} mr-3">${medal || (idx+1)}</div>
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center justify-between">
+                      <span class="text-sm font-bold text-gray-900 truncate">${op.prenom} ${op.nom}</span>
+                      <div class="flex items-center space-x-2">
+                        <span class="badge bg-green-50 text-green-600 border border-green-100 text-[10px]"><i class="fas fa-calendar-check mr-1"></i>${op.nb_rdv||0}</span>
+                        <span class="badge bg-amber-50 text-amber-600 border border-amber-100 text-[10px]">${op.nb_ar||0} AR</span>
+                        ${op.en_ligne ? '<div class="live-dot ml-1"></div>' : ''}
+                      </div>
+                    </div>
+                    <div class="flex items-center mt-1.5 space-x-2">
+                      <div class="flex-1 h-1.5 rounded-full bg-gray-100 overflow-hidden">
+                        <div class="h-full rounded-full transition-all duration-700" style="width:${pctAppels}%;background:${pctAppels>=100?'#10B981':'linear-gradient(90deg,#e8642c,#f97316)'};"></div>
+                      </div>
+                      <span class="text-[10px] font-mono font-bold ${pctAppels>=100?'text-green-600':'text-gray-700'}">${op.total_appels} appels</span>
+                      <span class="text-[10px] font-mono ${op.taux_conversion>=10?'text-green-600 font-bold':'text-gray-600'}">${op.taux_conversion||0}%</span>
+                    </div>
+                  </div>
+                </div>`;
+              }).join('')}
+            </div>`}
+        </div>
+
+        <!-- LEADERBOARD SEMAINE -->
+        <div class="glass-card rounded-xl p-6">
+          <h3 class="text-sm font-bold text-gray-900 mb-4"><i class="fas fa-calendar-week mr-2 text-blue-500"></i>Classement semaine</h3>
+          ${lbWeek.length === 0 ? '<p class="text-gray-600 text-xs italic py-4">Aucune activite cette semaine</p>' : `
+            <div class="space-y-2">
+              ${lbWeek.map((op, idx) => {
+                const rankClass = idx === 0 ? 'rank-gold' : idx === 1 ? 'rank-silver' : idx === 2 ? 'rank-bronze' : 'rank-default';
+                const medal = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : '';
+                return `
+                <div class="leaderboard-row flex items-center p-3 rounded-xl border border-gray-50 hover:border-blue-100">
+                  <div class="leaderboard-rank ${rankClass} mr-3">${medal || (idx+1)}</div>
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center justify-between">
+                      <span class="text-sm font-bold text-gray-900 truncate">${op.prenom} ${op.nom}</span>
+                      <div class="flex items-center space-x-2">
+                        <span class="badge bg-green-50 text-green-600 border border-green-100 text-[10px]"><i class="fas fa-calendar-check mr-1"></i>${op.nb_rdv||0}</span>
+                        <span class="text-[10px] font-mono text-gray-600">${op.total_appels} appels</span>
+                      </div>
+                    </div>
+                    <div class="flex items-center mt-1 space-x-3">
+                      <span class="text-[10px] text-gray-600">${op.nb_ar||0} AR</span>
+                      <span class="text-[10px] font-mono ${op.taux_conversion>=10?'text-green-600 font-bold':'text-gray-600'}">Tx: ${op.taux_conversion||0}%</span>
+                    </div>
+                  </div>
+                </div>`;
+              }).join('')}
+            </div>`}
+        </div>
       </div>
 
       <div class="glass-card rounded-xl p-6 mb-6 overflow-hidden">
@@ -874,6 +1008,7 @@ function renderAdmin() {
       <div class="flex space-x-1 mb-6 p-1 rounded-xl w-fit bg-gray-50 border border-gray-100">
         <button onclick="switchAdminTab('users')" id="tabUsers" class="px-5 py-2 rounded-lg text-xs font-semibold transition-all bg-white text-gray-700 shadow-sm"><i class="fas fa-users mr-1.5 text-maf-500"></i>Utilisateurs</button>
         <button onclick="switchAdminTab('import')" id="tabImport" class="px-5 py-2 rounded-lg text-xs font-semibold text-gray-800 hover:text-gray-600 transition-all"><i class="fas fa-file-import mr-1.5"></i>Import CSV</button>
+        <button onclick="switchAdminTab('objectifs')" id="tabObjectifs" class="px-5 py-2 rounded-lg text-xs font-semibold text-gray-800 hover:text-gray-600 transition-all"><i class="fas fa-bullseye mr-1.5 text-green-500"></i>Objectifs</button>
       </div>
       <div id="adminContent"></div>
     </div>
@@ -885,7 +1020,7 @@ function switchAdminTab(tab) {
   document.querySelectorAll('[id^="tab"]').forEach(el => { el.style.background='transparent'; el.className=el.className.replace('bg-white text-gray-700 shadow-sm','text-gray-800'); });
   const a = document.getElementById(`tab${tab.charAt(0).toUpperCase()+tab.slice(1)}`);
   if (a) { a.style.background='#fff'; a.className=a.className.replace('text-gray-800','bg-white text-gray-700 shadow-sm'); }
-  if (tab==='users') loadUsers(); else renderImportCSV();
+  if (tab==='users') loadUsers(); else if (tab==='objectifs') renderObjectifsConfig(); else renderImportCSV();
 }
 
 async function loadUsers() {
@@ -1345,6 +1480,151 @@ async function importCSV() { confirmImport(); }
 function changePage(p) { const i=document.getElementById('filterPage'); if(i) i.value=p; loadProspects(); }
 
 // =============================================
+// CONFIG OBJECTIFS (Admin)
+// =============================================
+async function renderObjectifsConfig() {
+  document.getElementById('adminContent').innerHTML = `
+    <div class="text-center py-12"><i class="fas fa-spinner fa-spin text-maf-500"></i></div>`;
+  try {
+    const { data } = await API.get('/dashboard/objectifs');
+    const obj = data.objectifs || { cible_appels: 50, cible_rdv: 3, cible_ar: 10 };
+    document.getElementById('adminContent').innerHTML = `
+      <div class="glass-card rounded-xl overflow-hidden fade-in max-w-2xl">
+        <div class="px-6 py-4 border-b border-gray-100">
+          <h3 class="text-sm font-bold text-gray-900"><i class="fas fa-bullseye text-green-500 mr-2"></i>Objectifs quotidiens</h3>
+          <p class="text-[10px] text-gray-600 mt-0.5">Definir les cibles journalieres pour tous les operateurs</p>
+        </div>
+        <div class="p-6">
+          <form id="objectifsForm" class="space-y-5">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+              <!-- Cible Appels -->
+              <div class="text-center">
+                <div class="w-20 h-20 mx-auto mb-3">
+                  ${buildMiniGauge(75, 80, 5, '')}
+                </div>
+                <label class="block text-[10px] font-bold mb-2 uppercase tracking-wider text-gray-600">
+                  <i class="fas fa-phone mr-1" style="color:var(--maf-orange);"></i>Cible appels / jour
+                </label>
+                <input type="number" id="objAppels" value="${obj.cible_appels}" min="1" max="500" 
+                  class="w-full text-center glass-input p-3 rounded-xl text-lg font-bold" style="color:var(--maf-orange);">
+                <p class="text-[10px] text-gray-500 mt-1">Nombre d'appels par operateur</p>
+              </div>
+              <!-- Cible RDV -->
+              <div class="text-center">
+                <div class="w-20 h-20 mx-auto mb-3">
+                  ${buildMiniGauge(60, 80, 5, 'gauge-green')}
+                </div>
+                <label class="block text-[10px] font-bold mb-2 uppercase tracking-wider text-gray-600">
+                  <i class="fas fa-calendar-check mr-1 text-green-500"></i>Cible RDV / jour
+                </label>
+                <input type="number" id="objRdv" value="${obj.cible_rdv}" min="1" max="50"
+                  class="w-full text-center glass-input p-3 rounded-xl text-lg font-bold text-green-600">
+                <p class="text-[10px] text-gray-500 mt-1">Rendez-vous par operateur</p>
+              </div>
+              <!-- Cible AR -->
+              <div class="text-center">
+                <div class="w-20 h-20 mx-auto mb-3">
+                  ${buildMiniGauge(50, 80, 5, 'gauge-amber')}
+                </div>
+                <label class="block text-[10px] font-bold mb-2 uppercase tracking-wider text-gray-600">
+                  <i class="fas fa-redo mr-1 text-amber-500"></i>Cible AR / jour
+                </label>
+                <input type="number" id="objAr" value="${obj.cible_ar}" min="1" max="100"
+                  class="w-full text-center glass-input p-3 rounded-xl text-lg font-bold text-amber-600">
+                <p class="text-[10px] text-gray-500 mt-1">A rappeler par operateur</p>
+              </div>
+            </div>
+            <div class="border-t border-gray-100 pt-5 flex items-center justify-between">
+              <p class="text-[10px] text-gray-500"><i class="fas fa-info-circle mr-1"></i>Les objectifs sont communs a tous les operateurs</p>
+              <button type="submit" class="btn-primary px-8 py-3 rounded-xl text-sm">
+                <i class="fas fa-save mr-2"></i>Enregistrer
+              </button>
+            </div>
+          </form>
+          <div id="objResult" class="hidden mt-4"></div>
+        </div>
+      </div>`;
+    document.getElementById('objectifsForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = e.target.querySelector('button[type=submit]');
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Enregistrement...'; btn.disabled = true;
+      try {
+        await API.put('/dashboard/objectifs', {
+          cible_appels: parseInt(document.getElementById('objAppels').value),
+          cible_rdv: parseInt(document.getElementById('objRdv').value),
+          cible_ar: parseInt(document.getElementById('objAr').value)
+        });
+        const res = document.getElementById('objResult');
+        res.classList.remove('hidden');
+        res.innerHTML = `<div class="rounded-xl p-4 bg-green-50 border border-green-100 text-sm text-green-700 scale-in"><i class="fas fa-check-circle mr-2"></i>Objectifs mis a jour avec succes !</div>`;
+        setTimeout(() => res.classList.add('hidden'), 3000);
+      } catch (err) {
+        alert(err.response?.data?.error || 'Erreur');
+      }
+      btn.innerHTML = '<i class="fas fa-save mr-2"></i>Enregistrer'; btn.disabled = false;
+    });
+  } catch (err) {
+    document.getElementById('adminContent').innerHTML = `<p class="text-red-500 text-sm p-6">Erreur: ${err.message}</p>`;
+  }
+}
+
+// =============================================
+// TOAST NOTIFICATIONS - Nouveau RDV
+// =============================================
+let lastKnownRdvTimestamp = null;
+let toastContainer = null;
+
+function initToastContainer() {
+  if (!toastContainer || !document.body.contains(toastContainer)) {
+    toastContainer = document.createElement('div');
+    toastContainer.className = 'toast-container';
+    toastContainer.id = 'toastContainer';
+    document.body.appendChild(toastContainer);
+  }
+}
+
+function showToast(message, icon, iconColor) {
+  initToastContainer();
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.innerHTML = `
+    <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:#ECFDF5;">
+      <i class="fas ${icon} text-sm" style="color:${iconColor};"></i>
+    </div>
+    <div>
+      <p class="text-xs font-bold text-gray-900">${message}</p>
+      <p class="text-[10px] text-gray-600 mt-0.5">${new Date().toLocaleTimeString('fr-FR')}</p>
+    </div>
+  `;
+  toastContainer.appendChild(toast);
+  setTimeout(() => { if (toast.parentNode) toast.remove(); }, 6000);
+}
+
+function checkNewRdvNotification(dernierRdv) {
+  if (!dernierRdv) return;
+  const ts = dernierRdv.created_at;
+  if (lastKnownRdvTimestamp && ts !== lastKnownRdvTimestamp) {
+    // Nouveau RDV detecte !
+    showToast(
+      `${dernierRdv.prenom} a decroche un RDV avec ${dernierRdv.nom_entreprise} !`,
+      'fa-trophy',
+      '#10B981'
+    );
+  }
+  lastKnownRdvTimestamp = ts;
+}
+
+// Polling pour les toasts sur la page operateur
+function startRdvPolling() {
+  setInterval(async () => {
+    try {
+      const { data } = await API.get('/dashboard/leaderboard');
+      if (data.dernier_rdv) checkNewRdvNotification(data.dernier_rdv);
+    } catch (e) { /* silencieux */ }
+  }, 30000); // toutes les 30s
+}
+
+// =============================================
 // UTILITAIRES
 // =============================================
 function formatDate(d) { if (!d) return '-'; try { return new Date(d).toLocaleDateString('fr-FR', {day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}); } catch { return d; } }
@@ -1386,3 +1666,8 @@ window.previewImport = previewImport; window.confirmImport = confirmImport;
 window.resetImport = resetImport;
 window.logout = logout; window.debounce = debounce; window.loadRDV = loadRDV;
 window.showModalResultForm = showModalResultForm; window.submitModalResult = submitModalResult;
+window.renderObjectifsConfig = renderObjectifsConfig;
+window.buildMiniGauge = buildMiniGauge;
+
+// Demarrer le polling RDV pour les toasts
+if (localStorage.getItem('maf_token')) startRdvPolling();

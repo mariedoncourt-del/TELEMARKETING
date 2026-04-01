@@ -468,6 +468,63 @@ function getMainHTML(): string {
       
       .particle-field { display: none; }
 
+      /* ====== GAUGE CIRCULAIRE OBJECTIFS ====== */
+      .gauge-ring {
+        transform: rotate(-90deg);
+      }
+      .gauge-ring circle {
+        fill: none;
+        stroke-linecap: round;
+        transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .gauge-bg { stroke: #EEEEEE; }
+      .gauge-fill { stroke: var(--maf-orange); filter: drop-shadow(0 2px 4px rgba(232,100,44,0.3)); }
+      .gauge-fill.gauge-green { stroke: #10B981; filter: drop-shadow(0 2px 4px rgba(16,185,129,0.3)); }
+      .gauge-fill.gauge-amber { stroke: #F59E0B; filter: drop-shadow(0 2px 4px rgba(245,158,11,0.3)); }
+
+      /* ====== LEADERBOARD ====== */
+      .leaderboard-row {
+        transition: all 0.3s ease;
+        position: relative;
+      }
+      .leaderboard-row:hover {
+        background: var(--maf-peach-light);
+        transform: translateX(4px);
+      }
+      .leaderboard-rank {
+        width: 32px; height: 32px;
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-weight: 800; font-size: 0.75rem;
+        flex-shrink: 0;
+      }
+      .rank-gold { background: linear-gradient(135deg, #FDE68A, #F59E0B); color: #92400E; box-shadow: 0 2px 8px rgba(245,158,11,0.3); }
+      .rank-silver { background: linear-gradient(135deg, #E5E7EB, #9CA3AF); color: #374151; box-shadow: 0 2px 8px rgba(156,163,175,0.3); }
+      .rank-bronze { background: linear-gradient(135deg, #FED7AA, #EA580C); color: #7C2D12; box-shadow: 0 2px 8px rgba(234,88,12,0.3); }
+      .rank-default { background: #F3F4F6; color: #6B7280; }
+
+      /* ====== TOAST NOTIFICATION ====== */
+      .toast-container {
+        position: fixed; top: 1rem; right: 1rem;
+        z-index: 9998;
+        display: flex; flex-direction: column;
+        gap: 0.5rem;
+        pointer-events: none;
+      }
+      .toast {
+        pointer-events: auto;
+        background: var(--bg-white);
+        border: 1.5px solid #A7F3D0;
+        border-radius: var(--radius-md);
+        padding: 1rem 1.25rem;
+        box-shadow: 0 12px 40px rgba(16,185,129,0.15), 0 4px 12px rgba(0,0,0,0.06);
+        animation: toastIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), toastOut 0.4s 5s ease forwards;
+        max-width: 360px;
+        display: flex; align-items: center; gap: 0.75rem;
+      }
+      @keyframes toastIn { from { opacity: 0; transform: translateX(100px) scale(0.9); } to { opacity: 1; transform: translateX(0) scale(1); } }
+      @keyframes toastOut { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(100px); } }
+
       /* ====== LOGIN PAGE SPECIFIC ====== */
       .login-bg {
         background: linear-gradient(160deg, #F5F5F5 0%, #FDEAE3 40%, #FFF4F0 60%, #F5F5F5 100%);
