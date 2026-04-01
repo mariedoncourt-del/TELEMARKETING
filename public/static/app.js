@@ -66,12 +66,12 @@ function renderLogin() {
             <i class="fas fa-headset"></i>
           </div>
           <h1 class="text-2xl font-extrabold tracking-tight" style="color:#333333;">MAF Formation</h1>
-          <p class="mt-2 text-sm font-medium" style="color:#888888;">Plateforme Telemarketing</p>
+          <p class="mt-2 text-sm font-medium" style="color:#333333;">Plateforme Telemarketing</p>
         </div>
 
         <form id="loginForm" class="space-y-5">
           <div>
-            <label class="block text-xs font-bold mb-2 uppercase tracking-wider" style="color:#888888;">Email</label>
+            <label class="block text-xs font-bold mb-2 uppercase tracking-wider" style="color:#333333;">Email</label>
             <div class="relative">
               <i class="fas fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-sm" style="color:#E8642C;"></i>
               <input type="email" id="loginEmail" placeholder="votre@email.fr" required
@@ -79,7 +79,7 @@ function renderLogin() {
             </div>
           </div>
           <div>
-            <label class="block text-xs font-bold mb-2 uppercase tracking-wider" style="color:#888888;">Mot de passe</label>
+            <label class="block text-xs font-bold mb-2 uppercase tracking-wider" style="color:#333333;">Mot de passe</label>
             <div class="relative">
               <i class="fas fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-sm" style="color:#E8642C;"></i>
               <input type="password" id="loginPassword" placeholder="Mot de passe" required
@@ -94,7 +94,7 @@ function renderLogin() {
 
         <div class="mt-8 text-center">
           <div class="divider"></div>
-          <p class="text-xs mt-4 font-mono" style="color:#888;">admin@maf-formation.fr / admin</p>
+          <p class="text-xs mt-4 font-mono" style="color:#666666;">admin@maf-formation.fr / admin</p>
         </div>
       </div>
     </div>
@@ -167,7 +167,7 @@ function getNavbar(active = '') {
               <p class="text-xs font-bold" style="color: var(--text-dark);">${currentUser?.prenom} ${currentUser?.nom}</p>
               <p class="text-[11px] font-semibold" style="color: var(--maf-orange);">${getRoleLabel(currentUser?.role)}</p>
             </div>
-            <button onclick="logout()" class="w-9 h-9 rounded-xl flex items-center justify-center transition-all hover:bg-red-50" style="color:#888;" title="Deconnexion">
+            <button onclick="logout()" class="w-9 h-9 rounded-xl flex items-center justify-center transition-all hover:bg-red-50" style="color:#666666;" title="Deconnexion">
               <i class="fas fa-sign-out-alt text-sm"></i>
             </button>
           </div>
@@ -351,21 +351,21 @@ function startLockTimer() {
 function showResultForm(type, prospectId) {
   const formDiv = document.getElementById('resultForm');
   formDiv.classList.remove('hidden');
-  const dateAppelField = `<label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:#555;">Date de l'appel *</label><input type="datetime-local" id="callDate" class="w-full glass-input p-3 rounded-lg text-xs mb-3" value="${getCurrentDateTime()}">`;
+  const dateAppelField = `<label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:#333333;">Date de l'appel *</label><input type="datetime-local" id="callDate" class="w-full glass-input p-3 rounded-lg text-xs mb-3" value="${getCurrentDateTime()}">`;
   const forms = {
     NRP: `<div class="glass-card rounded-xl p-5 scale-in border-red-100"><h4 class="font-bold text-red-600 text-sm mb-3"><i class="fas fa-phone-slash mr-2"></i>NRP</h4>${dateAppelField}<textarea id="nrpComment" placeholder="Commentaire..." rows="2" class="w-full p-3 rounded-lg text-xs mb-3"></textarea><button onclick="submitResult('NRP', ${prospectId})" class="w-full btn-danger py-2.5 rounded-lg text-sm"><i class="fas fa-check mr-2"></i>Confirmer</button></div>`,
-    AR: `<div class="glass-card rounded-xl p-5 scale-in border-amber-100"><h4 class="font-bold text-amber-600 text-sm mb-3"><i class="fas fa-redo mr-2"></i>A rappeler</h4>${dateAppelField}<label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:#555;">Date de rappel *</label><input type="datetime-local" id="arDate" required class="w-full glass-input p-3 rounded-lg text-xs mb-3" value="${getDefaultRappelDate()}"><textarea id="arComment" placeholder="Raison..." rows="2" class="w-full p-3 rounded-lg text-xs mb-3"></textarea><button onclick="submitResult('AR', ${prospectId})" class="w-full btn-warning py-2.5 rounded-lg text-sm"><i class="fas fa-check mr-2"></i>Confirmer AR</button></div>`,
+    AR: `<div class="glass-card rounded-xl p-5 scale-in border-amber-100"><h4 class="font-bold text-amber-600 text-sm mb-3"><i class="fas fa-redo mr-2"></i>A rappeler</h4>${dateAppelField}<label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:#333333;">Date de rappel *</label><input type="datetime-local" id="arDate" required class="w-full glass-input p-3 rounded-lg text-xs mb-3" value="${getDefaultRappelDate()}"><textarea id="arComment" placeholder="Raison..." rows="2" class="w-full p-3 rounded-lg text-xs mb-3"></textarea><button onclick="submitResult('AR', ${prospectId})" class="w-full btn-warning py-2.5 rounded-lg text-sm"><i class="fas fa-check mr-2"></i>Confirmer AR</button></div>`,
     RDV: `<div class="glass-card rounded-xl p-5 scale-in border-green-100"><h4 class="font-bold text-green-600 text-sm mb-3"><i class="fas fa-calendar-check mr-2"></i>Rendez-vous</h4>
       <div class="space-y-2.5">
         ${dateAppelField.replace('mb-3','mb-1')}
-        <div><label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:#555;">Date et heure du RDV *</label><input type="datetime-local" id="rdvDate" required class="w-full glass-input p-3 rounded-lg text-xs"></div>
-        <div><label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:#555;">Type</label><select id="rdvType" class="w-full p-3 rounded-lg text-xs"><option value="presentiel">Presentiel</option><option value="distance">A distance</option><option value="telephone">Telephone</option></select></div>
-        <div><label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:#555;">Lieu</label><input type="text" id="rdvLieu" placeholder="Adresse ou lien..." class="w-full glass-input p-3 rounded-lg text-xs"></div>
-        <div><label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:#555;">Formation</label><textarea id="rdvFormation" placeholder="Formation souhaitee..." rows="2" class="w-full p-3 rounded-lg text-xs"></textarea></div>
-        <div><label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:#555;">Notes</label><textarea id="rdvComments" placeholder="Notes..." rows="2" class="w-full p-3 rounded-lg text-xs"></textarea></div>
+        <div><label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:#333333;">Date et heure du RDV *</label><input type="datetime-local" id="rdvDate" required class="w-full glass-input p-3 rounded-lg text-xs"></div>
+        <div><label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:#333333;">Type</label><select id="rdvType" class="w-full p-3 rounded-lg text-xs"><option value="presentiel">Presentiel</option><option value="distance">A distance</option><option value="telephone">Telephone</option></select></div>
+        <div><label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:#333333;">Lieu</label><input type="text" id="rdvLieu" placeholder="Adresse ou lien..." class="w-full glass-input p-3 rounded-lg text-xs"></div>
+        <div><label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:#333333;">Formation</label><textarea id="rdvFormation" placeholder="Formation souhaitee..." rows="2" class="w-full p-3 rounded-lg text-xs"></textarea></div>
+        <div><label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:#333333;">Notes</label><textarea id="rdvComments" placeholder="Notes..." rows="2" class="w-full p-3 rounded-lg text-xs"></textarea></div>
       </div>
       <button onclick="submitResult('RDV', ${prospectId})" class="w-full btn-success py-2.5 rounded-lg text-sm mt-3"><i class="fas fa-check mr-2"></i>Confirmer RDV</button></div>`,
-    FIN: `<div class="glass-card rounded-xl p-5 scale-in"><h4 class="font-bold text-sm mb-3" style="color:#555;"><i class="fas fa-ban mr-2"></i>Cloturer</h4>${dateAppelField}<label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:#555;">Motif *</label><select id="finMotif" class="w-full p-3 rounded-lg text-xs mb-3"><option value="PAS_INTERESSE">Pas interesse</option><option value="HORS_CIBLE">Hors cible</option><option value="FAUX_NUMERO">Faux numero</option><option value="DOUBLON">Doublon</option><option value="AUTRE">Autre</option></select><textarea id="finComment" placeholder="Commentaire..." rows="2" class="w-full p-3 rounded-lg text-xs mb-3"></textarea><button onclick="submitResult('FIN', ${prospectId})" class="w-full btn-secondary py-2.5 rounded-lg text-sm"><i class="fas fa-check mr-2"></i>Confirmer</button></div>`
+    FIN: `<div class="glass-card rounded-xl p-5 scale-in"><h4 class="font-bold text-sm mb-3" style="color:#333333;"><i class="fas fa-ban mr-2"></i>Cloturer</h4>${dateAppelField}<label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:#333333;">Motif *</label><select id="finMotif" class="w-full p-3 rounded-lg text-xs mb-3"><option value="PAS_INTERESSE">Pas interesse</option><option value="HORS_CIBLE">Hors cible</option><option value="FAUX_NUMERO">Faux numero</option><option value="DOUBLON">Doublon</option><option value="AUTRE">Autre</option></select><textarea id="finComment" placeholder="Commentaire..." rows="2" class="w-full p-3 rounded-lg text-xs mb-3"></textarea><button onclick="submitResult('FIN', ${prospectId})" class="w-full btn-secondary py-2.5 rounded-lg text-sm"><i class="fas fa-check mr-2"></i>Confirmer</button></div>`
   };
   formDiv.innerHTML = forms[type];
 }
@@ -447,7 +447,7 @@ function renderDashboard() {
           <p class="section-subtitle">Vue d'ensemble en temps reel</p>
         </div>
         <div class="flex items-center space-x-3">
-          <div class="flex items-center space-x-2"><div class="live-dot"></div><span id="lastRefresh" class="text-[10px] font-mono" style="color:#555;"></span></div>
+          <div class="flex items-center space-x-2"><div class="live-dot"></div><span id="lastRefresh" class="text-[10px] font-mono" style="color:#333333;"></span></div>
           <button onclick="loadDashboard()" class="btn-secondary text-xs py-2.5 px-5 rounded-lg"><i class="fas fa-sync mr-1.5"></i>Actualiser</button>
         </div>
       </div>
@@ -614,7 +614,7 @@ async function showProspectDetail(id) {
                 </div>
                 <p class="text-sm mt-1" style="color:var(--text-dark);">${p.nom_dirigeant||'Contact non renseigne'} — ${p.ville||''} ${p.code_postal||''}</p>
               </div>
-              <button onclick="document.getElementById('modal').classList.add('hidden')" class="w-9 h-9 rounded-xl flex items-center justify-center hover:bg-gray-100 transition-all" style="color:#888;"><i class="fas fa-times text-sm"></i></button>
+              <button onclick="document.getElementById('modal').classList.add('hidden')" class="w-9 h-9 rounded-xl flex items-center justify-center hover:bg-gray-100 transition-all" style="color:#666666;"><i class="fas fa-times text-sm"></i></button>
             </div>
           </div>
 
@@ -629,10 +629,10 @@ async function showProspectDetail(id) {
                   <a href="tel:${p.telephone}" class="font-bold text-base hover:underline" style="color:var(--maf-orange);">${p.telephone}</a>
                 </div>
                 <div class="flex items-center">
-                  <div class="w-8 h-8 rounded-lg flex items-center justify-center mr-3" style="background:#F5F5F5;"><i class="fas fa-envelope text-xs" style="color:#888;"></i></div>
+                  <div class="w-8 h-8 rounded-lg flex items-center justify-center mr-3" style="background:#F5F5F5;"><i class="fas fa-envelope text-xs" style="color:#666666;"></i></div>
                   <span style="color:var(--text-dark);">${p.email||'-'}</span>
                 </div>
-                ${p.code_ape ? `<div class="flex items-center"><div class="w-8 h-8 rounded-lg flex items-center justify-center mr-3" style="background:#F5F5F5;"><i class="fas fa-industry text-xs" style="color:#888;"></i></div><span style="color:var(--text-dark);">APE: ${p.code_ape}</span></div>` : ''}
+                ${p.code_ape ? `<div class="flex items-center"><div class="w-8 h-8 rounded-lg flex items-center justify-center mr-3" style="background:#F5F5F5;"><i class="fas fa-industry text-xs" style="color:#666666;"></i></div><span style="color:var(--text-dark);">APE: ${p.code_ape}</span></div>` : ''}
                 ${p.opco ? `<div class="flex items-center"><div class="w-8 h-8 rounded-lg flex items-center justify-center mr-3" style="background:var(--maf-peach);"><i class="fas fa-building text-xs" style="color:var(--maf-orange);"></i></div><span class="font-semibold" style="color:var(--text-dark);">OPCO: ${p.opco}</span></div>` : ''}
                 ${p.budget_identifie ? `<div class="flex items-center"><div class="w-8 h-8 rounded-lg flex items-center justify-center mr-3" style="background:#ECFDF5;"><i class="fas fa-euro-sign text-xs" style="color:#10B981;"></i></div><span style="color:var(--text-dark);">Budget: ${p.budget_identifie}&euro;</span></div>` : ''}
               </div>
@@ -642,38 +642,38 @@ async function showProspectDetail(id) {
 
               <!-- Historique -->
               <div class="divider mb-4"></div>
-              <h3 class="text-[11px] font-bold mb-3 uppercase tracking-wider" style="color:#555;">Historique des appels (${appels.length})</h3>
+              <h3 class="text-[11px] font-bold mb-3 uppercase tracking-wider" style="color:#333333;">Historique des appels (${appels.length})</h3>
               <div class="space-y-1.5 mb-5 max-h-44 overflow-y-auto">
-                ${appels.map(a=>`<div class="text-xs border-l-2 ${getResultBorderColor(a.statut_resultat)} pl-3 py-2 hover:bg-gray-50 rounded-r transition-colors"><span class="font-bold" style="color:var(--text-dark);">${a.statut_resultat}</span><span class="ml-2 font-mono text-[11px]" style="color:#555;">${formatDate(a.created_at)}</span><span class="ml-2" style="color:var(--text-dark);">${a.commentaire||'-'}</span><span class="text-[10px] ml-2" style="color:#555;">(${a.operateur_prenom})</span></div>`).join('')||'<p class="text-xs italic" style="color:#555;">Premier appel — aucun historique</p>'}
+                ${appels.map(a=>`<div class="text-xs border-l-2 ${getResultBorderColor(a.statut_resultat)} pl-3 py-2 hover:bg-gray-50 rounded-r transition-colors"><span class="font-bold" style="color:var(--text-dark);">${a.statut_resultat}</span><span class="ml-2 font-mono text-[11px]" style="color:#333333;">${formatDate(a.created_at)}</span><span class="ml-2" style="color:var(--text-dark);">${a.commentaire||'-'}</span><span class="text-[10px] ml-2" style="color:#333333;">(${a.operateur_prenom})</span></div>`).join('')||'<p class="text-xs italic" style="color:#333333;">Premier appel — aucun historique</p>'}
               </div>
 
               <!-- RDV existants -->
               ${rdvs.length>0?`
-                <h3 class="text-[11px] font-bold mb-3 uppercase tracking-wider" style="color:#555;">Rendez-vous (${rdvs.length})</h3>
+                <h3 class="text-[11px] font-bold mb-3 uppercase tracking-wider" style="color:#333333;">Rendez-vous (${rdvs.length})</h3>
                 <div class="space-y-2 mb-4">${rdvs.map(r=>`<div class="rounded-xl p-3 text-xs" style="background:#ECFDF5;border:1.5px solid #A7F3D0;"><strong class="font-mono" style="color:#059669;">${formatDate(r.date_rdv)}</strong> <span style="color:var(--text-dark);">— ${r.type_rdv}</span>${r.formation_souhaitee?`<br><span style="color:var(--text-dark);">${r.formation_souhaitee}</span>`:''}</div>`).join('')}</div>
               `:''}
             </div>
 
             <!-- COLONNE DROITE : Actions -->
             <div class="p-6 pl-4 lg:border-l" style="border-color:#F0F0F0;background:#FAFAFA;border-radius:0 0 1rem 0;">
-              <h3 class="text-[11px] font-bold mb-4 uppercase tracking-wider" style="color:#555;"><i class="fas fa-clipboard-check mr-1.5"></i>Actions</h3>
+              <h3 class="text-[11px] font-bold mb-4 uppercase tracking-wider" style="color:#333333;"><i class="fas fa-clipboard-check mr-1.5"></i>Actions</h3>
               
               <div class="space-y-2.5 mb-5">
                 <button onclick="showModalResultForm('NRP', ${p.id})" class="action-btn" style="--btn-color:#fca5a5;--btn-bg:#fef2f2;--btn-glow:rgba(239,68,68,0.06);">
                   <span class="flex items-center"><i class="fas fa-phone-slash text-red-400 mr-3"></i><span class="font-semibold text-sm" style="color:var(--text-dark);">NRP</span></span>
-                  <span class="text-[10px]" style="color:#555;">Ne repond pas</span>
+                  <span class="text-[10px]" style="color:#333333;">Ne repond pas</span>
                 </button>
                 <button onclick="showModalResultForm('AR', ${p.id})" class="action-btn" style="--btn-color:#fcd34d;--btn-bg:#fffbeb;--btn-glow:rgba(245,158,11,0.06);">
                   <span class="flex items-center"><i class="fas fa-redo text-amber-400 mr-3"></i><span class="font-semibold text-sm" style="color:var(--text-dark);">AR</span></span>
-                  <span class="text-[10px]" style="color:#555;">A rappeler</span>
+                  <span class="text-[10px]" style="color:#333333;">A rappeler</span>
                 </button>
                 <button onclick="showModalResultForm('RDV', ${p.id})" class="action-btn" style="--btn-color:#6ee7b7;--btn-bg:#ecfdf5;--btn-glow:rgba(16,185,129,0.06);">
                   <span class="flex items-center"><i class="fas fa-calendar-check text-green-500 mr-3"></i><span class="font-semibold text-sm" style="color:var(--text-dark);">RDV</span></span>
-                  <span class="text-[10px]" style="color:#555;">Rendez-vous</span>
+                  <span class="text-[10px]" style="color:#333333;">Rendez-vous</span>
                 </button>
                 <button onclick="showModalResultForm('FIN', ${p.id})" class="action-btn" style="--btn-color:#d1d5db;--btn-bg:#f9fafb;--btn-glow:rgba(0,0,0,0.02);">
-                  <span class="flex items-center"><i class="fas fa-ban mr-3" style="color:#888;"></i><span class="font-semibold text-sm" style="color:var(--text-dark);">FIN</span></span>
-                  <span class="text-[10px]" style="color:#555;">Cloturer</span>
+                  <span class="flex items-center"><i class="fas fa-ban mr-3" style="color:#666666;"></i><span class="font-semibold text-sm" style="color:var(--text-dark);">FIN</span></span>
+                  <span class="text-[10px]" style="color:#333333;">Cloturer</span>
                 </button>
               </div>
 
@@ -691,7 +691,7 @@ async function showProspectDetail(id) {
 // Formulaire de resultat dans la modal prospect
 function showModalResultForm(type, prospectId) {
   const formDiv = document.getElementById('modalResultForm');
-  const dateAppelField = `<label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:#555;">Date de l'appel *</label><input type="datetime-local" id="modalCallDate" class="w-full glass-input p-2.5 rounded-lg text-xs mb-2" value="${getCurrentDateTime()}">`;
+  const dateAppelField = `<label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:#333333;">Date de l'appel *</label><input type="datetime-local" id="modalCallDate" class="w-full glass-input p-2.5 rounded-lg text-xs mb-2" value="${getCurrentDateTime()}">`;
   const forms = {
     NRP: `<div class="glass-card-static rounded-xl p-4 scale-in" style="border-color:#FECACA;">
       <h4 class="font-bold text-red-600 text-sm mb-3"><i class="fas fa-phone-slash mr-2"></i>NRP</h4>
@@ -702,7 +702,7 @@ function showModalResultForm(type, prospectId) {
     AR: `<div class="glass-card-static rounded-xl p-4 scale-in" style="border-color:#FDE68A;">
       <h4 class="font-bold text-amber-600 text-sm mb-3"><i class="fas fa-redo mr-2"></i>A rappeler</h4>
       ${dateAppelField}
-      <label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:#555;">Date de rappel *</label>
+      <label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:#333333;">Date de rappel *</label>
       <input type="datetime-local" id="modalArDate" required class="w-full glass-input p-3 rounded-lg text-xs mb-2" value="${getDefaultRappelDate()}">
       <textarea id="modalArComment" placeholder="Raison du rappel..." rows="2" class="w-full p-3 rounded-lg text-xs mb-2"></textarea>
       <button onclick="submitModalResult('AR', ${prospectId})" class="w-full btn-warning py-2.5 rounded-lg text-sm"><i class="fas fa-check mr-2"></i>Confirmer AR</button>
@@ -711,18 +711,18 @@ function showModalResultForm(type, prospectId) {
       <h4 class="font-bold text-green-600 text-sm mb-3"><i class="fas fa-calendar-check mr-2"></i>Rendez-vous</h4>
       <div class="space-y-2">
         ${dateAppelField.replace('mb-2','mb-1')}
-        <div><label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:#555;">Date et heure du RDV *</label><input type="datetime-local" id="modalRdvDate" required class="w-full glass-input p-2.5 rounded-lg text-xs"></div>
-        <div><label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:#555;">Type</label><select id="modalRdvType" class="w-full p-2.5 rounded-lg text-xs"><option value="presentiel">Presentiel</option><option value="distance">A distance</option><option value="telephone">Telephone</option></select></div>
-        <div><label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:#555;">Lieu</label><input type="text" id="modalRdvLieu" placeholder="Adresse ou lien visio..." class="w-full glass-input p-2.5 rounded-lg text-xs"></div>
-        <div><label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:#555;">Formation souhaitee</label><textarea id="modalRdvFormation" placeholder="Formation souhaitee..." rows="2" class="w-full p-2.5 rounded-lg text-xs"></textarea></div>
-        <div><label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:#555;">Notes</label><textarea id="modalRdvComments" placeholder="Notes..." rows="2" class="w-full p-2.5 rounded-lg text-xs"></textarea></div>
+        <div><label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:#333333;">Date et heure du RDV *</label><input type="datetime-local" id="modalRdvDate" required class="w-full glass-input p-2.5 rounded-lg text-xs"></div>
+        <div><label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:#333333;">Type</label><select id="modalRdvType" class="w-full p-2.5 rounded-lg text-xs"><option value="presentiel">Presentiel</option><option value="distance">A distance</option><option value="telephone">Telephone</option></select></div>
+        <div><label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:#333333;">Lieu</label><input type="text" id="modalRdvLieu" placeholder="Adresse ou lien visio..." class="w-full glass-input p-2.5 rounded-lg text-xs"></div>
+        <div><label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:#333333;">Formation souhaitee</label><textarea id="modalRdvFormation" placeholder="Formation souhaitee..." rows="2" class="w-full p-2.5 rounded-lg text-xs"></textarea></div>
+        <div><label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:#333333;">Notes</label><textarea id="modalRdvComments" placeholder="Notes..." rows="2" class="w-full p-2.5 rounded-lg text-xs"></textarea></div>
       </div>
       <button onclick="submitModalResult('RDV', ${prospectId})" class="w-full btn-success py-2.5 rounded-lg text-sm mt-3"><i class="fas fa-check mr-2"></i>Confirmer RDV</button>
     </div>`,
     FIN: `<div class="glass-card-static rounded-xl p-4 scale-in">
-      <h4 class="font-bold text-sm mb-3" style="color:#555;"><i class="fas fa-ban mr-2"></i>Cloturer</h4>
+      <h4 class="font-bold text-sm mb-3" style="color:#333333;"><i class="fas fa-ban mr-2"></i>Cloturer</h4>
       ${dateAppelField}
-      <label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:#555;">Motif *</label>
+      <label class="block text-[10px] font-bold mb-1 uppercase tracking-wider" style="color:#333333;">Motif *</label>
       <select id="modalFinMotif" class="w-full p-2.5 rounded-lg text-xs mb-2"><option value="PAS_INTERESSE">Pas interesse</option><option value="HORS_CIBLE">Hors cible</option><option value="FAUX_NUMERO">Faux numero</option><option value="DOUBLON">Doublon</option><option value="AUTRE">Autre</option></select>
       <textarea id="modalFinComment" placeholder="Commentaire..." rows="2" class="w-full p-2.5 rounded-lg text-xs mb-2"></textarea>
       <button onclick="submitModalResult('FIN', ${prospectId})" class="w-full btn-secondary py-2.5 rounded-lg text-sm"><i class="fas fa-check mr-2"></i>Confirmer</button>
@@ -897,7 +897,7 @@ async function loadUsers() {
         <div class="px-6 py-4 flex justify-between items-center border-b border-gray-100">
           <div>
             <h3 class="text-sm font-bold text-gray-900">Utilisateurs</h3>
-            <p class="text-[10px] text-gray-400 mt-0.5">${actifs} actifs · ${data.users.length} total</p>
+            <p class="text-[10px] text-gray-600 mt-0.5">${actifs} actifs · ${data.users.length} total</p>
           </div>
           <button onclick="showAddUserModal()" class="btn-primary text-xs py-2.5 px-4 rounded-lg">
             <i class="fas fa-user-plus mr-1.5"></i>Ajouter un utilisateur
@@ -913,7 +913,7 @@ async function loadUsers() {
                 </div>
                 <div>
                   <p class="text-sm font-semibold text-gray-800">${u.prenom} ${u.nom}</p>
-                  <p class="text-[11px] text-gray-400 font-mono">${u.email}</p>
+                  <p class="text-[11px] text-gray-600 font-mono">${u.email}</p>
                 </div>
               </div>
               <div class="flex items-center space-x-3">
@@ -937,7 +937,7 @@ async function loadUsers() {
                       <i class="fas fa-trash text-red-400 text-[10px]"></i>
                     </button>
                   </div>
-                ` : '<span class="text-[10px] text-gray-300 italic">Vous</span>'}
+                ` : '<span class="text-[10px] text-gray-500 italic">Vous</span>'}
               </div>
             </div>`).join('')}
         </div>
@@ -953,7 +953,7 @@ function userModalHTML(title, icon, submitLabel, submitColor='btn-primary', fiel
           <div class="flex items-center justify-between mb-6">
             <h2 class="text-base font-bold text-gray-800"><i class="fas ${icon} text-maf-500 mr-2"></i>${title}</h2>
             <button onclick="document.getElementById('modal').classList.add('hidden')" class="w-7 h-7 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors">
-              <i class="fas fa-times text-gray-400 text-xs"></i>
+              <i class="fas fa-times text-gray-600 text-xs"></i>
             </button>
           </div>
           <form id="userForm" class="space-y-4">
@@ -1026,7 +1026,7 @@ function showEditUserModal(id, prenom, nom, email, role) {
     ${fieldGroup('Email','uEmail','email',true,'',email)}
     ${roleSelect(role)}
     <div class="border-t border-gray-100 pt-4">
-      <label class="block text-[10px] font-semibold text-gray-600 mb-1.5 uppercase tracking-wider">Nouveau mot de passe <span class="text-gray-300 normal-case font-normal">(laisser vide pour ne pas changer)</span></label>
+      <label class="block text-[10px] font-semibold text-gray-600 mb-1.5 uppercase tracking-wider">Nouveau mot de passe <span class="text-gray-500 normal-case font-normal">(laisser vide pour ne pas changer)</span></label>
       <input type="password" id="uPassword" placeholder="Laisser vide pour garder l'actuel" minlength="6"
         class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:border-maf-400 focus:outline-none transition-colors">
     </div>`
@@ -1064,7 +1064,7 @@ async function deleteUser(userId, userName) {
             <i class="fas fa-trash text-red-400 text-xl"></i>
           </div>
           <h2 class="text-base font-bold text-gray-800 mb-2">Supprimer ${userName} ?</h2>
-          <p class="text-xs text-gray-400 mb-6">Cette action est irréversible. L'historique des appels sera conservé.</p>
+          <p class="text-xs text-gray-600 mb-6">Cette action est irréversible. L'historique des appels sera conservé.</p>
           <div class="flex gap-3">
             <button onclick="document.getElementById('modal').classList.add('hidden')"
               class="flex-1 btn-secondary py-2.5 rounded-xl text-sm">Annuler</button>
@@ -1117,7 +1117,7 @@ function renderImportCSV() {
           <i class="fas fa-cloud-upload-alt text-2xl text-maf-500"></i>
         </div>
         <p class="text-sm font-semibold text-gray-700 mb-1">Glissez votre fichier ici</p>
-        <p class="text-xs text-gray-400">ou cliquez pour parcourir — .xlsx, .xls, .csv acceptés</p>
+        <p class="text-xs text-gray-600">ou cliquez pour parcourir — .xlsx, .xls, .csv acceptés</p>
         <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" class="hidden" onchange="handleFileSelect(this)">
       </div>
 
@@ -1125,7 +1125,7 @@ function renderImportCSV() {
       <div id="mappingZone" class="hidden mb-6">
         <div class="flex items-center justify-between mb-3">
           <h4 class="text-xs font-bold text-gray-700"><i class="fas fa-columns mr-1.5 text-maf-500"></i>Mapping des colonnes détectées</h4>
-          <span id="fileInfo" class="text-[10px] text-gray-400 font-mono"></span>
+          <span id="fileInfo" class="text-[10px] text-gray-600 font-mono"></span>
         </div>
         <div id="mappingGrid" class="grid grid-cols-2 md:grid-cols-3 gap-3 mb-5"></div>
         <div class="flex items-center gap-3">
@@ -1142,7 +1142,7 @@ function renderImportCSV() {
       <div id="previewZone" class="hidden mb-6">
         <div class="flex items-center justify-between mb-3">
           <h4 class="text-xs font-bold text-gray-700"><i class="fas fa-table mr-1.5 text-maf-500"></i>Aperçu — <span id="previewCount">0</span> prospects à importer</h4>
-          <button onclick="document.getElementById('previewZone').classList.add('hidden');document.getElementById('mappingZone').classList.remove('hidden')" class="text-xs text-gray-400 hover:text-gray-600">
+          <button onclick="document.getElementById('previewZone').classList.add('hidden');document.getElementById('mappingZone').classList.remove('hidden')" class="text-xs text-gray-600 hover:text-gray-600">
             <i class="fas fa-arrow-left mr-1"></i>Modifier
           </button>
         </div>
@@ -1254,7 +1254,7 @@ function showMappingUI(headers, rowCount, fileName) {
 
   document.getElementById('mappingGrid').innerHTML = headers.map(h => `
     <div class="bg-white rounded-lg border border-gray-100 p-3">
-      <p class="text-[10px] font-mono text-gray-400 mb-1.5 truncate" title="${h}">${h}</p>
+      <p class="text-[10px] font-mono text-gray-600 mb-1.5 truncate" title="${h}">${h}</p>
       <select onchange="columnMapping['${h}']=this.value" class="w-full text-xs rounded-lg border border-gray-200 px-2 py-1.5 focus:border-maf-400 outline-none">
         <option value="">— ignorer —</option>
         ${fieldOptions}
@@ -1292,7 +1292,7 @@ function previewImport() {
   document.getElementById('previewTable').innerHTML = `
     <thead><tr>${cols.map(c=>`<th class="text-left px-3 py-2 bg-gray-50 text-gray-500 font-semibold uppercase text-[10px] tracking-wider">${c}</th>`).join('')}</tr></thead>
     <tbody>${prospects.slice(0,50).map(p=>`<tr class="hover:bg-orange-50/30">${cols.map(c=>`<td class="px-3 py-2 border-b border-gray-50 text-gray-700">${p[c]||'—'}</td>`).join('')}</tr>`).join('')}
-    ${prospects.length>50?`<tr><td colspan="${cols.length}" class="px-3 py-2 text-center text-gray-400 text-[10px]">... et ${prospects.length-50} autres lignes</td></tr>`:''}</tbody>`;
+    ${prospects.length>50?`<tr><td colspan="${cols.length}" class="px-3 py-2 text-center text-gray-600 text-[10px]">... et ${prospects.length-50} autres lignes</td></tr>`:''}</tbody>`;
 }
 
 async function confirmImport() {
