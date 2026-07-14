@@ -16,6 +16,11 @@ async function cleanupStaleLocks(db: D1Database) {
   `).run();
 }
 
+function normalizeTemperature(value: any) {
+  const valid = ['FROID', 'TIEDE', 'CHAUD', 'A_NOURRIR'];
+  return valid.includes(value) ? value : 'FROID';
+}
+
 // GET /api/prospects/next - Obtenir le prochain prospect (file d'attente commune)
 prospects.get('/next', async (c) => {
   const user = c.get('user');
@@ -37,30 +42,28 @@ prospects.get('/next', async (c) => {
     });
   }
 
-  // 3. Sélection du prochain prospect avec priorités métier
-  // D1/SQLite n'a pas FOR UPDATE SKIP LOCKED, on utilise une approche atomique
+  // 3. Sélection du prochain prospect avec priorités métier + score commercial
   const nextProspect = await db.prepare(`
     SELECT id FROM prospects
     WHERE locked_by IS NULL
       AND statut IN ('NOUVEAU', 'AR')
       AND (
-        -- Priorité 1: AR en retard (date_rappel passée)
         (statut = 'AR' AND date_rappel <= datetime('now'))
-        OR
-        -- Priorité 2: AR du jour
-        (statut = 'AR' AND date(date_rappel) = date('now'))
-        OR
-        -- Priorité 3: Nouveaux prospects
-        (statut = 'NOUVEAU')
+        OR (statut = 'AR' AND date(date_rappel) = date('now'))
+        OR (statut = 'NOUVEAU')
       )
     ORDER BY 
       CASE 
         WHEN statut = 'AR' AND date_rappel <= datetime('now') THEN 1
-        WHEN statut = 'AR' AND date(date_rappel) = date('now') THEN 2
-        WHEN statut = 'NOUVEAU' THEN 3
-        ELSE 4
+        WHEN priorite_manuelle > 0 THEN 2
+        WHEN temperature = 'CHAUD' THEN 3
+        WHEN statut = 'AR' AND date(date_rappel) = date('now') THEN 4
+        WHEN statut = 'NOUVEAU' THEN 5
+        ELSE 6
       END,
-      -- Équité: éviter qu'un agent monopolise les mêmes prospects
+      priorite_manuelle DESC,
+      score_potentiel DESC,
+      CASE WHEN meilleur_creneau = strftime('%H', 'now') THEN 0 ELSE 1 END,
       CASE WHEN last_called_by = ? THEN 1 ELSE 0 END,
       date_rappel ASC,
       created_at ASC
@@ -82,7 +85,6 @@ prospects.get('/next', async (c) => {
   `).bind(user.id, user.id, nextProspect.id).run();
 
   if (!lockResult.meta.changes || lockResult.meta.changes === 0) {
-    // Race condition: un autre opérateur a verrouillé entre-temps, on réessaie
     return c.json({ 
       prospect: null,
       message: 'Prospect déjà pris par un collègue. Réessayez.' 
@@ -127,6 +129,7 @@ prospects.get('/', requireRole('admin', 'supervisor'), async (c) => {
   const db = c.env.DB;
   const statut = c.req.query('statut');
   const search = c.req.query('search');
+  const temperature = c.req.query('temperature');
   const page = parseInt(c.req.query('page') || '1');
   const limit = parseInt(c.req.query('limit') || '50');
   const offset = (page - 1) * limit;
@@ -139,10 +142,15 @@ prospects.get('/', requireRole('admin', 'supervisor'), async (c) => {
     params.push(statut);
   }
 
+  if (temperature) {
+    where += ' AND p.temperature = ?';
+    params.push(temperature);
+  }
+
   if (search) {
-    where += ' AND (p.nom_entreprise LIKE ? OR p.nom_dirigeant LIKE ? OR p.telephone LIKE ? OR p.ville LIKE ?)';
+    where += ' AND (p.nom_entreprise LIKE ? OR p.nom_dirigeant LIKE ? OR p.telephone LIKE ? OR p.ville LIKE ? OR p.besoin_formation LIKE ?)';
     const searchTerm = `%${search}%`;
-    params.push(searchTerm, searchTerm, searchTerm, searchTerm);
+    params.push(searchTerm, searchTerm, searchTerm, searchTerm, searchTerm);
   }
 
   const countResult = await db.prepare(
@@ -164,6 +172,8 @@ prospects.get('/', requireRole('admin', 'supervisor'), async (c) => {
         WHEN 'RDV' THEN 3
         WHEN 'FIN' THEN 4
       END,
+      p.priorite_manuelle DESC,
+      p.score_potentiel DESC,
       p.updated_at DESC
     LIMIT ? OFFSET ?
   `).bind(...params, limit, offset).all();
@@ -209,14 +219,19 @@ prospects.post('/', requireRole('admin', 'supervisor'), async (c) => {
   const db = c.env.DB;
   const data = await c.req.json();
 
+  const score = Number(data.score_potentiel || 0);
   const result = await db.prepare(`
-    INSERT INTO prospects (nom_entreprise, nom_dirigeant, telephone, email, ville, code_postal, code_ape, opco, budget_identifie, notes)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO prospects (
+      nom_entreprise, nom_dirigeant, telephone, email, ville, code_postal, code_ape, opco, budget_identifie, notes,
+      score_potentiel, temperature, priorite_manuelle, secteur_activite, besoin_formation, meilleur_creneau
+    )
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `).bind(
     data.nom_entreprise, data.nom_dirigeant || null, data.telephone,
     data.email || null, data.ville || null, data.code_postal || null,
     data.code_ape || null, data.opco || null, data.budget_identifie || null,
-    data.notes || null
+    data.notes || null, score, normalizeTemperature(data.temperature),
+    data.priorite_manuelle || 0, data.secteur_activite || null, data.besoin_formation || null, data.meilleur_creneau || null
   ).run();
 
   return c.json({ id: result.meta.last_row_id, message: 'Prospect créé' }, 201);
@@ -242,18 +257,23 @@ prospects.post('/import', requireRole('admin'), async (c) => {
         errors.push(`Ligne ignorée: nom_entreprise et telephone obligatoires`);
         continue;
       }
-      // Valider et normaliser le statut
       const statut = validStatuts.includes(p.statut) ? p.statut : 'NOUVEAU';
       const nrpCount = typeof p.nrp_count === 'number' ? p.nrp_count : 0;
+      const score = Number(p.score_potentiel || 0);
 
       await db.prepare(`
-        INSERT INTO prospects (nom_entreprise, nom_dirigeant, telephone, email, ville, code_postal, code_ape, opco, budget_identifie, notes, statut, compteur_nrp)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO prospects (
+          nom_entreprise, nom_dirigeant, telephone, email, ville, code_postal, code_ape, opco, budget_identifie, notes, statut, compteur_nrp,
+          score_potentiel, temperature, priorite_manuelle, secteur_activite, besoin_formation, meilleur_creneau
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `).bind(
         p.nom_entreprise, p.nom_dirigeant || null, p.telephone,
         p.email || null, p.ville || null, p.code_postal || null,
         p.code_ape || null, p.opco || null, p.budget_identifie || null,
-        p.notes || null, statut, nrpCount
+        p.notes || null, statut, nrpCount,
+        score, normalizeTemperature(p.temperature), p.priorite_manuelle || 0,
+        p.secteur_activite || null, p.besoin_formation || null, p.meilleur_creneau || null
       ).run();
       imported++;
     } catch (e: any) {
@@ -268,12 +288,9 @@ prospects.post('/import', requireRole('admin'), async (c) => {
 prospects.delete('/purge', requireRole('admin'), async (c) => {
   const db = c.env.DB;
   
-  // Supprimer d'abord les tables dépendantes
   await db.prepare('DELETE FROM rdv').run();
   await db.prepare('DELETE FROM appels').run();
   await db.prepare('DELETE FROM prospects').run();
-  
-  // Reset auto-increment
   await db.prepare("DELETE FROM sqlite_sequence WHERE name IN ('prospects', 'appels', 'rdv')").run();
   
   return c.json({ message: 'Tous les prospects, appels et RDV ont été supprimés' });
@@ -297,6 +314,12 @@ prospects.put('/:id', requireRole('admin', 'supervisor'), async (c) => {
       opco = COALESCE(?, opco),
       budget_identifie = COALESCE(?, budget_identifie),
       notes = COALESCE(?, notes),
+      score_potentiel = COALESCE(?, score_potentiel),
+      temperature = COALESCE(?, temperature),
+      priorite_manuelle = COALESCE(?, priorite_manuelle),
+      secteur_activite = COALESCE(?, secteur_activite),
+      besoin_formation = COALESCE(?, besoin_formation),
+      meilleur_creneau = COALESCE(?, meilleur_creneau),
       updated_at = datetime('now')
     WHERE id = ?
   `).bind(
@@ -304,7 +327,9 @@ prospects.put('/:id', requireRole('admin', 'supervisor'), async (c) => {
     data.telephone || null, data.email || null,
     data.ville || null, data.code_postal || null,
     data.code_ape || null, data.opco || null,
-    data.budget_identifie || null, data.notes || null, id
+    data.budget_identifie || null, data.notes || null,
+    data.score_potentiel ?? null, data.temperature || null, data.priorite_manuelle ?? null,
+    data.secteur_activite || null, data.besoin_formation || null, data.meilleur_creneau || null, id
   ).run();
 
   return c.json({ message: 'Prospect mis à jour' });
